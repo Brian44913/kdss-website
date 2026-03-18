@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40" width="40" height="40">
+  <defs>
+    <linearGradient id="logoGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#2563eb"/>
+      <stop offset="100%" stop-color="#7c3aed"/>
+    </linearGradient>
+    <linearGradient id="iconGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#2563eb"/>
+      <stop offset="50%" stop-color="#7c3aed"/>
+      <stop offset="100%" stop-color="#0891b2"/>
+    </linearGradient>
+  </defs>
+  <!-- Hexagonal distributed storage icon -->
+  <g transform="translate(20, 20)">
+    <!-- Main hexagon outline -->
+    <polygon points="0,-16 13.9,-8 13.9,8 0,16 -13.9,8 -13.9,-8" fill="none" stroke="url(#iconGrad)" stroke-width="2.2"/>
+    <!-- Inner connected nodes -->
+    <circle cx="0" cy="-8" r="2.8" fill="#2563eb"/>
+    <circle cx="7" cy="4" r="2.8" fill="#7c3aed"/>
+    <circle cx="-7" cy="4" r="2.8" fill="#0891b2"/>
+    <circle cx="0" cy="0" r="3" fill="url(#logoGrad)"/>
+    <!-- Connection lines -->
+    <line x1="0" y1="-8" x2="0" y2="0" stroke="#2563eb" stroke-width="1.2" opacity="0.8"/>
+    <line x1="7" y1="4" x2="0" y2="0" stroke="#7c3aed" stroke-width="1.2" opacity="0.8"/>
+    <line x1="-7" y1="4" x2="0" y2="0" stroke="#0891b2" stroke-width="1.2" opacity="0.8"/>
+    <!-- Outer vertex dots -->
+    <circle cx="0" cy="-16" r="2" fill="#2563eb" opacity="0.85"/>
+    <circle cx="13.9" cy="-8" r="2" fill="#5b4cf6" opacity="0.85"/>
+    <circle cx="13.9" cy="8" r="2" fill="#7c3aed" opacity="0.85"/>
+    <circle cx="0" cy="16" r="2" fill="#0891b2" opacity="0.85"/>
+    <circle cx="-13.9" cy="8" r="2" fill="#0891b2" opacity="0.85"/>
+    <circle cx="-13.9" cy="-8" r="2" fill="#2563eb" opacity="0.85"/>
+  </g>
+</svg>

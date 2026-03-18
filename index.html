@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>KDSS — High-Performance Distributed Storage</title>
+<meta content="KDSS is a high-performance distributed storage system powered by erasure coding, delivering exceptional space efficiency and data reliability." name="description"/>
+<link href="images/favicon.svg" rel="icon" type="image/svg+xml"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet"/>
+<link href="css/base.css" rel="stylesheet"/>
+<link href="css/components.css" rel="stylesheet"/>
+<link href="css/layout.css" rel="stylesheet"/>
+<link href="css/pages.css" rel="stylesheet"/>
+</head>
+<body>
+<!-- Navigation -->
+<nav class="navbar">
+<div class="container">
+<a class="nav-logo" href="./">
+<img alt="KDSS" height="40" src="images/logo.svg" width="40"/>
+<span>KDSS</span>
+</a>
+<div class="nav-links">
+<a class="nav-link" href="features.html">Features</a>
+<a class="nav-link" href="solutions.html">Solutions</a>
+<a class="nav-link" href="architecture.html">Architecture</a>
+<a class="nav-link" href="docs.html">Docs</a>
+<a class="nav-link" href="about.html">About</a>
+</div>
+<div class="nav-actions">
+<div class="lang-switch"><span class="lang-btn active">EN</span>
+          <a class="lang-btn" href="zh/">中</a></div>
+</div>
+<button aria-label="Menu" class="mobile-menu-btn">
+<span></span><span></span><span></span>
+</button>
+</div>
+</nav>
+<!-- Mobile Navigation -->
+<div class="mobile-nav">
+<a class="nav-link" href="features.html">Features</a>
+<a class="nav-link" href="solutions.html">Solutions</a>
+<a class="nav-link" href="architecture.html">Architecture</a>
+<a class="nav-link" href="docs.html">Docs</a>
+<a class="nav-link" href="about.html">About</a>
+<div class="nav-actions">
+<div class="lang-switch"><span class="lang-btn active">EN</span>
+          <a class="lang-btn" href="zh/">中</a></div>
+</div>
+</div>
+<!-- Hero Section -->
+<section class="hero">
+<canvas class="hero-canvas"></canvas>
+<div class="container">
+<div class="hero-badge">
+<span class="badge badge-blue">High-Performance Distributed Storage</span>
+</div>
+<h1>
+<span>High-Performance Distributed Storage</span><br/>
+<span class="text-gradient">Powered by Erasure Coding</span>
+</h1>
+<p class="hero-subtitle">KDSS is a production-ready distributed storage system built with Reed-Solomon erasure coding, delivering exceptional space efficiency and data reliability.</p>
+<div class="hero-actions">
+<a class="btn btn-primary btn-lg" href="docs.html">Get Started</a>
+<a class="btn btn-secondary btn-lg" href="features.html">Explore Features</a>
+</div>
+</div>
+</section>
+<!-- Core Stats -->
+<section class="section">
+<div class="container">
+<div class="stats-grid reveal">
+<div class="stat-item">
+<div class="stat-number" data-count="90.6" data-suffix="%">0%</div>
+<div class="stat-label">Space Utilization (EC 29+3)</div>
+</div>
+<div class="stat-item">
+<div class="stat-number" data-count="32">0</div>
+<div class="stat-label">Built-in Alert Rules</div>
+</div>
+<div class="stat-item">
+<div class="stat-number" data-count="180">0</div>
+<div class="stat-label">Online Capacity (PB+)</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Features Overview -->
+<section class="section">
+<div class="container">
+<div class="section-header reveal">
+<h2>Built for Modern Storage</h2>
+<p>Enterprise-grade features designed from the ground up for reliability, performance, and operational simplicity.</p>
+</div>
+<div class="grid-3 stagger-group">
+<!-- EC -->
+<div class="card reveal">
+<div class="card-icon blue">
+<svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="2" viewbox="0 0 24 24"><rect height="7" width="7" x="3" y="3"></rect><rect height="7" width="7" x="14" y="3"></rect><rect height="7" width="7" x="3" y="14"></rect><rect height="7" width="7" x="14" y="14"></rect></svg>
+</div>
+<h4>Erasure Coding</h4>
+<p>Reed-Solomon EC with configurable data/parity ratios. Up to 90.6% space efficiency, far surpassing 3-way replication.</p>
+</div>
+<!-- Raw Disk -->
+<div class="card reveal">
+<div class="card-icon purple">
+<svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="2" viewbox="0 0 24 24"><ellipse cx="12" cy="5" rx="9" ry="3"></ellipse><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"></path><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"></path></svg>
+</div>
+<h4>Raw Disk Engine</h4>
+<p>Bypass filesystem overhead with direct disk I/O. Sequential append-only writes with intelligent merge and tunable fsync dramatically reduce random I/O and head seek wear, <strong>significantly extending HDD lifespan, lowering failure rates, and reducing rebuild frequency and hardware replacement costs</strong>.</p>
+</div>
+<!-- S3 -->
+<div class="card reveal">
+<div class="card-icon cyan">
+<svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="2" viewbox="0 0 24 24"><path d="M18 10h-1.26A8 8 0 109 20h9a5 5 0 000-10z"></path></svg>
+</div>
+<h4>S3 Compatible</h4>
+<p>Full S3 API compatibility including multipart upload, presigned URLs, and streaming for large files.</p>
+</div>
+<!-- FUSE -->
+<div class="card reveal">
+<div class="card-icon green">
+<svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="2" viewbox="0 0 24 24"><path d="M22 19a2 2 0 01-2 2H4a2 2 0 01-2-2V5a2 2 0 012-2h5l2 3h9a2 2 0 012 2z"></path></svg>
+</div>
+<h4>FUSE Mount</h4>
+<p>Mount storage as a local filesystem with POSIX interface. Transparent EC encoding/decoding with read/write buffering.</p>
+</div>
+<!-- Auto Repair -->
+<div class="card reveal">
+<div class="card-icon blue">
+<svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="2" viewbox="0 0 24 24"><path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z"></path></svg>
+</div>
+<h4>Auto Repair</h4>
+<p>Automatic fault detection and EC reconstruction. Failed disks are isolated and data migrated to healthy nodes.</p>
+</div>
+<!-- Web Console -->
+<div class="card reveal">
+<div class="card-icon purple">
+<svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="2" viewbox="0 0 24 24"><rect height="14" rx="2" width="20" x="2" y="3"></rect><line x1="8" x2="16" y1="21" y2="21"></line><line x1="12" x2="12" y1="17" y2="21"></line></svg>
+</div>
+<h4>Web Console</h4>
+<p>Full-featured dashboard for cluster management, monitoring, alerting, and RBAC access control.</p>
+</div>
+</div>
+</div>
+</section>
+<!-- EC Configuration Table -->
+<section class="section">
+<div class="container">
+<div class="section-header reveal">
+<h2>EC Configuration Comparison</h2>
+<p>Choose the right erasure coding profile for your workload.</p>
+</div>
+<div class="table-wrapper reveal">
+<table>
+<thead>
+<tr>
+<th>Configuration</th>
+<th>Recommended Servers</th>
+<th>Data Shards</th>
+<th>Parity Shards</th>
+<th>Fault Tolerance</th>
+<th>Space Efficiency</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>EC 5+2</code></td>
+<td>9</td>
+<td>5</td>
+<td>2</td>
+<td>2</td>
+<td class="highlight">71.4%</td>
+</tr>
+<tr>
+<td><code>EC 9+2</code></td>
+<td>13</td>
+<td>9</td>
+<td>2</td>
+<td>2</td>
+<td class="highlight">81.8%</td>
+</tr>
+<tr>
+<td><code>EC 18+3</code></td>
+<td>24</td>
+<td>18</td>
+<td>3</td>
+<td>3</td>
+<td class="highlight">85.7%</td>
+</tr>
+<tr>
+<td><code>EC 29+3</code></td>
+<td>36</td>
+<td>29</td>
+<td>3</td>
+<td>3</td>
+<td class="highlight">90.6%</td>
+</tr>
+<tr>
+<td><code>EC 31+2</code></td>
+<td>36</td>
+<td>31</td>
+<td>2</td>
+<td>2</td>
+<td class="highlight">93.9%<sup>*</sup></td>
+</tr>
+</tbody>
+</table>
+<p style="margin-top: var(--space-md); font-size: 13px; color: var(--text-muted);">* <strong>EC 31+2 Ultra-Density Mode</strong> is designed exclusively for brand-new enterprise-grade servers and drives, deployed in Tier 3+ data centers with 24/7 on-site staff for immediate hardware fault response. With only 2 parity shards, the fault tolerance margin is minimal — any delay in disk replacement increases the risk of data loss.</p>
+</div>
+</div>
+</section>
+<!-- Architecture Preview -->
+<section class="section">
+<div class="container">
+<div class="section-header reveal">
+<h2>System Architecture</h2>
+<p>A distributed architecture with clear separation of concerns between metadata, storage, and access layers.</p>
+</div>
+<div class="arch-preview reveal">
+<div class="arch-diagram">
+<img alt="KDSS Architecture" loading="lazy" src="images/architecture.svg"/>
+</div>
+<div style="margin-top: var(--space-xl); text-align: center;">
+<a class="btn btn-secondary" href="architecture.html">Explore Architecture</a>
+</div>
+</div>
+</div>
+</section>
+<!-- Contact Us -->
+<section class="section contact-section">
+<div class="container">
+<div class="section-header reveal">
+<h2>Contact Us</h2>
+<p>Interested in KDSS? We'd love to hear from you.</p>
+</div>
+<div class="contact-card reveal">
+<div class="contact-icon">
+<svg fill="none" height="32" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" viewbox="0 0 24 24" width="32">
+<rect height="16" rx="2" width="20" x="2" y="4"></rect>
+<path d="M22 4L12 13L2 4"></path>
+</svg>
+</div>
+<h3>Email</h3>
+<a class="contact-email" href="mailto:contact@kdss.io">contact@kdss.io</a>
+<p>For technical consultation, business cooperation or product inquiries.</p>
+</div>
+</div>
+</section>
+<!-- Footer -->
+<footer class="footer">
+<div class="container">
+<div class="footer-grid">
+<div class="footer-brand">
+<a class="nav-logo" href="./">
+<img alt="KDSS" height="40" src="images/logo.svg" width="40"/>
+<span>KDSS</span>
+</a>
+<p>High-performance distributed storage system powered by erasure coding technology.</p>
+</div>
+<div class="footer-col">
+<h4>Product</h4>
+<a href="features.html">Features</a>
+<a href="solutions.html">Solutions</a>
+<a href="architecture.html">Architecture</a>
+</div>
+<div class="footer-col">
+<h4>Documentation</h4>
+<a href="docs.html#requirements">Requirements</a>
+<a href="docs.html#capacity">Capacity Planning</a>
+<a href="docs.html#s3api">S3 API</a>
+</div>
+<div class="footer-col">
+<h4>Support</h4>
+<a href="mailto:support@kdss.io">Technical Support</a>
+<a href="mailto:support@kdss.io">Feedback</a>
+<a href="mailto:contact@kdss.io">Partnership</a>
+</div>
+</div>
+<div class="footer-bottom">
+<p>© 2025-2031 KDSS Project. All rights reserved.</p>
+<div class="footer-bottom-links">
+<span style="color: var(--text-muted); font-size: 13px;">Built with Go, gRPC, and Reed-Solomon</span>
+</div>
+</div>
+</div>
+</footer>
+<!-- Back to Top -->
+<button aria-label="Back to top" class="back-to-top">
+<svg fill="none" height="20" stroke="currentColor" stroke-linecap="round" stroke-width="2" viewbox="0 0 24 24" width="20"><path d="M18 15l-6-6-6 6"></path></svg>
+</button>
+
+<script src="js/nav.js"></script>
+<script src="js/animations.js"></script>
+</body>
+</html>

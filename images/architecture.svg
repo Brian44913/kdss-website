@@ -1,0 +1,136 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 600" width="900" height="600">
+  <defs>
+    <linearGradient id="archBluePurple" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#3b82f6"/>
+      <stop offset="100%" stop-color="#8b5cf6"/>
+    </linearGradient>
+    <!-- Arrow marker -->
+    <marker id="arrowBlue" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+      <path d="M0,0 L8,3 L0,6" fill="none" stroke="#3b82f6" stroke-width="1"/>
+    </marker>
+    <marker id="arrowCyan" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+      <path d="M0,0 L8,3 L0,6" fill="none" stroke="#06b6d4" stroke-width="1"/>
+    </marker>
+    <marker id="arrowPurple" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+      <path d="M0,0 L8,3 L0,6" fill="none" stroke="#8b5cf6" stroke-width="1"/>
+    </marker>
+    <marker id="arrowGreen" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+      <path d="M0,0 L8,3 L0,6" fill="none" stroke="#22c55e" stroke-width="1"/>
+    </marker>
+  </defs>
+
+  <!-- Background -->
+  <rect width="900" height="600" fill="#f8fafc" rx="8"/>
+
+  <!-- Subtle grid pattern -->
+  <g opacity="0.05">
+    <line x1="0" y1="100" x2="900" y2="100" stroke="#3b82f6" stroke-width="0.5"/>
+    <line x1="0" y1="200" x2="900" y2="200" stroke="#3b82f6" stroke-width="0.5"/>
+    <line x1="0" y1="300" x2="900" y2="300" stroke="#3b82f6" stroke-width="0.5"/>
+    <line x1="0" y1="400" x2="900" y2="400" stroke="#3b82f6" stroke-width="0.5"/>
+    <line x1="0" y1="500" x2="900" y2="500" stroke="#3b82f6" stroke-width="0.5"/>
+    <line x1="150" y1="0" x2="150" y2="600" stroke="#3b82f6" stroke-width="0.5"/>
+    <line x1="300" y1="0" x2="300" y2="600" stroke="#3b82f6" stroke-width="0.5"/>
+    <line x1="450" y1="0" x2="450" y2="600" stroke="#3b82f6" stroke-width="0.5"/>
+    <line x1="600" y1="0" x2="600" y2="600" stroke="#3b82f6" stroke-width="0.5"/>
+    <line x1="750" y1="0" x2="750" y2="600" stroke="#3b82f6" stroke-width="0.5"/>
+  </g>
+
+  <!-- ==================== LAYER LABELS ==================== -->
+  <text x="20" y="52" font-family="'Inter', sans-serif" font-size="10" fill="#64748b" font-weight="600" letter-spacing="2" text-transform="uppercase">CLIENT LAYER</text>
+  <text x="20" y="162" font-family="'Inter', sans-serif" font-size="10" fill="#64748b" font-weight="600" letter-spacing="2">GATEWAY LAYER</text>
+  <text x="20" y="292" font-family="'Inter', sans-serif" font-size="10" fill="#64748b" font-weight="600" letter-spacing="2">CORE LAYER</text>
+  <text x="20" y="442" font-family="'Inter', sans-serif" font-size="10" fill="#64748b" font-weight="600" letter-spacing="2">DATA LAYER</text>
+
+  <!-- Layer divider lines -->
+  <line x1="20" y1="60" x2="880" y2="60" stroke="#cbd5e1" stroke-width="1" stroke-dasharray="4,4"/>
+  <line x1="20" y1="170" x2="880" y2="170" stroke="#cbd5e1" stroke-width="1" stroke-dasharray="4,4"/>
+  <line x1="20" y1="310" x2="880" y2="310" stroke="#cbd5e1" stroke-width="1" stroke-dasharray="4,4"/>
+  <line x1="20" y1="450" x2="880" y2="450" stroke="#cbd5e1" stroke-width="1" stroke-dasharray="4,4"/>
+
+  <!-- ==================== CLIENT LAYER ==================== -->
+  <!-- S3 Client -->
+  <rect x="250" y="75" width="160" height="44" rx="8" fill="#ffffff" stroke="#06b6d4" stroke-width="1.5"/>
+  <text x="330" y="102" font-family="'Inter', monospace" font-size="13" fill="#06b6d4" text-anchor="middle" font-weight="600">S3 Client</text>
+
+  <!-- FUSE Client -->
+  <rect x="490" y="75" width="160" height="44" rx="8" fill="#ffffff" stroke="#22c55e" stroke-width="1.5"/>
+  <text x="570" y="102" font-family="'Inter', monospace" font-size="13" fill="#22c55e" text-anchor="middle" font-weight="600">FUSE Client</text>
+
+  <!-- ==================== GATEWAY LAYER ==================== -->
+  <!-- S3 Gateway -->
+  <rect x="220" y="185" width="200" height="50" rx="8" fill="#ffffff" stroke="#06b6d4" stroke-width="1.5"/>
+  <text x="320" y="207" font-family="'Inter', monospace" font-size="13" fill="#06b6d4" text-anchor="middle" font-weight="600">S3 Gateway</text>
+  <text x="320" y="224" font-family="'JetBrains Mono', monospace" font-size="11" fill="#06b6d4" text-anchor="middle" opacity="0.6">:9000</text>
+
+  <!-- FUSE Mount -->
+  <rect x="480" y="185" width="200" height="50" rx="8" fill="#ffffff" stroke="#22c55e" stroke-width="1.5"/>
+  <text x="580" y="207" font-family="'Inter', monospace" font-size="13" fill="#22c55e" text-anchor="middle" font-weight="600">FUSE Mount</text>
+  <text x="580" y="224" font-family="'JetBrains Mono', monospace" font-size="11" fill="#22c55e" text-anchor="middle" opacity="0.6">/mnt/kdss</text>
+
+  <!-- ==================== CORE LAYER ==================== -->
+  <!-- Master Server (center, emphasized) -->
+  <rect x="320" y="330" width="260" height="56" rx="10" fill="#ffffff" stroke="url(#archBluePurple)" stroke-width="2"/>
+  <!-- Glow effect -->
+  <rect x="320" y="330" width="260" height="56" rx="10" fill="none" stroke="#3b82f6" stroke-width="4" opacity="0.08"/>
+  <text x="450" y="354" font-family="'Inter', monospace" font-size="14" fill="#0f172a" text-anchor="middle" font-weight="700">Master Server</text>
+  <text x="450" y="374" font-family="'JetBrains Mono', monospace" font-size="11" fill="#8b5cf6" text-anchor="middle" opacity="0.7">:6700</text>
+
+  <!-- MongoDB -->
+  <rect x="50" y="335" width="180" height="46" rx="8" fill="#ffffff" stroke="#8b5cf6" stroke-width="1.5"/>
+  <text x="140" y="355" font-family="'Inter', monospace" font-size="13" fill="#8b5cf6" text-anchor="middle" font-weight="600">MongoDB</text>
+  <text x="140" y="372" font-family="'JetBrains Mono', monospace" font-size="11" fill="#8b5cf6" text-anchor="middle" opacity="0.6">:27017</text>
+
+  <!-- Web Console -->
+  <rect x="670" y="335" width="180" height="46" rx="8" fill="#ffffff" stroke="#3b82f6" stroke-width="1.5"/>
+  <text x="760" y="355" font-family="'Inter', monospace" font-size="13" fill="#3b82f6" text-anchor="middle" font-weight="600">Web Console</text>
+  <text x="760" y="372" font-family="'JetBrains Mono', monospace" font-size="11" fill="#3b82f6" text-anchor="middle" opacity="0.6">:8081</text>
+
+  <!-- ==================== DATA LAYER ==================== -->
+  <!-- Storage Server 1 -->
+  <rect x="120" y="475" width="180" height="50" rx="8" fill="#ffffff" stroke="#22c55e" stroke-width="1.5"/>
+  <text x="210" y="497" font-family="'Inter', monospace" font-size="12" fill="#22c55e" text-anchor="middle" font-weight="600">Storage Server</text>
+  <text x="210" y="515" font-family="'JetBrains Mono', monospace" font-size="11" fill="#22c55e" text-anchor="middle" opacity="0.6">:6800</text>
+
+  <!-- Storage Server 2 -->
+  <rect x="360" y="475" width="180" height="50" rx="8" fill="#ffffff" stroke="#22c55e" stroke-width="1.5"/>
+  <text x="450" y="497" font-family="'Inter', monospace" font-size="12" fill="#22c55e" text-anchor="middle" font-weight="600">Storage Server</text>
+  <text x="450" y="515" font-family="'JetBrains Mono', monospace" font-size="11" fill="#22c55e" text-anchor="middle" opacity="0.6">:6800</text>
+
+  <!-- Storage Server 3 -->
+  <rect x="600" y="475" width="180" height="50" rx="8" fill="#ffffff" stroke="#22c55e" stroke-width="1.5"/>
+  <text x="690" y="497" font-family="'Inter', monospace" font-size="12" fill="#22c55e" text-anchor="middle" font-weight="600">Storage Server</text>
+  <text x="690" y="515" font-family="'JetBrains Mono', monospace" font-size="11" fill="#22c55e" text-anchor="middle" opacity="0.6">:6800</text>
+
+  <!-- ==================== ARROWS ==================== -->
+  <!-- Client → Gateway -->
+  <line x1="330" y1="119" x2="320" y2="183" stroke="#06b6d4" stroke-width="1.2" marker-end="url(#arrowCyan)" opacity="0.7"/>
+  <line x1="570" y1="119" x2="580" y2="183" stroke="#22c55e" stroke-width="1.2" marker-end="url(#arrowGreen)" opacity="0.7"/>
+
+  <!-- Gateway → Master -->
+  <line x1="320" y1="235" x2="400" y2="328" stroke="#06b6d4" stroke-width="1.2" marker-end="url(#arrowCyan)" opacity="0.7"/>
+  <line x1="580" y1="235" x2="500" y2="328" stroke="#22c55e" stroke-width="1.2" marker-end="url(#arrowGreen)" opacity="0.7"/>
+
+  <!-- Master → Storage Servers -->
+  <line x1="400" y1="386" x2="250" y2="473" stroke="#22c55e" stroke-width="1.2" marker-end="url(#arrowGreen)" opacity="0.6"/>
+  <line x1="450" y1="386" x2="450" y2="473" stroke="#22c55e" stroke-width="1.2" marker-end="url(#arrowGreen)" opacity="0.6"/>
+  <line x1="500" y1="386" x2="650" y2="473" stroke="#22c55e" stroke-width="1.2" marker-end="url(#arrowGreen)" opacity="0.6"/>
+
+  <!-- MongoDB ↔ Master -->
+  <line x1="230" y1="358" x2="318" y2="358" stroke="#8b5cf6" stroke-width="1.2" marker-end="url(#arrowPurple)" opacity="0.7"/>
+
+  <!-- Web Console ↔ Master -->
+  <line x1="668" y1="358" x2="582" y2="358" stroke="#3b82f6" stroke-width="1.2" marker-end="url(#arrowBlue)" opacity="0.7"/>
+
+  <!-- ==================== LEGEND ==================== -->
+  <g transform="translate(30, 560)">
+    <rect x="0" y="0" width="8" height="8" rx="2" fill="none" stroke="#06b6d4" stroke-width="1.5"/>
+    <text x="14" y="8" font-family="'Inter', sans-serif" font-size="9" fill="#64748b">Gateway</text>
+    <rect x="75" y="0" width="8" height="8" rx="2" fill="none" stroke="#8b5cf6" stroke-width="1.5"/>
+    <text x="89" y="8" font-family="'Inter', sans-serif" font-size="9" fill="#64748b">Metadata</text>
+    <rect x="150" y="0" width="8" height="8" rx="2" fill="none" stroke="#3b82f6" stroke-width="1.5"/>
+    <text x="164" y="8" font-family="'Inter', sans-serif" font-size="9" fill="#64748b">Console</text>
+    <rect x="220" y="0" width="8" height="8" rx="2" fill="none" stroke="#22c55e" stroke-width="1.5"/>
+    <text x="234" y="8" font-family="'Inter', sans-serif" font-size="9" fill="#64748b">Storage</text>
+  </g>
+</svg>

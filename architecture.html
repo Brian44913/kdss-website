@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Architecture — KDSS</title>
+<meta content="KDSS system architecture: master server, storage server, S3 gateway, FUSE client, web console, and deployment topology." name="description"/>
+<link href="images/favicon.svg" rel="icon" type="image/svg+xml"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet"/>
+<link href="css/base.css" rel="stylesheet"/>
+<link href="css/components.css" rel="stylesheet"/>
+<link href="css/layout.css" rel="stylesheet"/>
+<link href="css/pages.css" rel="stylesheet"/>
+</head>
+<body>
+<!-- Navigation -->
+<nav class="navbar">
+<div class="container">
+<a class="nav-logo" href="./">
+<img alt="KDSS" height="40" src="images/logo.svg" width="40"/>
+<span>KDSS</span>
+</a>
+<div class="nav-links">
+<a class="nav-link" href="features.html">Features</a>
+<a class="nav-link" href="solutions.html">Solutions</a>
+<a class="nav-link active" href="architecture.html">Architecture</a>
+<a class="nav-link" href="docs.html">Docs</a>
+<a class="nav-link" href="about.html">About</a>
+</div>
+<div class="nav-actions">
+<div class="lang-switch"><span class="lang-btn active">EN</span>
+          <a class="lang-btn" href="zh/architecture.html">中</a></div>
+</div>
+<button aria-label="Menu" class="mobile-menu-btn">
+<span></span><span></span><span></span>
+</button>
+</div>
+</nav>
+<!-- Mobile Navigation -->
+<div class="mobile-nav">
+<a class="nav-link" href="features.html">Features</a>
+<a class="nav-link" href="solutions.html">Solutions</a>
+<a class="nav-link active" href="architecture.html">Architecture</a>
+<a class="nav-link" href="docs.html">Docs</a>
+<a class="nav-link" href="about.html">About</a>
+<div class="nav-actions">
+<div class="lang-switch"><span class="lang-btn active">EN</span>
+          <a class="lang-btn" href="zh/architecture.html">中</a></div>
+</div>
+</div>
+<!-- Page Header -->
+<section class="page-header">
+<div class="container">
+<h1>System Architecture</h1>
+<p>Understand how KDSS components work together to deliver high-performance distributed storage.</p>
+</div>
+</section>
+<!-- Architecture Overview -->
+<section class="section arch-section">
+<div class="container">
+<div class="section-header reveal">
+<h2>Architecture Overview</h2>
+</div>
+<div class="arch-full-diagram reveal">
+<img alt="Architecture" loading="lazy" src="images/architecture.svg"/>
+</div>
+</div>
+</section>
+<!-- Component Details -->
+<section class="section arch-section">
+<div class="container">
+<div class="section-header reveal">
+<h2>Component Details</h2>
+</div>
+<div class="component-grid reveal">
+<!-- Master Server -->
+<div class="component-card">
+<h4>
+<span>Master Server</span>
+<span class="port">:6700</span>
+</h4>
+<p>Central metadata manager responsible for namespace management, EC group allocation, volume placement, and cluster health monitoring. Coordinates all storage nodes via gRPC heartbeats.</p>
+</div>
+<!-- Storage Server -->
+<div class="component-card">
+<h4>
+<span>Storage Server</span>
+<span class="port">:6800</span>
+</h4>
+<p>Handles raw disk I/O with append-only writes. Manages shard storage on local disks with CRC32 integrity verification, three-layer health monitoring, and background compaction. Reports disk health to the Master via heartbeat.</p>
+</div>
+<!-- S3 Gateway -->
+<div class="component-card">
+<h4>
+<span>S3 Gateway</span>
+<span class="port">:9000</span>
+</h4>
+<p>Provides S3-compatible API access including multipart upload, presigned URLs, bucket policies, and streaming for large objects. Translates S3 requests into internal storage operations.</p>
+</div>
+<!-- FUSE Client -->
+<div class="component-card">
+<h4>
+<span>FUSE Client</span>
+<span class="port">mount</span>
+</h4>
+<p>Mounts KDSS as a local POSIX filesystem. Performs EC encoding on write and decoding on read, with LRU chunk caching and sequential prefetch for optimal throughput.</p>
+</div>
+<!-- Web Console -->
+<div class="component-card">
+<h4>
+<span>Web Console</span>
+<span class="port">:8081</span>
+</h4>
+<p>Full-featured dashboard for cluster management, real-time monitoring, alerting with 32 built-in rules, RBAC access control, and visual topology overview.</p>
+</div>
+<!-- MongoDB -->
+<div class="component-card">
+<h4>
+<span>MongoDB</span>
+<span class="port">:27017</span>
+</h4>
+<p>Stores all metadata including file entries, EC group mappings, volume information, user accounts, and access policies. Supports replica set deployment for high availability.</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Data Flow -->
+<section class="section arch-section">
+<div class="container">
+<div class="section-header reveal">
+<h2>Data Flow</h2>
+</div>
+<div class="grid-2 reveal">
+<!-- Write Path -->
+<div class="component-card">
+<h4>Write Path</h4>
+<ol style="padding-left: var(--space-lg); margin-top: var(--space-md);">
+<li style="color: var(--text-secondary); font-size: 15px; margin-bottom: var(--space-sm); list-style: decimal;">Client sends data via S3 API or FUSE mount</li>
+<li style="color: var(--text-secondary); font-size: 15px; margin-bottom: var(--space-sm); list-style: decimal;">Client splits data into fixed-size chunks (default 256 MB)</li>
+<li style="color: var(--text-secondary); font-size: 15px; margin-bottom: var(--space-sm); list-style: decimal;">Client EC-encodes each chunk into data + parity shards</li>
+<li style="color: var(--text-secondary); font-size: 15px; margin-bottom: var(--space-sm); list-style: decimal;">Shards are distributed to storage nodes in parallel via gRPC</li>
+<li style="color: var(--text-secondary); font-size: 15px; margin-bottom: var(--space-sm); list-style: decimal;">Storage nodes append shards to raw disk with CRC32 checksum</li>
+<li style="color: var(--text-secondary); font-size: 15px; margin-bottom: var(--space-sm); list-style: decimal;">Master records shard locations in metadata store</li>
+</ol>
+</div>
+<!-- Read Path -->
+<div class="component-card">
+<h4>Read Path</h4>
+<ol style="padding-left: var(--space-lg); margin-top: var(--space-md);">
+<li style="color: var(--text-secondary); font-size: 15px; margin-bottom: var(--space-sm); list-style: decimal;">Client requests data via S3 API or FUSE mount</li>
+<li style="color: var(--text-secondary); font-size: 15px; margin-bottom: var(--space-sm); list-style: decimal;">Master returns shard locations from metadata store</li>
+<li style="color: var(--text-secondary); font-size: 15px; margin-bottom: var(--space-sm); list-style: decimal;">Client fetches data shards in parallel from storage nodes</li>
+<li style="color: var(--text-secondary); font-size: 15px; margin-bottom: var(--space-sm); list-style: decimal;">If any shard is unavailable, parity shards are used for EC recovery</li>
+<li style="color: var(--text-secondary); font-size: 15px; margin-bottom: var(--space-sm); list-style: decimal;">Client EC-decodes and reassembles the original data</li>
+<li style="color: var(--text-secondary); font-size: 15px; margin-bottom: var(--space-sm); list-style: decimal;">Data is returned to the application</li>
+</ol>
+</div>
+</div>
+<div class="arch-full-diagram reveal" style="margin-top: var(--space-2xl);">
+<img alt="Data Flow" loading="lazy" src="images/data-flow.svg"/>
+</div>
+</div>
+</section>
+<!-- Storage Layout -->
+<section class="section arch-section">
+<div class="container">
+<div class="section-header reveal">
+<h2>Storage Layout</h2>
+</div>
+<div class="reveal">
+<p style="text-align: center; max-width: 720px; margin: 0 auto var(--space-2xl);">KDSS bypasses the filesystem and writes directly to raw disks. Each disk begins with dual SuperBlocks for crash recovery, followed by an append-only sequence of data records.</p>
+<div class="arch-full-diagram">
+<pre style="margin: 0; text-align: center; line-height: 1.6;"><code>┌──────────────┬──────────────┬──────────────────────────┐
+│ SuperBlock    │ SuperBlock   │  Data Records (append)   │
+│ Primary (2KB) │ Backup (2KB) │  Record = Header + Shard │
+└──────────────┴──────────────┴──────────────────────────┘
+Shard index maintained by embedded BadgerDB (on SSD)</code></pre>
+</div>
+</div>
+</div>
+</section>
+<!-- Deployment Topology -->
+<section class="section arch-section">
+<div class="container">
+<div class="section-header reveal">
+<h2>Deployment Topology</h2>
+</div>
+<div class="grid-2 reveal">
+<!-- Hybrid Deployment -->
+<div class="component-card">
+<h4>Mixed Deployment (Recommended)</h4>
+<p style="margin-bottom: var(--space-md);">Master nodes run both Master and Storage services, maximizing disk utilization. Additional pure Storage nodes handle data I/O. Recommended for all cluster sizes (9-72+ nodes).</p>
+<pre style="margin: 0; font-size: 13px; line-height: 1.5;"><code>┌─────────────────────────────────────┐
+│   Mixed Node 1                      │
+│   Master + Storage + MongoDB        │
+└──────────────────┬──────────────────┘
+                   │
+┌──────────────────┴──────────────────┐
+│   Mixed Node 2                      │
+│   Master + Storage + MongoDB        │
+└──────────────────┬──────────────────┘
+                   │
+┌──────────────────┴──────────────────┐
+│   Pure Storage Node (×N)            │
+│   Storage only                      │
+└─────────────────────────────────────┘</code></pre>
+</div>
+<!-- Scale-Out Deployment -->
+<div class="component-card">
+<h4>Scale-Out Deployment</h4>
+<p style="margin-bottom: var(--space-md);">For 70+ node clusters, additional Master nodes (up to 7) handle metadata, while the majority of nodes run Storage only.</p>
+<pre style="margin: 0; font-size: 13px; line-height: 1.5;"><code>┌──────────┐  ┌──────────┐  ┌──────────┐
+│ Master 1 │  │ Master 2 │  │  ... ×7  │
+│+Storage  │  │+Storage  │  │+Storage  │
+│+MongoDB  │  │+MongoDB  │  │+MongoDB  │
+└────┬─────┘  └────┬─────┘  └────┬─────┘
+     │             │             │
+─────┴─────────────┴─────────────┴─────
+     │             │             │
+┌────┴─────┐  ┌────┴─────┐  ┌────┴─────┐
+│Storage 1 │  │Storage 2 │  │  ... ×65 │
+└──────────┘  └──────────┘  └──────────┘</code></pre>
+</div>
+</div>
+</div>
+</section>
+<!-- Footer -->
+<footer class="footer">
+<div class="container">
+<div class="footer-grid">
+<div class="footer-brand">
+<a class="nav-logo" href="./">
+<img alt="KDSS" height="40" src="images/logo.svg" width="40"/>
+<span>KDSS</span>
+</a>
+<p>High-performance distributed storage system powered by erasure coding technology.</p>
+</div>
+<div class="footer-col">
+<h4>Product</h4>
+<a href="features.html">Features</a>
+<a href="solutions.html">Solutions</a>
+<a href="architecture.html">Architecture</a>
+</div>
+<div class="footer-col">
+<h4>Documentation</h4>
+<a href="docs.html#requirements">Requirements</a>
+<a href="docs.html#capacity">Capacity Planning</a>
+<a href="docs.html#s3api">S3 API</a>
+</div>
+<div class="footer-col">
+<h4>Support</h4>
+<a href="mailto:support@kdss.io">Technical Support</a>
+<a href="mailto:support@kdss.io">Feedback</a>
+<a href="mailto:contact@kdss.io">Partnership</a>
+</div>
+</div>
+<div class="footer-bottom">
+<p>© 2025-2031 KDSS Project. All rights reserved.</p>
+<div class="footer-bottom-links">
+<span style="color: var(--text-muted); font-size: 13px;">Built with Go, gRPC, and Reed-Solomon</span>
+</div>
+</div>
+</div>
+</footer>
+<!-- Back to Top -->
+<button aria-label="Back to top" class="back-to-top">
+<svg fill="none" height="20" stroke="currentColor" stroke-linecap="round" stroke-width="2" viewbox="0 0 24 24" width="20"><path d="M18 15l-6-6-6 6"></path></svg>
+</button>
+
+<script src="js/nav.js"></script>
+<script src="js/animations.js"></script>
+</body>
+</html>

@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>产品特性 — KDSS</title>
+<meta content="KDSS 产品特性：纠删码引擎、裸盘引擎、S3 兼容 API、FUSE 挂载、自动修复、数据均衡、Web 控制台、监控告警和垃圾回收。" name="description"/>
+<link href="../images/favicon.svg" rel="icon" type="image/svg+xml"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet"/>
+<link href="../css/base.css" rel="stylesheet"/>
+<link href="../css/components.css" rel="stylesheet"/>
+<link href="../css/layout.css" rel="stylesheet"/>
+<link href="../css/pages.css" rel="stylesheet"/>
+</head>
+<body>
+<!-- Navigation -->
+<nav class="navbar">
+<div class="container">
+<a class="nav-logo" href="./">
+<img alt="KDSS" height="40" src="../images/logo.svg" width="40"/>
+<span>KDSS</span>
+</a>
+<div class="nav-links">
+<a class="nav-link active" href="features.html">产品特性</a>
+<a class="nav-link" href="solutions.html">解决方案</a>
+<a class="nav-link" href="architecture.html">系统架构</a>
+<a class="nav-link" href="docs.html">文档</a>
+<a class="nav-link" href="about.html">关于</a>
+</div>
+<div class="nav-actions">
+<div class="lang-switch"><a class="lang-btn" href="../features.html">EN</a>
+          <span class="lang-btn active">中</span></div>
+</div>
+<button aria-label="Menu" class="mobile-menu-btn">
+<span></span><span></span><span></span>
+</button>
+</div>
+</nav>
+<!-- Mobile Navigation -->
+<div class="mobile-nav">
+<a class="nav-link active" href="features.html">产品特性</a>
+<a class="nav-link" href="solutions.html">解决方案</a>
+<a class="nav-link" href="architecture.html">系统架构</a>
+<a class="nav-link" href="docs.html">文档</a>
+<a class="nav-link" href="about.html">关于</a>
+<div class="nav-actions">
+<div class="lang-switch"><a class="lang-btn" href="../features.html">EN</a>
+          <span class="lang-btn active">中</span></div>
+</div>
+</div>
+<!-- Page Header -->
+<section class="page-header">
+<div class="container">
+<h1 class="reveal">产品特性</h1>
+<p class="reveal">从底层以纠删码为核心构建，生产级分布式存储所需的一切功能。</p>
+</div>
+</section>
+<!-- Feature 1: Erasure Coding Engine -->
+<section class="section">
+<div class="container">
+<div class="feature-card reveal">
+<div class="feature-content">
+<span class="badge badge-blue">核心引擎</span>
+<h3>纠删码引擎</h3>
+<p>基于 Reed-Solomon 纠删码，KDSS 将数据分割为可配置的数据分片和校验分片。提供从 EC 5+2 到 EC 29+3 的 4 种预设配置，空间利用率最高可达 90.6%，同时容忍多块磁盘同时故障——远超三副本 33.3% 的利用率。</p>
+<ul>
+<li>Reed-Solomon 算法，硬件加速伽罗瓦域运算</li>
+<li>4 种预设配置：EC 5+2、9+2、18+3、29+3</li>
+<li>空间利用率高达 90.6%，对比三副本仅 33.3%</li>
+<li>每条带容忍最多 3 块磁盘同时故障</li>
+<li>自动跨节点分片分布，实现故障隔离</li>
+</ul>
+</div>
+<div class="feature-visual">
+<div class="code-block">
+<div class="code-block-header">
+<span>master.toml</span>
+<button class="copy-btn">Copy</button>
+</div>
+<pre><code># Erasure Coding Configuration
+[ec]
+data_shards   = 5      # Number of data shards / 数据分片数
+parity_shards = 2      # Number of parity shards / 校验分片数
+
+# Space Efficiency Comparison:
+# EC 5+2   = 71.4%  (tolerates 2 failures)
+# EC 9+2   = 81.8%  (tolerates 2 failures)
+# EC 18+3  = 85.7%  (tolerates 3 failures)
+# EC 29+3  = 90.6%  (tolerates 3 failures)
+# 3-replica = 33.3%  (tolerates 2 failures)</code></pre>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Feature 2: Raw Disk Engine -->
+<section class="section">
+<div class="container">
+<div class="feature-card reverse reveal">
+<div class="feature-content">
+<span class="badge badge-purple">存储引擎</span>
+<h3>裸盘引擎</h3>
+<p>KDSS 完全绕过文件系统，在裸块设备上执行 Direct I/O。追加写模式最大化顺序吞吐量，双 SuperBlock 设计和五级恢复机制确保即使在意外断电或硬件故障后也能保证数据完整性。</p>
+<ul>
+<li>Direct I/O 绕过操作系统页缓存，延迟可预测</li>
+<li>追加写消除随机 I/O 和碎片化，<strong>显著延长 HDD 使用寿命、降低故障率</strong></li>
+<li>双 SuperBlock + CRC32 校验保护元数据</li>
+<li>五级恢复：干净关闭检测、SuperBlock 校验、索引恢复、分片重建、全条带 EC 重建</li>
+<li>压缩回收空间，不中断服务</li>
+</ul>
+</div>
+<div class="feature-visual">
+<div class="code-block">
+<div class="code-block-header">
+<span>Disk Layout</span>
+</div>
+<pre><code>+----------------------------------------------+
+|  SuperBlock A (primary)  |  SuperBlock B (backup) |
++----------------------------------------------+
+|  Data Records (append-only)                   |
+|  +--------+--------+--------+--------+-----  |
+|  | Record | Record | Record | Record | ...   |
+|  | Hdr+D  | Hdr+D  | Hdr+D  | Hdr+D  |      |
+|  +--------+--------+--------+--------+-----  |
++----------------------------------------------+
+
+Recovery Levels:
+  L1: Clean shutdown detection (skip recovery)
+  L2: SuperBlock validation &amp; failover
+  L3: Index recovery from data records
+  L4: Single-shard EC rebuild
+  L5: Full stripe EC reconstruction</code></pre>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Feature 3: S3 Compatible API -->
+<section class="section">
+<div class="container">
+<div class="feature-card reveal">
+<div class="feature-content">
+<span class="badge badge-cyan">访问层</span>
+<h3>S3 兼容 API</h3>
+<p>KDSS 提供完全 S3 兼容的 HTTP API，可无缝对接现有工具、SDK 和应用。支持 Bucket 操作、大文件分段上传、预签名 URL 安全临时访问以及流式传输。</p>
+<ul>
+<li>完整 Bucket CRUD：CreateBucket、ListBuckets、DeleteBucket、HeadBucket</li>
+<li>对象操作：PutObject、GetObject、DeleteObject、HeadObject、CopyObject</li>
+<li>分段上传：InitiateMultipartUpload、UploadPart、CompleteMultipartUpload</li>
+<li>预签名 URL，限时认证访问</li>
+<li>兼容 AWS CLI、boto3、MinIO Client 及标准 S3 SDK</li>
+</ul>
+</div>
+<div class="feature-visual">
+<div class="code-block">
+<div class="code-block-header">
+<span>bash</span>
+<button class="copy-btn">Copy</button>
+</div>
+<pre><code># Upload a file via S3 API
+curl -X PUT "http://kdss:9000/my-bucket/photo.jpg" \
+  -H "Authorization: AWS4-HMAC-SHA256 ..." \
+  -T ./photo.jpg
+
+# Multipart upload (large files)
+curl -X POST \
+  "http://kdss:9000/my-bucket/bigfile?uploads"
+
+# Generate presigned download URL
+kdss-cli presign get \
+  --bucket my-bucket \
+  --key photo.jpg \
+  --expires 3600
+
+# List objects with prefix
+curl "http://kdss:9000/my-bucket?prefix=photos/&amp;max-keys=100"</code></pre>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Feature 4: FUSE Filesystem Mount -->
+<section class="section">
+<div class="container">
+<div class="feature-card reverse reveal">
+<div class="feature-content">
+<span class="badge badge-green">POSIX 接口</span>
+<h3>FUSE 文件系统挂载</h3>
+<p>通过 FUSE 将 KDSS 集群挂载为本地目录。应用可使用标准 POSIX 文件操作——read、write、stat、readdir——KDSS 在后台透明处理纠删码编解码、分片分发和故障恢复。可配置读写缓冲优化不同工作负载的吞吐量。</p>
+<ul>
+<li>标准 POSIX 接口：open、read、write、stat、readdir、rename</li>
+<li>写入时透明 EC 编码，读取时透明解码</li>
+<li>可配置 chunk 大小（默认 256 MB），LRU 读缓存和顺序预取</li>
+<li>元数据缓存，减少 Master 节点往返</li>
+<li>兼容标准 Linux 工具：cp、rsync、tar 等</li>
+</ul>
+</div>
+<div class="feature-visual">
+<div class="code-block">
+<div class="code-block-header">
+<span>bash</span>
+<button class="copy-btn">Copy</button>
+</div>
+<pre><code># Mount KDSS as a local filesystem
+ksfs -c /etc/ksfs/mount.toml
+
+# Now use it like any local directory
+ls /mnt/kdss/my-bucket/
+cp /var/log/app.log /mnt/kdss/my-bucket/logs/
+df -h /mnt/kdss
+
+# Unmount when done
+umount /mnt/kdss</code></pre>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Feature 5: Auto Repair & Recovery -->
+<section class="section">
+<div class="container">
+<div class="feature-card reveal">
+<div class="feature-content">
+<span class="badge badge-blue">可靠性</span>
+<h3>自动修复与恢复</h3>
+<p>KDSS 通过 S.M.A.R.T. 指标和心跳信号持续监控磁盘健康。检测到故障时——无论是慢盘、读取错误还是磁盘完全失效——系统自动隔离故障磁盘，使用 EC 校验数据重构缺失分片，并重新分布到健康节点，全程无需人工干预。</p>
+<ul>
+<li>三层磁盘健康监控：S.M.A.R.T.、dmesg 错误扫描、IO 错误滑动窗口</li>
+<li>心跳超时和 I/O 错误追踪自动检测故障</li>
+<li>基于 EC 校验的分片重构，无需完整数据拷贝</li>
+<li>分布式修复：所有 Master 节点并行执行修复任务</li>
+<li>通过 Web 控制台和 Prometheus 指标追踪修复进度</li>
+</ul>
+</div>
+<div class="feature-visual">
+<div class="code-block">
+<div class="code-block-header">
+<span>Auto Repair Flow</span>
+</div>
+<pre><code>  Disk Health Monitor
+        |
+        v
+  +------------------+
+  | S.M.A.R.T. Check |---&gt; Normal ---&gt; Continue
+  | Heartbeat Check  |                 Monitoring
+  +------------------+
+        |
+      Fault Detected
+        |
+        v
+  +------------------+
+  | Isolate Disk     |  Mark disk as "offline"
+  | Stop I/O         |  Redirect traffic
+  +------------------+
+        |
+        v
+  +------------------+
+  | Identify Missing |  Scan stripe metadata
+  | Shards           |  for affected data
+  +------------------+
+        |
+        v
+  +------------------+
+  | EC Reconstruct   |  Rebuild from parity
+  | Missing Shards   |  shards (k of n)
+  +------------------+
+        |
+        v
+  +------------------+
+  | Place on Healthy |  Rebalance across
+  | Nodes            |  available disks
+  +------------------+
+        |
+        v
+  Repair Complete ---&gt; Resume Normal Operation</code></pre>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Feature 6: Data Balancing -->
+<section class="section">
+<div class="container">
+<div class="feature-card reverse reveal">
+<div class="feature-content">
+<span class="badge badge-purple">运维</span>
+<h3>数据均衡</h3>
+<p>随着集群扩展和工作负载变化，磁盘利用率可能不均衡。KDSS 内置利用率感知的数据均衡引擎，非中断地将分片从高利用率磁盘迁移到低利用率磁盘，保持集群健康和存储均匀分布，并提供实时进度监控。</p>
+<ul>
+<li>利用率感知调度：不均衡超过可配置阈值时触发</li>
+<li>非中断迁移：在线数据移动不影响服务</li>
+<li>带宽限流，限制对生产负载的影响</li>
+<li>通过 CLI 和 Web 控制台仪表盘监控进度</li>
+<li>添加新磁盘或节点时自动再均衡</li>
+</ul>
+</div>
+<div class="feature-visual">
+<div class="code-block">
+<div class="code-block-header">
+<span>bash</span>
+<button class="copy-btn">Copy</button>
+</div>
+<pre><code># Check cluster disk utilization
+kdss-cli balance status
+
+Disk Utilization:
+  node-01/sda   ████████████░░░  82%
+  node-01/sdb   █████████░░░░░░  61%
+  node-02/sda   ██████████████░  93%
+  node-02/sdb   ███████░░░░░░░░  47%
+  node-03/sda   ██████████░░░░░  68%
+
+Imbalance: 46%  (threshold: 20%)
+
+# Start balancing
+kdss-cli balance start --max-bandwidth 100MB/s
+
+Balancing in progress...
+  Migrated: 128 shards (12.4 GB)
+  Remaining: 64 shards (~6.2 GB)
+  ETA: 3m 22s</code></pre>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Feature 7: Web Management Console -->
+<section class="section">
+<div class="container">
+<div class="feature-card reveal">
+<div class="feature-content">
+<span class="badge badge-cyan">管理</span>
+<h3>Web 管理控制台</h3>
+<p>功能完备的 Web 管理控制台，让您对 KDSS 集群拥有完整的可视化和控制。一览集群健康状况、管理节点和磁盘、配置 EC 策略、控制用户访问——全部通过基于角色访问控制 (RBAC) 的直观仪表盘实现。</p>
+<ul>
+<li>实时仪表盘：集群健康、容量、吞吐量和 IOPS</li>
+<li>节点和磁盘管理：添加、移除、退役，引导式工作流</li>
+<li>Bucket 和对象浏览器，支持搜索、上传和下载</li>
+<li>预定义角色的 RBAC：管理员、存储管理员、只读</li>
+<li>告警配置和通知历史</li>
+</ul>
+</div>
+<div class="feature-visual">
+<div class="code-block">
+<div class="code-block-header">
+<span>Dashboard Overview</span>
+</div>
+<pre><code>+-----------------------------------------------+
+|  KDSS Console            [admin] [Logout]      |
++-----------------------------------------------+
+|         |                                      |
+| Dash    |  Cluster Health: Healthy             |
+| Nodes   |                                      |
+| Disks   |  Nodes: 5/5 online                   |
+| Buckets |  Disks: 20/20 active                 |
+| Users   |  Capacity: 42.8 TB / 60 TB (71%)     |
+| Alerts  |                                      |
+| Config  |  Throughput   IOPS                    |
+|         |  ~~~^~~~      ~~^~~~                  |
+|         |  348 MB/s     12.4K                   |
+|         |                                      |
+|         |  Recent Alerts (3)                    |
+|         |  ! Disk node-02/sdc S.M.A.R.T. warn  |
+|         |  ! Repair job #47 completed           |
+|         |  i Balance job started                |
++-----------------------------------------------+</code></pre>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Feature 8: Monitoring & Alerting -->
+<section class="section">
+<div class="container">
+<div class="feature-card reverse reveal">
+<div class="feature-content">
+<span class="badge badge-green">可观测性</span>
+<h3>监控与告警</h3>
+<p>KDSS 开箱即用暴露全面的 Prometheus 指标，覆盖集群健康、磁盘 I/O、EC 操作和 API 延迟。配合 32 条内置告警规则、预配置 Grafana 仪表盘和飞书 Webhook 集成，无需从头搭建监控基础设施即可获得完整可观测性。</p>
+<ul>
+<li>每个组件 Prometheus 原生 /metrics 端点</li>
+<li>32 条内置告警规则，覆盖磁盘、节点、容量和性能</li>
+<li>预构建 Grafana 仪表盘，集群、节点和磁盘级视图</li>
+<li>飞书 Webhook 实时告警通知</li>
+<li>可配置告警阈值和通知路由</li>
+</ul>
+</div>
+<div class="feature-visual">
+<div class="code-block">
+<div class="code-block-header">
+<span>prometheus.yml</span>
+<button class="copy-btn">Copy</button>
+</div>
+<pre><code># Prometheus scrape config for KDSS
+scrape_configs:
+  - job_name: 'kdss-master'
+    static_configs:
+      - targets: ['master-01:6701']
+    metrics_path: /metrics
+
+  - job_name: 'kdss-storage'
+    static_configs:
+      - targets:
+          - 'storage-01:6801'
+          - 'storage-02:6801'
+          - 'storage-03:6801'
+
+# Sample alert rules (32 built-in)
+# - DiskSpaceCritical (&gt;90%)
+# - DiskSmartWarning
+# - NodeHeartbeatLost (&gt;30s)
+# - ECRepairQueueHigh (&gt;100)
+# - APILatencyP99High (&gt;500ms)
+# - ReplicationLagHigh
+# ...</code></pre>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Feature 9: GC & Reclamation -->
+<section class="section">
+<div class="container">
+<div class="feature-card reveal">
+<div class="feature-content">
+<span class="badge badge-blue">生命周期</span>
+<h3>垃圾回收与空间回收</h3>
+<p>KDSS 实现安全的两阶段删除流程，支持可配置的回收站保留期。后台自动运行垃圾回收，从已删除对象和过期临时数据中回收空间，同时确保在保留窗口到期前不会永久删除数据。</p>
+<ul>
+<li>两阶段删除：先软删到回收站，保留期后永久移除</li>
+<li>可配置回收站保留期（默认 7 天）</li>
+<li>可配置间隔和时间窗口的自动 GC 调度</li>
+<li>可配置超时后自动清理过期分段上传</li>
+<li>GC 进度和已回收空间指标导出到 Prometheus</li>
+</ul>
+</div>
+<div class="feature-visual">
+<div class="code-block">
+<div class="code-block-header">
+<span>master.toml</span>
+<button class="copy-btn">Copy</button>
+</div>
+<pre><code># Garbage Collection Configuration
+[gc]
+enabled = true
+# Run GC every 6 hours / 每 6 小时运行一次 GC
+interval = "6h"
+# Only run during low-traffic window
+# 仅在低峰期运行
+time_window = "02:00-06:00"
+
+[gc.recycle_bin]
+# Retain deleted objects for 7 days
+# 删除对象保留 7 天
+retention = "168h"
+
+[gc.multipart]
+# Clean up stale multipart uploads after 24h
+# 24 小时后清理过期的分片上传
+stale_timeout = "24h"
+
+[gc.compaction]
+# Trigger compaction when fragmentation &gt; 30%
+# 碎片率超过 30% 时触发压缩
+fragmentation_threshold = 0.3</code></pre>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Footer -->
+<footer class="footer">
+<div class="container">
+<div class="footer-grid">
+<div class="footer-brand">
+<a class="nav-logo" href="./">
+<img alt="KDSS" height="40" src="../images/logo.svg" width="40"/>
+<span>KDSS</span>
+</a>
+<p>基于纠删码技术的高性能分布式存储系统。</p>
+</div>
+<div class="footer-col">
+<h4>产品</h4>
+<a href="features.html">产品特性</a>
+<a href="solutions.html">解决方案</a>
+<a href="architecture.html">系统架构</a>
+</div>
+<div class="footer-col">
+<h4>文档</h4>
+<a href="docs.html#requirements">环境要求</a>
+<a href="docs.html#capacity">容量规划</a>
+<a href="docs.html#s3api">S3 接口</a>
+</div>
+<div class="footer-col">
+<h4>支持</h4>
+<a href="mailto:support@kdss.io">技术支持</a>
+<a href="mailto:support@kdss.io">问题反馈</a>
+<a href="mailto:contact@kdss.io">合作咨询</a>
+</div>
+</div>
+<div class="footer-bottom">
+<p>© 2025-2031 KDSS 项目. 保留所有权利。</p>
+<div class="footer-bottom-links">
+<span style="color: var(--text-muted); font-size: 13px;">使用 Go、gRPC 和 Reed-Solomon 构建</span>
+</div>
+</div>
+</div>
+</footer>
+<!-- Back to Top -->
+<button aria-label="Back to top" class="back-to-top">
+<svg fill="none" height="20" stroke="currentColor" stroke-linecap="round" stroke-width="2" viewbox="0 0 24 24" width="20"><path d="M18 15l-6-6-6 6"></path></svg>
+</button>
+
+<script src="../js/nav.js"></script>
+<script src="../js/animations.js"></script>
+</body>
+</html>

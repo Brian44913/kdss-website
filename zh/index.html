@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>KDSS — 高性能分布式存储系统</title>
+<meta content="KDSS 是基于纠删码技术的高性能分布式存储系统，提供卓越的空间利用率和数据可靠性。" name="description"/>
+<link href="../images/favicon.svg" rel="icon" type="image/svg+xml"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet"/>
+<link href="../css/base.css" rel="stylesheet"/>
+<link href="../css/components.css" rel="stylesheet"/>
+<link href="../css/layout.css" rel="stylesheet"/>
+<link href="../css/pages.css" rel="stylesheet"/>
+</head>
+<body>
+<!-- Navigation -->
+<nav class="navbar">
+<div class="container">
+<a class="nav-logo" href="./">
+<img alt="KDSS" height="40" src="../images/logo.svg" width="40"/>
+<span>KDSS</span>
+</a>
+<div class="nav-links">
+<a class="nav-link" href="features.html">产品特性</a>
+<a class="nav-link" href="solutions.html">解决方案</a>
+<a class="nav-link" href="architecture.html">系统架构</a>
+<a class="nav-link" href="docs.html">文档</a>
+<a class="nav-link" href="about.html">关于</a>
+</div>
+<div class="nav-actions">
+<div class="lang-switch"><a class="lang-btn" href="../">EN</a>
+          <span class="lang-btn active">中</span></div>
+</div>
+<button aria-label="Menu" class="mobile-menu-btn">
+<span></span><span></span><span></span>
+</button>
+</div>
+</nav>
+<!-- Mobile Navigation -->
+<div class="mobile-nav">
+<a class="nav-link" href="features.html">产品特性</a>
+<a class="nav-link" href="solutions.html">解决方案</a>
+<a class="nav-link" href="architecture.html">系统架构</a>
+<a class="nav-link" href="docs.html">文档</a>
+<a class="nav-link" href="about.html">关于</a>
+<div class="nav-actions">
+<div class="lang-switch"><a class="lang-btn" href="../">EN</a>
+          <span class="lang-btn active">中</span></div>
+</div>
+</div>
+<!-- Hero Section -->
+<section class="hero">
+<canvas class="hero-canvas"></canvas>
+<div class="container">
+<div class="hero-badge">
+<span class="badge badge-blue">高性能分布式存储系统</span>
+</div>
+<h1>
+<span>高性能分布式存储</span><br/>
+<span class="text-gradient">纠删码驱动</span>
+</h1>
+<p class="hero-subtitle">KDSS 是基于 Reed-Solomon 纠删码构建的生产级分布式存储系统，提供卓越的空间利用率和数据可靠性。</p>
+<div class="hero-actions">
+<a class="btn btn-primary btn-lg" href="docs.html">快速开始</a>
+<a class="btn btn-secondary btn-lg" href="features.html">探索功能</a>
+</div>
+</div>
+</section>
+<!-- Core Stats -->
+<section class="section">
+<div class="container">
+<div class="stats-grid reveal">
+<div class="stat-item">
+<div class="stat-number" data-count="90.6" data-suffix="%">0%</div>
+<div class="stat-label">空间利用率 (EC 29+3)</div>
+</div>
+<div class="stat-item">
+<div class="stat-number" data-count="32">0</div>
+<div class="stat-label">内置告警规则</div>
+</div>
+<div class="stat-item">
+<div class="stat-number" data-count="180">0</div>
+<div class="stat-label">当前已上线容量 (PB+)</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Features Overview -->
+<section class="section">
+<div class="container">
+<div class="section-header reveal">
+<h2>为现代存储而生</h2>
+<p>从底层设计的企业级功能，兼顾可靠性、性能与运维简洁性。</p>
+</div>
+<div class="grid-3 stagger-group">
+<!-- EC -->
+<div class="card reveal">
+<div class="card-icon blue">
+<svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="2" viewbox="0 0 24 24"><rect height="7" width="7" x="3" y="3"></rect><rect height="7" width="7" x="14" y="3"></rect><rect height="7" width="7" x="3" y="14"></rect><rect height="7" width="7" x="14" y="14"></rect></svg>
+</div>
+<h4>纠删码</h4>
+<p>Reed-Solomon 纠删码引擎，支持灵活配置数据/校验比例，空间利用率最高可达 90.6%，远超三副本方案。</p>
+</div>
+<!-- Raw Disk -->
+<div class="card reveal">
+<div class="card-icon purple">
+<svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="2" viewbox="0 0 24 24"><ellipse cx="12" cy="5" rx="9" ry="3"></ellipse><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"></path><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"></path></svg>
+</div>
+<h4>裸盘引擎</h4>
+<p>绕过文件系统，直接管理裸盘 I/O。顺序追加写入配合智能合并与可调 fsync 策略，大幅降低随机 I/O 与磁头寻道磨损，<strong>显著延长 HDD 使用寿命、降低故障率，减少数据重建频次和硬件更换成本</strong>。</p>
+</div>
+<!-- S3 -->
+<div class="card reveal">
+<div class="card-icon cyan">
+<svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="2" viewbox="0 0 24 24"><path d="M18 10h-1.26A8 8 0 109 20h9a5 5 0 000-10z"></path></svg>
+</div>
+<h4>S3 兼容</h4>
+<p>完整的 S3 API 兼容，支持分段上传、预签名 URL、大文件流式传输。</p>
+</div>
+<!-- FUSE -->
+<div class="card reveal">
+<div class="card-icon green">
+<svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="2" viewbox="0 0 24 24"><path d="M22 19a2 2 0 01-2 2H4a2 2 0 01-2-2V5a2 2 0 012-2h5l2 3h9a2 2 0 012 2z"></path></svg>
+</div>
+<h4>FUSE 挂载</h4>
+<p>将存储挂载为本地文件系统，提供 POSIX 接口。透明的 EC 编解码与读写缓冲。</p>
+</div>
+<!-- Auto Repair -->
+<div class="card reveal">
+<div class="card-icon blue">
+<svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="2" viewbox="0 0 24 24"><path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z"></path></svg>
+</div>
+<h4>自动修复</h4>
+<p>自动故障检测与 EC 重构。失效磁盘自动隔离，数据迁移至健康节点。</p>
+</div>
+<!-- Web Console -->
+<div class="card reveal">
+<div class="card-icon purple">
+<svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="2" viewbox="0 0 24 24"><rect height="14" rx="2" width="20" x="2" y="3"></rect><line x1="8" x2="16" y1="21" y2="21"></line><line x1="12" x2="12" y1="17" y2="21"></line></svg>
+</div>
+<h4>Web 控制台</h4>
+<p>功能完备的 Web 管理界面，支持集群监控、告警配置和 RBAC 权限控制。</p>
+</div>
+</div>
+</div>
+</section>
+<!-- EC Configuration Table -->
+<section class="section">
+<div class="container">
+<div class="section-header reveal">
+<h2>EC 配置对比</h2>
+<p>根据您的工作负载选择合适的纠删码配置方案。</p>
+</div>
+<div class="table-wrapper reveal">
+<table>
+<thead>
+<tr>
+<th>配置方案</th>
+<th>建议服务器数</th>
+<th>数据片</th>
+<th>校验片</th>
+<th>容错数</th>
+<th>空间利用率</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>EC 5+2</code></td>
+<td>9</td>
+<td>5</td>
+<td>2</td>
+<td>2</td>
+<td class="highlight">71.4%</td>
+</tr>
+<tr>
+<td><code>EC 9+2</code></td>
+<td>13</td>
+<td>9</td>
+<td>2</td>
+<td>2</td>
+<td class="highlight">81.8%</td>
+</tr>
+<tr>
+<td><code>EC 18+3</code></td>
+<td>24</td>
+<td>18</td>
+<td>3</td>
+<td>3</td>
+<td class="highlight">85.7%</td>
+</tr>
+<tr>
+<td><code>EC 29+3</code></td>
+<td>36</td>
+<td>29</td>
+<td>3</td>
+<td>3</td>
+<td class="highlight">90.6%</td>
+</tr>
+<tr>
+<td><code>EC 31+2</code></td>
+<td>36</td>
+<td>31</td>
+<td>2</td>
+<td>2</td>
+<td class="highlight">93.9%<sup>*</sup></td>
+</tr>
+</tbody>
+</table>
+<p style="margin-top: var(--space-md); font-size: 13px; color: var(--text-muted);">* <strong>极致密度 EC(31,2) 模式</strong>仅适用于全新的存储服务器和全新企业级硬盘，且必须部署在 Tier 3+ 标准的 IDC 机房，配备 24 小时人员值守随时处理硬件故障。仅 2 个校验分片，容错余量极小——磁盘更换的任何延迟都会增加数据丢失风险。</p>
+</div>
+</div>
+</section>
+<!-- Architecture Preview -->
+<section class="section">
+<div class="container">
+<div class="section-header reveal">
+<h2>系统架构</h2>
+<p>分布式架构设计，元数据、存储和访问层职责清晰分离。</p>
+</div>
+<div class="arch-preview reveal">
+<div class="arch-diagram">
+<img alt="KDSS Architecture" loading="lazy" src="../images/architecture.svg"/>
+</div>
+<div style="margin-top: var(--space-xl); text-align: center;">
+<a class="btn btn-secondary" href="architecture.html">了解更多</a>
+</div>
+</div>
+</div>
+</section>
+<!-- Contact Us -->
+<section class="section contact-section">
+<div class="container">
+<div class="section-header reveal">
+<h2>联系我们</h2>
+<p>对 KDSS 感兴趣？欢迎随时与我们联系。</p>
+</div>
+<div class="contact-card reveal">
+<div class="contact-icon">
+<svg fill="none" height="32" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" viewbox="0 0 24 24" width="32">
+<rect height="16" rx="2" width="20" x="2" y="4"></rect>
+<path d="M22 4L12 13L2 4"></path>
+</svg>
+</div>
+<h3>邮箱</h3>
+<a class="contact-email" href="mailto:contact@kdss.io">contact@kdss.io</a>
+<p>技术咨询、商务合作或产品咨询，欢迎来信。</p>
+</div>
+</div>
+</section>
+<!-- Footer -->
+<footer class="footer">
+<div class="container">
+<div class="footer-grid">
+<div class="footer-brand">
+<a class="nav-logo" href="./">
+<img alt="KDSS" height="40" src="../images/logo.svg" width="40"/>
+<span>KDSS</span>
+</a>
+<p>基于纠删码技术的高性能分布式存储系统。</p>
+</div>
+<div class="footer-col">
+<h4>产品</h4>
+<a href="features.html">产品特性</a>
+<a href="solutions.html">解决方案</a>
+<a href="architecture.html">系统架构</a>
+</div>
+<div class="footer-col">
+<h4>文档</h4>
+<a href="docs.html#requirements">环境要求</a>
+<a href="docs.html#capacity">容量规划</a>
+<a href="docs.html#s3api">S3 接口</a>
+</div>
+<div class="footer-col">
+<h4>支持</h4>
+<a href="mailto:support@kdss.io">技术支持</a>
+<a href="mailto:support@kdss.io">问题反馈</a>
+<a href="mailto:contact@kdss.io">合作咨询</a>
+</div>
+</div>
+<div class="footer-bottom">
+<p>© 2025-2031 KDSS 项目. 保留所有权利。</p>
+<div class="footer-bottom-links">
+<span style="color: var(--text-muted); font-size: 13px;">使用 Go、gRPC 和 Reed-Solomon 构建</span>
+</div>
+</div>
+</div>
+</footer>
+<!-- Back to Top -->
+<button aria-label="Back to top" class="back-to-top">
+<svg fill="none" height="20" stroke="currentColor" stroke-linecap="round" stroke-width="2" viewbox="0 0 24 24" width="20"><path d="M18 15l-6-6-6 6"></path></svg>
+</button>
+
+<script src="../js/nav.js"></script>
+<script src="../js/animations.js"></script>
+</body>
+</html>

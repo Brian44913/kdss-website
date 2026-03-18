@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>关于 — KDSS</title>
+<meta content="了解 KDSS 项目愿景、技术栈、发展路线图以及如何参与社区。" name="description"/>
+<link href="../images/favicon.svg" rel="icon" type="image/svg+xml"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet"/>
+<link href="../css/base.css" rel="stylesheet"/>
+<link href="../css/components.css" rel="stylesheet"/>
+<link href="../css/layout.css" rel="stylesheet"/>
+<link href="../css/pages.css" rel="stylesheet"/>
+</head>
+<body>
+<!-- Navigation -->
+<nav class="navbar">
+<div class="container">
+<a class="nav-logo" href="./">
+<img alt="KDSS" height="40" src="../images/logo.svg" width="40"/>
+<span>KDSS</span>
+</a>
+<div class="nav-links">
+<a class="nav-link" href="features.html">产品特性</a>
+<a class="nav-link" href="solutions.html">解决方案</a>
+<a class="nav-link" href="architecture.html">系统架构</a>
+<a class="nav-link" href="docs.html">文档</a>
+<a class="nav-link active" href="about.html">关于</a>
+</div>
+<div class="nav-actions">
+<div class="lang-switch"><a class="lang-btn" href="../about.html">EN</a>
+          <span class="lang-btn active">中</span></div>
+</div>
+<button aria-label="Menu" class="mobile-menu-btn">
+<span></span><span></span><span></span>
+</button>
+</div>
+</nav>
+<!-- Mobile Navigation -->
+<div class="mobile-nav">
+<a class="nav-link" href="features.html">产品特性</a>
+<a class="nav-link" href="solutions.html">解决方案</a>
+<a class="nav-link" href="architecture.html">系统架构</a>
+<a class="nav-link" href="docs.html">文档</a>
+<a class="nav-link active" href="about.html">关于</a>
+<div class="nav-actions">
+<div class="lang-switch"><a class="lang-btn" href="../about.html">EN</a>
+          <span class="lang-btn active">中</span></div>
+</div>
+</div>
+<!-- Page Header -->
+<section class="section page-header">
+<div class="container">
+<div class="section-header reveal">
+<h1>关于 KDSS</h1>
+<p>为现代数据时代构建的高性能分布式存储系统。</p>
+</div>
+</div>
+</section>
+<!-- Project Vision -->
+<section class="section">
+<div class="container">
+<div class="section-header reveal">
+<h2>项目愿景</h2>
+</div>
+<div class="reveal" style="max-width: 800px; margin: 0 auto;">
+<p style="font-size: 1.125rem; line-height: 1.8; margin-bottom: var(--space-xl);">KDSS 的诞生源于存储容量需求与基础设施预算之间日益扩大的差距。传统三副本方案浪费 200% 的原始存储容量。KDSS 以 Reed-Solomon 纠删码为核心，在保持同等数据持久性的同时实现高达 90.6% 的空间利用率——让组织以更少的磁盘、更低的功耗和更低的运维成本存储更多数据。</p>
+<h4 style="margin-bottom: var(--space-md);">目标场景</h4>
+<ul style="line-height: 2; padding-left: var(--space-lg);">
+<li>大规模非结构化数据存储（媒体、备份、日志、归档）</li>
+<li>成本敏感环境，需要高持久性但无需三副本开销</li>
+<li>混合云存储，兼具 S3 兼容 API 和 POSIX 文件系统访问</li>
+<li>AI/ML 训练数据管线，需要高吞吐顺序读取</li>
+<li>本地对象存储，替代公有云存储服务</li>
+</ul>
+</div>
+</div>
+</section>
+<!-- Technology Stack -->
+<section class="section">
+<div class="container">
+<div class="section-header reveal">
+<h2>技术栈</h2>
+<p>基于经过验证的高性能技术构建。</p>
+</div>
+<div class="tech-stack stagger-group">
+<div class="tech-item reveal">
+<div class="card-icon blue">
+<svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="2" viewbox="0 0 24 24"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg>
+</div>
+<h4>Go</h4>
+<p>所有服务的核心语言。高并发、低延迟、单二进制部署。</p>
+</div>
+<div class="tech-item reveal">
+<div class="card-icon purple">
+<svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="2" viewbox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"></path></svg>
+</div>
+<h4>gRPC</h4>
+<p>高性能 RPC 框架，用于节点间通信，支持流式传输。</p>
+</div>
+<div class="tech-item reveal">
+<div class="card-icon cyan">
+<svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="2" viewbox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>
+</div>
+<h4>Protocol Buffers</h4>
+<p>高效二进制序列化，用于元数据和通信协议定义。</p>
+</div>
+<div class="tech-item reveal">
+<div class="card-icon green">
+<svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="2" viewbox="0 0 24 24"><ellipse cx="12" cy="5" rx="9" ry="3"></ellipse><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"></path><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"></path></svg>
+</div>
+<h4>MongoDB</h4>
+<p>灵活的文档存储，用于元数据管理，支持副本集。</p>
+</div>
+<div class="tech-item reveal">
+<div class="card-icon blue">
+<svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="2" viewbox="0 0 24 24"><rect height="7" width="7" x="3" y="3"></rect><rect height="7" width="7" x="14" y="3"></rect><rect height="7" width="7" x="3" y="14"></rect><rect height="7" width="7" x="14" y="14"></rect></svg>
+</div>
+<h4>Reed-Solomon</h4>
+<p>纠删码算法，提供可配置冗余级别的数据保护。</p>
+</div>
+<div class="tech-item reveal">
+<div class="card-icon purple">
+<svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="2" viewbox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5z"></path><path d="M2 17l10 5 10-5"></path><path d="M2 12l10 5 10-5"></path></svg>
+</div>
+<h4>BadgerDB</h4>
+<p>嵌入式键值存储，用于存储节点本地索引和缓存管理。</p>
+</div>
+<div class="tech-item reveal">
+<div class="card-icon cyan">
+<svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="2" viewbox="0 0 24 24"><path d="M22 19a2 2 0 01-2 2H4a2 2 0 01-2-2V5a2 2 0 012-2h5l2 3h9a2 2 0 012 2z"></path></svg>
+</div>
+<h4>FUSE</h4>
+<p>用户态文件系统，无需内核模块即可实现 POSIX 兼容挂载。</p>
+</div>
+<div class="tech-item reveal">
+<div class="card-icon green">
+<svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="2" viewbox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
+</div>
+<h4>Prometheus</h4>
+<p>指标采集与告警，内置 32 条告警规则用于集群监控。</p>
+</div>
+<div class="tech-item reveal">
+<div class="card-icon blue">
+<svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="2" viewbox="0 0 24 24"><rect height="14" rx="2" width="20" x="2" y="3"></rect><line x1="8" x2="16" y1="21" y2="21"></line><line x1="12" x2="12" y1="17" y2="21"></line></svg>
+</div>
+<h4>Grafana</h4>
+<p>预构建仪表盘，实时可视化集群健康状况和性能。</p>
+</div>
+<div class="tech-item reveal">
+<div class="card-icon purple">
+<svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="2" viewbox="0 0 24 24"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"></path></svg>
+</div>
+<h4>Docker</h4>
+<p>容器镜像和 Docker Compose 模板，用于快速开发和测试。</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Roadmap -->
+<section class="section">
+<div class="container">
+<div class="section-header reveal">
+<h2>发展路线图</h2>
+<p>KDSS 项目即将推出的功能和里程碑。</p>
+</div>
+<div class="roadmap-timeline reveal">
+<div class="roadmap-item">
+<div class="roadmap-marker"></div>
+<div class="roadmap-content">
+<h4>多区域复制</h4>
+<p>异步跨区域复制，用于灾难恢复。在地理分布的集群间复制 EC 编码数据，支持可配置的一致性策略。</p>
+</div>
+</div>
+<div class="roadmap-item">
+<div class="roadmap-marker"></div>
+<div class="roadmap-content">
+<h4>分层存储</h4>
+<p>自动数据生命周期管理，支持热/温/冷分层。根据访问模式和可配置策略在 NVMe、SSD 和 HDD 之间迁移数据。</p>
+</div>
+</div>
+<div class="roadmap-item">
+<div class="roadmap-marker"></div>
+<div class="roadmap-content">
+<h4>Kubernetes Operator</h4>
+<p>原生 Kubernetes Operator，支持声明式集群管理。自动扩缩容、滚动升级以及 CSI 驱动集成持久卷。</p>
+</div>
+</div>
+<div class="roadmap-item">
+<div class="roadmap-marker"></div>
+<div class="roadmap-content">
+<h4>静态加密</h4>
+<p>AES-256-GCM 服务端加密。支持外部密钥管理系统 (KMS)，包括 HashiCorp Vault 和 AWS KMS 集成。</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Contact -->
+<section class="section">
+<div class="container">
+<div class="section-header reveal">
+<h2>加入我们</h2>
+<p>加入 KDSS 社区，共同塑造分布式存储的未来。</p>
+</div>
+<div class="stagger-group" style="max-width: 600px; margin: 0 auto;">
+<div class="card reveal">
+<div class="card-icon blue">
+<svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="2" viewbox="0 0 24 24"><path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"></path></svg>
+</div>
+<h4>联系方式</h4>
+<ul style="list-style: none; padding: 0; margin-top: var(--space-lg); line-height: 2.2;">
+<li>
+<a class="nav-link" href="mailto:support@kdss.io">技术支持 -- support@kdss.io</a>
+</li>
+<li>
+<a class="nav-link" href="mailto:contact@kdss.io">邮箱 -- contact@kdss.io</a>
+</li>
+<li>
+<a class="nav-link" href="mailto:support@kdss.io">问题反馈 -- 报告 Bug 和功能建议</a>
+</li>
+<li>
+<a class="nav-link" href="mailto:contact@kdss.io">合作咨询 -- 商务合作洽谈</a>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</section>
+<!-- Footer -->
+<footer class="footer">
+<div class="container">
+<div class="footer-grid">
+<div class="footer-brand">
+<a class="nav-logo" href="./">
+<img alt="KDSS" height="40" src="../images/logo.svg" width="40"/>
+<span>KDSS</span>
+</a>
+<p>基于纠删码技术的高性能分布式存储系统。</p>
+</div>
+<div class="footer-col">
+<h4>产品</h4>
+<a href="features.html">产品特性</a>
+<a href="solutions.html">解决方案</a>
+<a href="architecture.html">系统架构</a>
+</div>
+<div class="footer-col">
+<h4>文档</h4>
+<a href="docs.html#requirements">环境要求</a>
+<a href="docs.html#capacity">容量规划</a>
+<a href="docs.html#s3api">S3 接口</a>
+</div>
+<div class="footer-col">
+<h4>支持</h4>
+<a href="mailto:support@kdss.io">技术支持</a>
+<a href="mailto:support@kdss.io">问题反馈</a>
+<a href="mailto:contact@kdss.io">合作咨询</a>
+</div>
+</div>
+<div class="footer-bottom">
+<p>© 2025-2031 KDSS 项目. 保留所有权利。</p>
+<div class="footer-bottom-links">
+<span style="color: var(--text-muted); font-size: 13px;">使用 Go、gRPC 和 Reed-Solomon 构建</span>
+</div>
+</div>
+</div>
+</footer>
+<!-- Back to Top -->
+<button aria-label="Back to top" class="back-to-top">
+<svg fill="none" height="20" stroke="currentColor" stroke-linecap="round" stroke-width="2" viewbox="0 0 24 24" width="20"><path d="M18 15l-6-6-6 6"></path></svg>
+</button>
+
+<script src="../js/nav.js"></script>
+<script src="../js/animations.js"></script>
+</body>
+</html>

@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+  <!-- Data balancing: Scale/balance icon -->
+  <!-- Center pole -->
+  <line x1="12" y1="3" x2="12" y2="19"/>
+  <!-- Base -->
+  <line x1="8" y1="19" x2="16" y2="19"/>
+  <!-- Top triangle/fulcrum -->
+  <polygon points="12,3 10,5 14,5" fill="currentColor" opacity="0.3"/>
+  <!-- Beam -->
+  <line x1="4" y1="8" x2="20" y2="8"/>
+  <!-- Left pan strings -->
+  <line x1="4" y1="8" x2="4" y2="13"/>
+  <line x1="8" y1="8" x2="8" y2="13"/>
+  <!-- Left pan -->
+  <path d="M2,13 Q6,16 10,13"/>
+  <!-- Right pan strings -->
+  <line x1="16" y1="8" x2="16" y2="13"/>
+  <line x1="20" y1="8" x2="20" y2="13"/>
+  <!-- Right pan -->
+  <path d="M14,13 Q18,16 22,13"/>
+</svg>

@@ -1,0 +1,772 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Documentation — KDSS</title>
+<meta content="KDSS documentation center. Quick start guides, deployment instructions, CLI reference, and configuration details." name="description"/>
+<link href="images/favicon.svg" rel="icon" type="image/svg+xml"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet"/>
+<link href="css/base.css" rel="stylesheet"/>
+<link href="css/components.css" rel="stylesheet"/>
+<link href="css/layout.css" rel="stylesheet"/>
+<link href="css/pages.css" rel="stylesheet"/>
+</head>
+<body>
+<!-- Navigation -->
+<nav class="navbar">
+<div class="container">
+<a class="nav-logo" href="./">
+<img alt="KDSS" height="40" src="images/logo.svg" width="40"/>
+<span>KDSS</span>
+</a>
+<div class="nav-links">
+<a class="nav-link" href="features.html">Features</a>
+<a class="nav-link" href="solutions.html">Solutions</a>
+<a class="nav-link" href="architecture.html">Architecture</a>
+<a class="nav-link active" href="docs.html">Docs</a>
+<a class="nav-link" href="about.html">About</a>
+</div>
+<div class="nav-actions">
+<div class="lang-switch"><span class="lang-btn active">EN</span>
+          <a class="lang-btn" href="zh/docs.html">中</a></div>
+</div>
+<button aria-label="Menu" class="mobile-menu-btn">
+<span></span><span></span><span></span>
+</button>
+</div>
+</nav>
+<!-- Mobile Navigation -->
+<div class="mobile-nav">
+<a class="nav-link" href="features.html">Features</a>
+<a class="nav-link" href="solutions.html">Solutions</a>
+<a class="nav-link" href="architecture.html">Architecture</a>
+<a class="nav-link active" href="docs.html">Docs</a>
+<a class="nav-link" href="about.html">About</a>
+<div class="nav-actions">
+<div class="lang-switch"><span class="lang-btn active">EN</span>
+          <a class="lang-btn" href="zh/docs.html">中</a></div>
+</div>
+</div>
+<!-- Docs Layout -->
+<div class="container">
+<div class="docs-layout">
+<!-- Sidebar -->
+<aside class="docs-sidebar">
+<div class="docs-search">
+<svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="2" viewbox="0 0 24 24"><circle cx="11" cy="11" r="8"></circle><line x1="21" x2="16.65" y1="21" y2="16.65"></line></svg>
+<input placeholder="Search docs..." type="text"/>
+</div>
+<div class="docs-sidebar-group">
+<h4>Planning</h4>
+<a href="#requirements">Requirements</a>
+<a href="#capacity">Capacity Planning</a>
+</div>
+<div class="docs-sidebar-group">
+<h4>Usage</h4>
+<a href="#s3api">S3 API</a>
+</div>
+<div class="docs-sidebar-group">
+<h4>Reference</h4>
+<a href="#config">Configuration</a>
+</div>
+</aside>
+<!-- Content -->
+<main class="docs-content">
+<!-- ==================== Requirements ==================== -->
+<section id="requirements">
+<h2>Requirements</h2>
+<p>Before deploying KDSS, ensure your hardware and software meet the following specifications. Requirements vary depending on workload and data volume.</p>
+<h3>Minimum Hardware</h3>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr>
+<th>Resource</th>
+<th>Minimum</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CPU</td>
+<td>8 cores</td>
+<td>Per node minimum for Storage; 16 cores recommended</td>
+</tr>
+<tr>
+<td>RAM</td>
+<td>32 GB</td>
+<td>64-128 GB for Mixed (Master+Storage) nodes</td>
+</tr>
+<tr>
+<td>System Disk</td>
+<td>200 GB SSD</td>
+<td>1 TB NVMe for Mixed nodes (MongoDB + BadgerDB)</td>
+</tr>
+<tr>
+<td>HDD</td>
+<td>1+ data disks</td>
+<td>Up to 36 × 16 TB HDD per node</td>
+</tr>
+<tr>
+<td>Network</td>
+<td>10 Gbps</td>
+<td>20 Gbps bonded recommended</td>
+</tr>
+</tbody>
+</table>
+</div>
+<h3>Recommended Hardware</h3>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr>
+<th>Resource</th>
+<th>Recommended</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CPU</td>
+<td>16 cores</td>
+<td>More cores accelerate EC encoding</td>
+</tr>
+<tr>
+<td>RAM</td>
+<td>128 GB</td>
+<td>Mixed nodes: 64 GB for MongoDB + 32 GB for services</td>
+</tr>
+<tr>
+<td>System Disk</td>
+<td>2 TB NVMe</td>
+<td>NVMe for OS, MongoDB, and BadgerDB indexes</td>
+</tr>
+<tr>
+<td>HDD</td>
+<td>36 x 16 TB</td>
+<td>High-capacity mechanical drives for storage nodes</td>
+</tr>
+<tr>
+<td>Network</td>
+<td>20 Gbps bonded</td>
+<td>Bonded NICs for high availability</td>
+</tr>
+</tbody>
+</table>
+</div>
+<h3>Software Requirements</h3>
+<ul>
+<li>Ubuntu 24.04 Server (recommended OS)</li>
+<li>MongoDB 8.0+ (replica set for high availability metadata)</li>
+<li>Go 1.24+ (only required for building from source)</li>
+<li>FUSE 3.x (required for FUSE mount client)</li>
+<li>smartmontools (required for disk health monitoring)</li>
+</ul>
+</section>
+<!-- ==================== Capacity Planning ==================== -->
+<section id="capacity">
+<h2>Capacity Planning</h2>
+<p>Understanding how erasure coding affects usable capacity is essential for planning your cluster size. KDSS uses Reed-Solomon EC, which splits data into data shards and parity shards.</p>
+<h3>Usable Capacity Formula</h3>
+<p>The usable storage capacity is determined by the EC configuration:</p>
+<div class="code-block">
+<div class="code-block-header">
+<span>formula</span>
+<button class="copy-btn">Copy</button>
+</div>
+<pre><code>Usable Capacity = Raw Capacity x (data_shards / (data_shards + parity_shards))</code></pre>
+</div>
+<h3>Example Calculations</h3>
+<p>The following table shows usable capacity for a cluster with 100 TB of raw disk space under different EC configurations:</p>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr>
+<th>EC Config</th>
+<th>Data Shards</th>
+<th>Parity Shards</th>
+<th>Efficiency</th>
+<th>Usable (100 TB raw)</th>
+<th>Fault Tolerance</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>EC 5+2</code></td>
+<td>5</td>
+<td>2</td>
+<td class="highlight">71.4%</td>
+<td>71.4 TB</td>
+<td>2 disk failures</td>
+</tr>
+<tr>
+<td><code>EC 9+2</code></td>
+<td>9</td>
+<td>2</td>
+<td class="highlight">81.8%</td>
+<td>81.8 TB</td>
+<td>2 disk failures</td>
+</tr>
+<tr>
+<td><code>EC 18+3</code></td>
+<td>18</td>
+<td>3</td>
+<td class="highlight">85.7%</td>
+<td>85.7 TB</td>
+<td>3 disk failures</td>
+</tr>
+<tr>
+<td><code>EC 29+3</code></td>
+<td>29</td>
+<td>3</td>
+<td class="highlight">90.6%</td>
+<td>90.6 TB</td>
+<td>3 disk failures</td>
+</tr>
+<tr>
+<td><code>EC 31+2</code></td>
+<td>31</td>
+<td>2</td>
+<td class="highlight">93.9%</td>
+<td>93.9 TB</td>
+<td>2 disk failures</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p><strong>Tip:</strong> For most production workloads, <code>EC 9+2</code> offers a good balance between space efficiency (81.8%) and fault tolerance (2 simultaneous failures). Use <code>EC 18+3</code> or <code>EC 29+3</code> for higher parity protection if your environment has a higher risk of correlated disk failures.</p>
+<p><strong>Warning:</strong> <code>EC 31+2</code> Ultra-Density Mode is designed exclusively for brand-new enterprise-grade servers and drives, deployed in Tier 3+ data centers with 24/7 on-site staff for immediate hardware fault response. With only 2 parity shards, the fault tolerance margin is minimal — any delay in disk replacement increases the risk of data loss.</p>
+</section>
+<!-- ==================== S3 API ==================== -->
+<section id="s3api">
+<h2>S3 API</h2>
+<p>KDSS provides a fully S3-compatible API gateway, supporting standard S3 tools and SDKs. The default endpoint is <code>http://&lt;master-host&gt;:9000</code>.</p>
+<h3>AWS CLI</h3>
+<p>Use the standard AWS CLI to interact with KDSS. Configure a custom endpoint to point to your KDSS S3 gateway.</p>
+<div class="code-block">
+<div class="code-block-header">
+<span>bash</span>
+<button class="copy-btn">Copy</button>
+</div>
+<pre><code># Configure credentials (use KDSS access key / secret key)
+aws configure
+# AWS Access Key ID: your-access-key
+# AWS Secret Access Key: your-secret-key
+# Default region name: us-east-1
+# Default output format: json
+
+# Set alias for convenience
+alias s3='aws --endpoint-url http://master-host:9000 s3'
+alias s3api='aws --endpoint-url http://master-host:9000 s3api'
+
+# Bucket operations
+s3 mb s3://my-bucket                          # Create bucket
+s3 ls                                         # List buckets
+s3 ls s3://my-bucket/                         # List objects
+s3 rb s3://my-bucket --force                  # Delete bucket
+
+# Upload / Download
+s3 cp local-file.dat s3://my-bucket/          # Upload file
+s3 cp s3://my-bucket/file.dat ./              # Download file
+s3 cp ./data/ s3://my-bucket/data/ --recursive  # Upload directory
+s3 sync ./backup/ s3://my-bucket/backup/      # Sync directory
+
+# Delete
+s3 rm s3://my-bucket/file.dat                 # Delete object
+s3 rm s3://my-bucket/ --recursive             # Delete all objects</code></pre>
+</div>
+<h3>s3cmd</h3>
+<p>s3cmd is a lightweight command-line tool for S3-compatible storage.</p>
+<div class="code-block">
+<div class="code-block-header">
+<span>~/.s3cfg</span>
+<button class="copy-btn">Copy</button>
+</div>
+<pre><code>[default]
+access_key = your-access-key
+secret_key = your-secret-key
+host_base = master-host:9000
+host_bucket = master-host:9000/%(bucket)
+use_https = False
+signature_v2 = False</code></pre>
+</div>
+<div class="code-block">
+<div class="code-block-header">
+<span>bash</span>
+<button class="copy-btn">Copy</button>
+</div>
+<pre><code># Bucket operations
+s3cmd mb s3://my-bucket
+s3cmd ls
+
+# Upload / Download
+s3cmd put file.dat s3://my-bucket/
+s3cmd get s3://my-bucket/file.dat ./
+s3cmd sync ./data/ s3://my-bucket/data/
+
+# File info
+s3cmd info s3://my-bucket/file.dat</code></pre>
+</div>
+<h3>Python (boto3)</h3>
+<p>Use the boto3 SDK to access KDSS programmatically from Python.</p>
+<div class="code-block">
+<div class="code-block-header">
+<span>python</span>
+<button class="copy-btn">Copy</button>
+</div>
+<pre><code>import boto3
+
+# Create S3 client pointing to KDSS
+s3 = boto3.client(
+    "s3",
+    endpoint_url="http://master-host:9000",
+    aws_access_key_id="your-access-key",
+    aws_secret_access_key="your-secret-key",
+    region_name="us-east-1",
+)
+
+# Create bucket
+s3.create_bucket(Bucket="my-bucket")
+
+# Upload file
+s3.upload_file("local-file.dat", "my-bucket", "path/to/file.dat")
+
+# Download file
+s3.download_file("my-bucket", "path/to/file.dat", "downloaded.dat")
+
+# List objects
+resp = s3.list_objects_v2(Bucket="my-bucket", Prefix="path/")
+for obj in resp.get("Contents", []):
+    print(obj["Key"], obj["Size"])
+
+# Generate presigned URL (valid for 1 hour)
+url = s3.generate_presigned_url(
+    "get_object",
+    Params={"Bucket": "my-bucket", "Key": "path/to/file.dat"},
+    ExpiresIn=3600,
+)
+print(url)
+
+# Delete object
+s3.delete_object(Bucket="my-bucket", Key="path/to/file.dat")</code></pre>
+</div>
+<h3>Go</h3>
+<p>Use the AWS SDK for Go (v2) to interact with KDSS.</p>
+<div class="code-block">
+<div class="code-block-header">
+<span>go</span>
+<button class="copy-btn">Copy</button>
+</div>
+<pre><code>package main
+
+import (
+    "context"
+    "fmt"
+    "os"
+
+    "github.com/aws/aws-sdk-go-v2/aws"
+    "github.com/aws/aws-sdk-go-v2/config"
+    "github.com/aws/aws-sdk-go-v2/credentials"
+    "github.com/aws/aws-sdk-go-v2/service/s3"
+)
+
+func main() {
+    // Create S3 client pointing to KDSS
+    cfg, _ := config.LoadDefaultConfig(context.TODO(),
+        config.WithRegion("us-east-1"),
+        config.WithCredentialsProvider(
+            credentials.NewStaticCredentialsProvider("your-access-key", "your-secret-key", ""),
+        ),
+    )
+    client := s3.NewFromConfig(cfg, func(o *s3.Options) {
+        o.BaseEndpoint = aws.String("http://master-host:9000")
+        o.UsePathStyle = true
+    })
+
+    // Upload file
+    file, _ := os.Open("local-file.dat")
+    defer file.Close()
+    client.PutObject(context.TODO(), &amp;s3.PutObjectInput{
+        Bucket: aws.String("my-bucket"),
+        Key:    aws.String("path/to/file.dat"),
+        Body:   file,
+    })
+
+    // List objects
+    resp, _ := client.ListObjectsV2(context.TODO(), &amp;s3.ListObjectsV2Input{
+        Bucket: aws.String("my-bucket"),
+    })
+    for _, obj := range resp.Contents {
+        fmt.Printf("%s  %d bytes\n", *obj.Key, *obj.Size)
+    }
+}</code></pre>
+</div>
+<h3>Supported S3 Operations</h3>
+<p>KDSS S3 gateway supports the following S3 API operations:</p>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr>
+<th>Category</th>
+<th>Operations</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Bucket</td>
+<td><code>CreateBucket</code> <code>DeleteBucket</code> <code>ListBuckets</code> <code>HeadBucket</code></td>
+</tr>
+<tr>
+<td>Object</td>
+<td><code>PutObject</code> <code>GetObject</code> <code>DeleteObject</code> <code>HeadObject</code> <code>CopyObject</code></td>
+</tr>
+<tr>
+<td>List</td>
+<td><code>ListObjectsV2</code> <code>ListObjectVersions</code></td>
+</tr>
+<tr>
+<td>Multipart Upload</td>
+<td><code>CreateMultipartUpload</code> <code>UploadPart</code> <code>CompleteMultipartUpload</code> <code>AbortMultipartUpload</code></td>
+</tr>
+<tr>
+<td>Presigned URL</td>
+<td><code>GET</code> <code>PUT</code></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<!-- ==================== Configuration ==================== -->
+<section id="config">
+<h2>Configuration</h2>
+<p>KDSS uses TOML configuration files for all components. This section provides a full reference for every configuration option.</p>
+<h3>master.toml Reference</h3>
+<p>Configuration for the KDSS master node.</p>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr>
+<th>Key</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>listen</code></td>
+<td><code>:6700</code></td>
+<td>gRPC listen address</td>
+</tr>
+<tr>
+<td><code>web_listen</code></td>
+<td><code>:8081</code></td>
+<td>Web console listen address</td>
+</tr>
+<tr>
+<td><code>s3_listen</code></td>
+<td><code>:9000</code></td>
+<td>S3 gateway listen address</td>
+</tr>
+<tr>
+<td><code>mongo_uri</code></td>
+<td>(required)</td>
+<td>MongoDB connection URI</td>
+</tr>
+<tr>
+<td><code>mongo_db</code></td>
+<td><code>kdss</code></td>
+<td>MongoDB database name</td>
+</tr>
+<tr>
+<td><code>ec.data_shards</code></td>
+<td>(required)</td>
+<td>Number of data shards per stripe</td>
+</tr>
+<tr>
+<td><code>ec.parity_shards</code></td>
+<td>(required)</td>
+<td>Number of parity shards per stripe</td>
+</tr>
+<tr>
+<td><code>leader.lock_ttl_sec</code></td>
+<td><code>10</code></td>
+<td>Leader lock TTL (seconds)</td>
+</tr>
+<tr>
+<td><code>leader.renew_interval_sec</code></td>
+<td><code>3</code></td>
+<td>Leader lock renewal interval</td>
+</tr>
+<tr>
+<td><code>gc.interval_sec</code></td>
+<td><code>3600</code></td>
+<td>GC housekeeping scan interval (seconds)</td>
+</tr>
+<tr>
+<td><code>gc.auto_gc_pending_hours</code></td>
+<td><code>48</code></td>
+<td>Auto-delete gc_pending stripes after N hours</td>
+</tr>
+<tr>
+<td><code>capacity.alert_pct</code></td>
+<td><code>95</code></td>
+<td>Cluster usage alert threshold (%)</td>
+</tr>
+<tr>
+<td><code>capacity.reject_pct</code></td>
+<td><code>99</code></td>
+<td>Cluster usage reject threshold (%)</td>
+</tr>
+<tr>
+<td><code>repair.concurrency</code></td>
+<td><code>4</code></td>
+<td>Repair tasks per Master node</td>
+</tr>
+<tr>
+<td><code>log.level</code></td>
+<td><code>info</code></td>
+<td>Log level (debug, info, warn, error)</td>
+</tr>
+<tr>
+<td><code>log.file</code></td>
+<td><code>/var/log/kdss/master.log</code></td>
+<td>Log file path</td>
+</tr>
+</tbody>
+</table>
+</div>
+<h3>storage.toml Reference</h3>
+<p>Configuration for KDSS storage nodes.</p>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr>
+<th>Key</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>node_id</code></td>
+<td>(required)</td>
+<td>Unique node identifier</td>
+</tr>
+<tr>
+<td><code>listen</code></td>
+<td><code>:6800</code></td>
+<td>gRPC listen address</td>
+</tr>
+<tr>
+<td><code>master_addrs</code></td>
+<td>(required)</td>
+<td>Master node addresses</td>
+</tr>
+<tr>
+<td><code>index_dir</code></td>
+<td><code>/opt/kdss/index</code></td>
+<td>BadgerDB index directory (SSD recommended)</td>
+</tr>
+<tr>
+<td><code>[[disks]].disk_id</code></td>
+<td>(required)</td>
+<td>Disk identifier</td>
+</tr>
+<tr>
+<td><code>[[disks]].device</code></td>
+<td>(required)</td>
+<td>Disk device path (use /dev/disk/by-id/)</td>
+</tr>
+<tr>
+<td><code>heartbeat.interval_sec</code></td>
+<td><code>60</code></td>
+<td>Heartbeat interval (seconds)</td>
+</tr>
+<tr>
+<td><code>heartbeat.timeout_sec</code></td>
+<td><code>180</code></td>
+<td>Heartbeat timeout (seconds)</td>
+</tr>
+<tr>
+<td><code>checker.enabled</code></td>
+<td><code>true</code></td>
+<td>Enable CRC32 integrity scanning</td>
+</tr>
+<tr>
+<td><code>checker.rate_mb_per_sec</code></td>
+<td><code>50</code></td>
+<td>Scan rate limit (MB/s per disk)</td>
+</tr>
+<tr>
+<td><code>compactor.enabled</code></td>
+<td><code>true</code></td>
+<td>Enable background compaction</td>
+</tr>
+<tr>
+<td><code>compactor.threshold</code></td>
+<td><code>0.2</code></td>
+<td>Soft compaction threshold (20%)</td>
+</tr>
+<tr>
+<td><code>compactor.force_threshold</code></td>
+<td><code>0.5</code></td>
+<td>Force compaction threshold (50%)</td>
+</tr>
+<tr>
+<td><code>sync.mode</code></td>
+<td><code>immediate</code></td>
+<td>Fsync mode: immediate, batch, or deferred</td>
+</tr>
+<tr>
+<td><code>log.level</code></td>
+<td><code>info</code></td>
+<td>Log level</td>
+</tr>
+<tr>
+<td><code>log.file</code></td>
+<td><code>/var/log/kdss/storage.log</code></td>
+<td>Log file path</td>
+</tr>
+</tbody>
+</table>
+</div>
+<h3>mount.toml Reference</h3>
+<p>Configuration for the KDSS FUSE mount client.</p>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr>
+<th>Key</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>cluster.masters</code></td>
+<td>(required)</td>
+<td>Master node addresses</td>
+</tr>
+<tr>
+<td><code>auth.access_key</code></td>
+<td>(required)</td>
+<td>S3 access key</td>
+</tr>
+<tr>
+<td><code>auth.secret_key</code></td>
+<td>(required)</td>
+<td>S3 secret key</td>
+</tr>
+<tr>
+<td><code>auth.bucket</code></td>
+<td>(required)</td>
+<td>Target bucket name</td>
+</tr>
+<tr>
+<td><code>mount.mountpoint</code></td>
+<td>(required)</td>
+<td>Local mount point path</td>
+</tr>
+<tr>
+<td><code>mount.entry_timeout_s</code></td>
+<td><code>3600</code></td>
+<td>Kernel dentry cache TTL (seconds)</td>
+</tr>
+<tr>
+<td><code>mount.attr_timeout_s</code></td>
+<td><code>3600</code></td>
+<td>Kernel attr cache TTL (seconds)</td>
+</tr>
+<tr>
+<td><code>performance.chunk_size_mb</code></td>
+<td><code>256</code></td>
+<td>Chunk size in MB (1 chunk = 1 stripe)</td>
+</tr>
+<tr>
+<td><code>performance.read_rate_limit_mb</code></td>
+<td><code>0</code></td>
+<td>Read rate limit (MB/s, 0=unlimited)</td>
+</tr>
+<tr>
+<td><code>performance.write_rate_limit_mb</code></td>
+<td><code>0</code></td>
+<td>Write rate limit (MB/s, 0=unlimited)</td>
+</tr>
+<tr>
+<td><code>timeout.master_timeout_ms</code></td>
+<td><code>5000</code></td>
+<td>Master RPC timeout (ms)</td>
+</tr>
+<tr>
+<td><code>timeout.storage_timeout_ms</code></td>
+<td><code>10000</code></td>
+<td>Storage RPC timeout (ms)</td>
+</tr>
+<tr>
+<td><code>log.level</code></td>
+<td><code>info</code></td>
+<td>Log level</td>
+</tr>
+<tr>
+<td><code>log.file</code></td>
+<td>(stdout)</td>
+<td>Log file path</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+</main>
+</div>
+</div>
+<!-- Footer -->
+<footer class="footer">
+<div class="container">
+<div class="footer-grid">
+<div class="footer-brand">
+<a class="nav-logo" href="./">
+<img alt="KDSS" height="40" src="images/logo.svg" width="40"/>
+<span>KDSS</span>
+</a>
+<p>High-performance distributed storage system powered by erasure coding technology.</p>
+</div>
+<div class="footer-col">
+<h4>Product</h4>
+<a href="features.html">Features</a>
+<a href="solutions.html">Solutions</a>
+<a href="architecture.html">Architecture</a>
+</div>
+<div class="footer-col">
+<h4>Documentation</h4>
+<a href="docs.html#requirements">Requirements</a>
+<a href="docs.html#capacity">Capacity Planning</a>
+<a href="docs.html#s3api">S3 API</a>
+</div>
+<div class="footer-col">
+<h4>Support</h4>
+<a href="mailto:support@kdss.io">Technical Support</a>
+<a href="mailto:support@kdss.io">Feedback</a>
+<a href="mailto:contact@kdss.io">Partnership</a>
+</div>
+</div>
+<div class="footer-bottom">
+<p>© 2025-2031 KDSS Project. All rights reserved.</p>
+<div class="footer-bottom-links">
+<span style="color: var(--text-muted); font-size: 13px;">Built with Go, gRPC, and Reed-Solomon</span>
+</div>
+</div>
+</div>
+</footer>
+<!-- Back to Top -->
+<button aria-label="Back to top" class="back-to-top">
+<svg fill="none" height="20" stroke="currentColor" stroke-linecap="round" stroke-width="2" viewbox="0 0 24 24" width="20"><path d="M18 15l-6-6-6 6"></path></svg>
+</button>
+
+<script src="js/nav.js"></script>
+<script src="js/animations.js"></script>
+</body>
+</html>

@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+  <!-- FUSE mount: Folder with link/mount symbol -->
+  <!-- Folder shape -->
+  <path d="M3,6 L3,19 Q3,20 4,20 L20,20 Q21,20 21,19 L21,9 Q21,8 20,8 L11,8 L9,5 Q8.5,4.5 8,4.5 L4,4.5 Q3,4.5 3,5.5 Z"/>
+  <!-- Link/mount chain icon inside folder -->
+  <path d="M9,14 L11,14 Q13,14 13,12.5 Q13,11 11,11 L10,11"/>
+  <path d="M15,14 L13,14 Q11,14 11,15.5 Q11,17 13,17 L14,17"/>
+</svg>

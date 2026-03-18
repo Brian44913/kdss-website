@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" width="800" height="600">
+  <defs>
+    <pattern id="dotGrid" x="0" y="0" width="40" height="40" patternUnits="userSpaceOnUse">
+      <!-- Grid dots -->
+      <circle cx="20" cy="20" r="1" fill="#3b82f6" opacity="0.15"/>
+    </pattern>
+    <pattern id="lineGridH" x="0" y="0" width="40" height="40" patternUnits="userSpaceOnUse">
+      <!-- Horizontal lines -->
+      <line x1="0" y1="20" x2="40" y2="20" stroke="#3b82f6" stroke-width="0.3" opacity="0.06"/>
+    </pattern>
+    <pattern id="lineGridV" x="0" y="0" width="40" height="40" patternUnits="userSpaceOnUse">
+      <!-- Vertical lines -->
+      <line x1="20" y1="0" x2="20" y2="40" stroke="#8b5cf6" stroke-width="0.3" opacity="0.06"/>
+    </pattern>
+    <radialGradient id="bgFade" cx="50%" cy="40%" r="60%">
+      <stop offset="0%" stop-color="#8b5cf6" stop-opacity="0.03"/>
+      <stop offset="50%" stop-color="#3b82f6" stop-opacity="0.02"/>
+      <stop offset="100%" stop-color="#ffffff" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <!-- Base -->
+  <rect width="800" height="600" fill="transparent"/>
+  <!-- Radial glow -->
+  <rect width="800" height="600" fill="url(#bgFade)"/>
+  <!-- Grid lines -->
+  <rect width="800" height="600" fill="url(#lineGridH)"/>
+  <rect width="800" height="600" fill="url(#lineGridV)"/>
+  <!-- Grid dots -->
+  <rect width="800" height="600" fill="url(#dotGrid)"/>
+  <!-- Accent dots at intersections - scattered -->
+  <circle cx="200" cy="120" r="1.5" fill="#3b82f6" opacity="0.12"/>
+  <circle cx="400" cy="200" r="2" fill="#8b5cf6" opacity="0.1"/>
+  <circle cx="600" cy="160" r="1.5" fill="#06b6d4" opacity="0.1"/>
+  <circle cx="160" cy="320" r="1.8" fill="#8b5cf6" opacity="0.08"/>
+  <circle cx="520" cy="360" r="1.5" fill="#3b82f6" opacity="0.1"/>
+  <circle cx="680" cy="440" r="2" fill="#06b6d4" opacity="0.08"/>
+  <circle cx="300" cy="480" r="1.5" fill="#22c55e" opacity="0.06"/>
+  <circle cx="100" cy="520" r="1.8" fill="#3b82f6" opacity="0.06"/>
+  <circle cx="700" cy="280" r="1.5" fill="#8b5cf6" opacity="0.08"/>
+  <!-- Subtle connection lines between accent dots -->
+  <line x1="200" y1="120" x2="400" y2="200" stroke="#3b82f6" stroke-width="0.4" opacity="0.04"/>
+  <line x1="400" y1="200" x2="600" y2="160" stroke="#8b5cf6" stroke-width="0.4" opacity="0.04"/>
+  <line x1="160" y1="320" x2="520" y2="360" stroke="#06b6d4" stroke-width="0.4" opacity="0.03"/>
+  <line x1="520" y1="360" x2="680" y2="440" stroke="#3b82f6" stroke-width="0.4" opacity="0.03"/>
+</svg>

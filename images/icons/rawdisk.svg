@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+  <!-- Raw disk engine: Disk/cylinder shape -->
+  <!-- Top ellipse -->
+  <ellipse cx="12" cy="6" rx="8" ry="3"/>
+  <!-- Side walls -->
+  <path d="M4,6 L4,18"/>
+  <path d="M20,6 L20,18"/>
+  <!-- Bottom ellipse -->
+  <ellipse cx="12" cy="18" rx="8" ry="3"/>
+  <!-- Middle ring -->
+  <path d="M4,12 Q12,15 20,12" opacity="0.4"/>
+</svg>

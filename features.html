@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Product Features — KDSS</title>
+<meta content="Explore KDSS product features: erasure coding, raw disk engine, S3 API, FUSE mount, auto repair, data balancing, web console, monitoring, and garbage collection." name="description"/>
+<link href="images/favicon.svg" rel="icon" type="image/svg+xml"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet"/>
+<link href="css/base.css" rel="stylesheet"/>
+<link href="css/components.css" rel="stylesheet"/>
+<link href="css/layout.css" rel="stylesheet"/>
+<link href="css/pages.css" rel="stylesheet"/>
+</head>
+<body>
+<!-- Navigation -->
+<nav class="navbar">
+<div class="container">
+<a class="nav-logo" href="./">
+<img alt="KDSS" height="40" src="images/logo.svg" width="40"/>
+<span>KDSS</span>
+</a>
+<div class="nav-links">
+<a class="nav-link active" href="features.html">Features</a>
+<a class="nav-link" href="solutions.html">Solutions</a>
+<a class="nav-link" href="architecture.html">Architecture</a>
+<a class="nav-link" href="docs.html">Docs</a>
+<a class="nav-link" href="about.html">About</a>
+</div>
+<div class="nav-actions">
+<div class="lang-switch"><span class="lang-btn active">EN</span>
+          <a class="lang-btn" href="zh/features.html">中</a></div>
+</div>
+<button aria-label="Menu" class="mobile-menu-btn">
+<span></span><span></span><span></span>
+</button>
+</div>
+</nav>
+<!-- Mobile Navigation -->
+<div class="mobile-nav">
+<a class="nav-link active" href="features.html">Features</a>
+<a class="nav-link" href="solutions.html">Solutions</a>
+<a class="nav-link" href="architecture.html">Architecture</a>
+<a class="nav-link" href="docs.html">Docs</a>
+<a class="nav-link" href="about.html">About</a>
+<div class="nav-actions">
+<div class="lang-switch"><span class="lang-btn active">EN</span>
+          <a class="lang-btn" href="zh/features.html">中</a></div>
+</div>
+</div>
+<!-- Page Header -->
+<section class="page-header">
+<div class="container">
+<h1 class="reveal">Product Features</h1>
+<p class="reveal">Everything you need for production-grade distributed storage, built from the ground up with erasure coding at its core.</p>
+</div>
+</section>
+<!-- Feature 1: Erasure Coding Engine -->
+<section class="section">
+<div class="container">
+<div class="feature-card reveal">
+<div class="feature-content">
+<span class="badge badge-blue">Core Engine</span>
+<h3>Erasure Coding Engine</h3>
+<p>Built on Reed-Solomon erasure coding, KDSS splits data into configurable data and parity shards. With 4 preset configurations ranging from EC 5+2 to EC 29+3, you can achieve up to 90.6% space efficiency while tolerating simultaneous disk failures -- far surpassing the 33.3% efficiency of traditional 3-way replication.</p>
+<ul>
+<li>Reed-Solomon algorithm with hardware-accelerated Galois field operations</li>
+<li>4 preset configurations: EC 5+2, 9+2, 18+3, 29+3</li>
+<li>Up to 90.6% space efficiency vs 33.3% for 3-replica</li>
+<li>Tolerates up to 3 simultaneous disk failures per stripe</li>
+<li>Automatic shard distribution across nodes for fault isolation</li>
+</ul>
+</div>
+<div class="feature-visual">
+<div class="code-block">
+<div class="code-block-header">
+<span>master.toml</span>
+<button class="copy-btn">Copy</button>
+</div>
+<pre><code># Erasure Coding Configuration
+[ec]
+data_shards   = 5      # Number of data shards / 数据分片数
+parity_shards = 2      # Number of parity shards / 校验分片数
+
+# Space Efficiency Comparison:
+# EC 5+2   = 71.4%  (tolerates 2 failures)
+# EC 9+2   = 81.8%  (tolerates 2 failures)
+# EC 18+3  = 85.7%  (tolerates 3 failures)
+# EC 29+3  = 90.6%  (tolerates 3 failures)
+# 3-replica = 33.3%  (tolerates 2 failures)</code></pre>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Feature 2: Raw Disk Engine -->
+<section class="section">
+<div class="container">
+<div class="feature-card reverse reveal">
+<div class="feature-content">
+<span class="badge badge-purple">Storage Engine</span>
+<h3>Raw Disk Engine</h3>
+<p>KDSS bypasses the filesystem entirely, performing direct writes on raw block devices. An append-only write pattern maximizes sequential throughput, while a dual SuperBlock design and five-level recovery mechanism ensure data integrity even after unexpected power loss or hardware failure.</p>
+<ul>
+<li>Direct raw disk writes bypass filesystem overhead</li>
+<li>Append-only writes eliminate random I/O and fragmentation, <strong>significantly extending HDD lifespan and lowering failure rates</strong></li>
+<li>Dual SuperBlock with CRC32 checksum for metadata protection</li>
+<li>Five-level crash recovery with clean shutdown optimization</li>
+<li>Space reclamation via compaction without service interruption</li>
+</ul>
+</div>
+<div class="feature-visual">
+<div class="code-block">
+<div class="code-block-header">
+<span>Disk Layout</span>
+</div>
+<pre><code>[SuperBlock 4KB: primary + backup]
+[Record 1: Header(64B) + Shard Data + Padding]
+[Record 2: Header(64B) + Shard Data + Padding]
+[...]
+
+Recovery Levels:
+  L0: Clean shutdown marker (skip recovery)
+  L1: SuperBlock validation &amp; failover
+  L2: BadgerDB index recovery (recoverIndex)
+  L3: Single-shard EC rebuild
+  L4: Full stripe EC reconstruction</code></pre>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Feature 3: S3 Compatible API -->
+<section class="section">
+<div class="container">
+<div class="feature-card reveal">
+<div class="feature-content">
+<span class="badge badge-cyan">Access Layer</span>
+<h3>S3 Compatible API</h3>
+<p>KDSS provides a fully S3-compatible HTTP API, allowing seamless integration with existing tools, SDKs, and applications. Supports bucket operations, multipart uploads for large files, presigned URLs for secure temporary access, and streaming transfers for efficient data movement.</p>
+<ul>
+<li>Full bucket CRUD: CreateBucket, ListBuckets, DeleteBucket, HeadBucket</li>
+<li>Object operations: PutObject, GetObject, DeleteObject, HeadObject, CopyObject</li>
+<li>Multipart upload: InitiateMultipartUpload, UploadPart, CompleteMultipartUpload</li>
+<li>Presigned URLs for time-limited authenticated access</li>
+<li>Compatible with AWS CLI, boto3, MinIO Client, and standard S3 SDKs</li>
+</ul>
+</div>
+<div class="feature-visual">
+<div class="code-block">
+<div class="code-block-header">
+<span>bash</span>
+<button class="copy-btn">Copy</button>
+</div>
+<pre><code># Upload a file via S3 API
+curl -X PUT "http://s3.example.com/my-bucket/photo.jpg" \
+  -H "Authorization: AWS4-HMAC-SHA256 ..." \
+  -T ./photo.jpg
+
+# Multipart upload (large files)
+curl -X POST \
+  "http://s3.example.com/my-bucket/bigfile?uploads"
+
+# Generate presigned download URL
+kdss-cli presign get \
+  --bucket my-bucket \
+  --key photo.jpg \
+  --expires 3600
+
+# List objects with prefix
+curl "http://s3.example.com/my-bucket?prefix=photos/&amp;max-keys=100"</code></pre>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Feature 4: FUSE Filesystem Mount -->
+<section class="section">
+<div class="container">
+<div class="feature-card reverse reveal">
+<div class="feature-content">
+<span class="badge badge-green">POSIX Interface</span>
+<h3>FUSE Filesystem Mount</h3>
+<p>Mount your KDSS cluster as a local directory via FUSE. Applications can use standard POSIX file operations -- read, write, stat, readdir -- while KDSS transparently handles erasure coding, shard distribution, and fault recovery behind the scenes. Configurable chunk size with LRU read caching and sequential prefetch optimize throughput for different workload patterns.</p>
+<ul>
+<li>Standard POSIX interface: open, read, write, stat, readdir, rename</li>
+<li>Transparent EC encoding on write, decoding on read</li>
+<li>Configurable chunk size (default 256 MB) with LRU read caching and sequential prefetch</li>
+<li>Metadata caching for reduced master node round-trips</li>
+<li>Compatible with standard Linux tools: cp, rsync, tar, etc.</li>
+</ul>
+</div>
+<div class="feature-visual">
+<div class="code-block">
+<div class="code-block-header">
+<span>bash</span>
+<button class="copy-btn">Copy</button>
+</div>
+<pre><code># Mount KDSS as a local filesystem
+ksfs -c /etc/ksfs/mount.toml
+
+# Configuration file (mount.toml)
+[cluster]
+masters = ["master-1:6700", "master-2:6700", "master-3:6700"]
+
+[auth]
+access_key = "your-access-key"
+secret_key = "your-secret-key"
+bucket = "my-bucket"
+
+[mount]
+mountpoint = "/mnt/kdss"
+
+# Now use it like any local directory
+ls /mnt/kdss/
+cp /var/log/app.log /mnt/kdss/logs/
+df -h /mnt/kdss</code></pre>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Feature 5: Auto Repair & Recovery -->
+<section class="section">
+<div class="container">
+<div class="feature-card reveal">
+<div class="feature-content">
+<span class="badge badge-blue">Reliability</span>
+<h3>Auto Repair &amp; Recovery</h3>
+<p>KDSS continuously monitors disk health via S.M.A.R.T. metrics and heartbeat signals. When a fault is detected -- whether a slow disk, read error, or complete disk failure -- the system automatically isolates the affected disk, reconstructs missing shards using EC parity data, and redistributes them to healthy nodes, all without manual intervention.</p>
+<ul>
+<li>S.M.A.R.T. monitoring for early disk failure prediction</li>
+<li>Three-layer disk health monitoring: S.M.A.R.T., dmesg error scanning, and I/O error sliding window</li>
+<li>EC parity-based shard reconstruction without full data copies</li>
+<li>Distributed repair execution across all Master nodes for parallel recovery</li>
+<li>Configurable repair concurrency and bandwidth throttling</li>
+<li>Repair progress tracking via Web Console and Prometheus metrics</li>
+</ul>
+</div>
+<div class="feature-visual">
+<div class="code-block">
+<div class="code-block-header">
+<span>Auto Repair Flow</span>
+</div>
+<pre><code>  Disk Health Monitor
+        |
+        v
+  +------------------+
+  | S.M.A.R.T. Check |---&gt; Normal ---&gt; Continue
+  | Heartbeat Check  |                 Monitoring
+  +------------------+
+        |
+      Fault Detected
+        |
+        v
+  +------------------+
+  | Isolate Disk     |  Mark disk as "offline"
+  | Stop I/O         |  Redirect traffic
+  +------------------+
+        |
+        v
+  +------------------+
+  | Identify Missing |  Scan stripe metadata
+  | Shards           |  for affected data
+  +------------------+
+        |
+        v
+  +------------------+
+  | EC Reconstruct   |  Rebuild from parity
+  | Missing Shards   |  shards (k of n)
+  +------------------+
+        |
+        v
+  +------------------+
+  | Place on Healthy |  Rebalance across
+  | Nodes            |  available disks
+  +------------------+
+        |
+        v
+  Repair Complete ---&gt; Resume Normal Operation</code></pre>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Feature 6: Data Balancing -->
+<section class="section">
+<div class="container">
+<div class="feature-card reverse reveal">
+<div class="feature-content">
+<span class="badge badge-purple">Operations</span>
+<h3>Data Balancing</h3>
+<p>As your cluster grows and workloads shift, disk utilization can become uneven. KDSS includes a utilization-aware data balancing engine that non-disruptively migrates shards from over-utilized to under-utilized disks, keeping your cluster healthy and storage evenly distributed with real-time progress monitoring.</p>
+<ul>
+<li>Utilization-aware scheduling: triggers when imbalance exceeds configurable threshold</li>
+<li>Non-disruptive migration: live data movement without service interruption</li>
+<li>Bandwidth throttling to limit impact on production workloads</li>
+<li>Progress monitoring via CLI and Web Console dashboard</li>
+<li>Automatic rebalancing when new disks or nodes are added to the cluster</li>
+</ul>
+</div>
+<div class="feature-visual">
+<div class="code-block">
+<div class="code-block-header">
+<span>bash</span>
+<button class="copy-btn">Copy</button>
+</div>
+<pre><code># Check cluster disk utilization
+kdss-cli balance status
+
+Disk Utilization:
+  node-01/sda   ████████████░░░  82%
+  node-01/sdb   █████████░░░░░░  61%
+  node-02/sda   ██████████████░  93%
+  node-02/sdb   ███████░░░░░░░░  47%
+  node-03/sda   ██████████░░░░░  68%
+
+Imbalance: 46%  (threshold: 20%)
+
+# Start balancing
+kdss-cli balance start --max-bandwidth 100MB/s
+
+Balancing in progress...
+  Migrated: 128 shards (12.4 GB)
+  Remaining: 64 shards (~6.2 GB)
+  ETA: 3m 22s</code></pre>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Feature 7: Web Management Console -->
+<section class="section">
+<div class="container">
+<div class="feature-card reveal">
+<div class="feature-content">
+<span class="badge badge-cyan">Management</span>
+<h3>Web Management Console</h3>
+<p>A full-featured web-based management console gives you complete visibility and control over your KDSS cluster. Monitor cluster health at a glance, manage nodes and disks, configure EC policies, and control user access -- all through an intuitive dashboard with role-based access control (RBAC).</p>
+<ul>
+<li>Real-time dashboard: cluster health, capacity, throughput, and IOPS</li>
+<li>Node and disk management: add, remove, decommission with guided workflows</li>
+<li>Bucket and object browser with search, upload, and download</li>
+<li>RBAC with predefined roles: Admin, Storage Admin, Read-Only</li>
+<li>Alert configuration and notification history</li>
+</ul>
+</div>
+<div class="feature-visual">
+<div class="code-block">
+<div class="code-block-header">
+<span>Dashboard Overview</span>
+</div>
+<pre><code>+-----------------------------------------------+
+|  KDSS Console            [admin] [Logout]      |
++-----------------------------------------------+
+|         |                                      |
+| Dash    |  Cluster Health: Healthy             |
+| Nodes   |                                      |
+| Disks   |  Nodes: 5/5 online                   |
+| Buckets |  Disks: 20/20 active                 |
+| Users   |  Capacity: 42.8 TB / 60 TB (71%)     |
+| Alerts  |                                      |
+| Config  |  Throughput   IOPS                    |
+|         |  ~~~^~~~      ~~^~~~                  |
+|         |  348 MB/s     12.4K                   |
+|         |                                      |
+|         |  Recent Alerts (3)                    |
+|         |  ! Disk node-02/sdc S.M.A.R.T. warn  |
+|         |  ! Repair job #47 completed           |
+|         |  i Balance job started                |
++-----------------------------------------------+</code></pre>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Feature 8: Monitoring & Alerting -->
+<section class="section">
+<div class="container">
+<div class="feature-card reverse reveal">
+<div class="feature-content">
+<span class="badge badge-green">Observability</span>
+<h3>Monitoring &amp; Alerting</h3>
+<p>KDSS exposes comprehensive Prometheus metrics out of the box, covering cluster health, disk I/O, EC operations, and API latencies. With 32 built-in alert rules, pre-configured Grafana dashboards, and Lark (Feishu) webhook integration, you get full observability without building monitoring infrastructure from scratch.</p>
+<ul>
+<li>Prometheus-native /metrics endpoint on every component</li>
+<li>32 built-in alert rules covering disk, node, capacity, and performance</li>
+<li>Pre-built Grafana dashboards for cluster, node, and disk-level views</li>
+<li>Lark (Feishu) webhook for real-time alert notifications</li>
+<li>Configurable alert thresholds and notification routing</li>
+</ul>
+</div>
+<div class="feature-visual">
+<div class="code-block">
+<div class="code-block-header">
+<span>prometheus.yml</span>
+<button class="copy-btn">Copy</button>
+</div>
+<pre><code># Prometheus scrape config for KDSS
+scrape_configs:
+  - job_name: 'kdss-master'
+    static_configs:
+      - targets: ['master-01:6701']
+    metrics_path: /metrics
+
+  - job_name: 'kdss-storage'
+    static_configs:
+      - targets:
+          - 'storage-01:6801'
+          - 'storage-02:6801'
+          - 'storage-03:6801'
+
+# Sample alert rules (32 built-in)
+# - DiskSpaceCritical (&gt;90%)
+# - DiskSmartWarning
+# - NodeHeartbeatLost (&gt;30s)
+# - ECRepairQueueHigh (&gt;100)
+# - APILatencyP99High (&gt;500ms)
+# - ReplicationLagHigh
+# ...</code></pre>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Feature 9: GC & Reclamation -->
+<section class="section">
+<div class="container">
+<div class="feature-card reveal">
+<div class="feature-content">
+<span class="badge badge-blue">Lifecycle</span>
+<h3>GC &amp; Reclamation</h3>
+<p>KDSS implements a safe two-phase delete process with a configurable recycle bin retention period. Automatic garbage collection runs in the background to reclaim space from deleted objects and stale temporary data, while ensuring no data is permanently removed before the retention window expires.</p>
+<ul>
+<li>Two-phase delete: soft delete to recycle bin, then gc_pending with configurable auto-purge</li>
+<li>Automatic housekeeping with configurable scan interval and auto-gc timeout</li>
+<li>Stale multipart upload cleanup after configurable timeout</li>
+<li>Background compaction with soft and force thresholds</li>
+<li>GC progress and space reclaimed metrics exported to Prometheus</li>
+</ul>
+</div>
+<div class="feature-visual">
+<div class="code-block">
+<div class="code-block-header">
+<span>master.toml</span>
+<button class="copy-btn">Copy</button>
+</div>
+<pre><code># Garbage Collection Configuration
+[gc]
+interval_sec = 3600              # Housekeeping scan interval (seconds)
+auto_gc_pending_hours = 48       # Auto-delete gc_pending after N hours (0=disable)
+stale_writing_minutes = 120      # Clean up stale writing stripes after N minutes
+
+# Capacity Alerts
+[capacity]
+alert_pct  = 95                  # Alert when cluster usage &gt;= 95%
+reject_pct = 99                  # Reject writes when &gt;= 99%
+
+# Background Compaction (storage.toml)
+[compactor]
+enabled            = true
+threshold          = 0.2         # Soft threshold: compact when idle (20%)
+force_threshold    = 0.5         # Force compact regardless of load (50%)</code></pre>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Footer -->
+<footer class="footer">
+<div class="container">
+<div class="footer-grid">
+<div class="footer-brand">
+<a class="nav-logo" href="./">
+<img alt="KDSS" height="40" src="images/logo.svg" width="40"/>
+<span>KDSS</span>
+</a>
+<p>High-performance distributed storage system powered by erasure coding technology.</p>
+</div>
+<div class="footer-col">
+<h4>Product</h4>
+<a href="features.html">Features</a>
+<a href="solutions.html">Solutions</a>
+<a href="architecture.html">Architecture</a>
+</div>
+<div class="footer-col">
+<h4>Documentation</h4>
+<a href="docs.html#requirements">Requirements</a>
+<a href="docs.html#capacity">Capacity Planning</a>
+<a href="docs.html#s3api">S3 API</a>
+</div>
+<div class="footer-col">
+<h4>Support</h4>
+<a href="mailto:support@kdss.io">Technical Support</a>
+<a href="mailto:support@kdss.io">Feedback</a>
+<a href="mailto:contact@kdss.io">Partnership</a>
+</div>
+</div>
+<div class="footer-bottom">
+<p>© 2025-2031 KDSS Project. All rights reserved.</p>
+<div class="footer-bottom-links">
+<span style="color: var(--text-muted); font-size: 13px;">Built with Go, gRPC, and Reed-Solomon</span>
+</div>
+</div>
+</div>
+</footer>
+<!-- Back to Top -->
+<button aria-label="Back to top" class="back-to-top">
+<svg fill="none" height="20" stroke="currentColor" stroke-linecap="round" stroke-width="2" viewbox="0 0 24 24" width="20"><path d="M18 15l-6-6-6 6"></path></svg>
+</button>
+
+<script src="js/nav.js"></script>
+<script src="js/animations.js"></script>
+</body>
+</html>

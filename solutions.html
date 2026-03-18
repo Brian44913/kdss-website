@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Solutions — KDSS</title>
+<meta content="KDSS industry solutions: blockchain/Web3, healthcare, video surveillance, media, finance, IoT, scientific research, and enterprise backup." name="description"/>
+<link href="images/favicon.svg" rel="icon" type="image/svg+xml"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet"/>
+<link href="css/base.css" rel="stylesheet"/>
+<link href="css/components.css" rel="stylesheet"/>
+<link href="css/layout.css" rel="stylesheet"/>
+<link href="css/pages.css" rel="stylesheet"/>
+</head>
+<body>
+<!-- Navigation -->
+<nav class="navbar">
+<div class="container">
+<a class="nav-logo" href="./">
+<img alt="KDSS" height="40" src="images/logo.svg" width="40"/>
+<span>KDSS</span>
+</a>
+<div class="nav-links">
+<a class="nav-link" href="features.html">Features</a>
+<a class="nav-link active" href="solutions.html">Solutions</a>
+<a class="nav-link" href="architecture.html">Architecture</a>
+<a class="nav-link" href="docs.html">Docs</a>
+<a class="nav-link" href="about.html">About</a>
+</div>
+<div class="nav-actions">
+<div class="lang-switch"><span class="lang-btn active">EN</span>
+          <a class="lang-btn" href="zh/solutions.html">中</a></div>
+</div>
+<button aria-label="Menu" class="mobile-menu-btn">
+<span></span><span></span><span></span>
+</button>
+</div>
+</nav>
+<!-- Mobile Navigation -->
+<div class="mobile-nav">
+<a class="nav-link" href="features.html">Features</a>
+<a class="nav-link active" href="solutions.html">Solutions</a>
+<a class="nav-link" href="architecture.html">Architecture</a>
+<a class="nav-link" href="docs.html">Docs</a>
+<a class="nav-link" href="about.html">About</a>
+<div class="nav-actions">
+<div class="lang-switch"><span class="lang-btn active">EN</span>
+          <a class="lang-btn" href="zh/solutions.html">中</a></div>
+</div>
+</div>
+<!-- Page Header -->
+<section class="page-header">
+<div class="container">
+<h1>Industry Solutions</h1>
+<p>Purpose-built optimizations for demanding storage workloads across industries.</p>
+</div>
+</section>
+<!-- Blockchain / Web3 -->
+<section class="section" id="blockchain">
+<div class="container">
+<div class="solution-card reveal">
+<div class="solution-header">
+<div class="solution-icon blue">
+<svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="2" viewbox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"></path><line x1="12" x2="12" y1="9" y2="13"></line><line x1="12" x2="12.01" y1="17" y2="17"></line></svg>
+</div>
+<div>
+<span class="badge badge-blue">Blockchain / Web3</span>
+<h3>Decentralized Storage Infrastructure</h3>
+</div>
+</div>
+<p class="solution-desc">Optimized for Filecoin, Arweave, Storj, and other decentralized storage networks. KDSS provides sector-aligned storage, proof-of-spacetime acceleration, and block production parameter tuning to maximize mining efficiency and storage utilization.</p>
+<div class="solution-grid">
+<div class="solution-detail">
+<h5>Filecoin Optimization</h5>
+<ul>
+<li>32 GiB sector-aligned storage layout, eliminating padding waste</li>
+<li>Proof-of-Spacetime (PoSt) read path acceleration with shard-level caching</li>
+<li>WindowPoSt deadline-aware I/O scheduling to prioritize proof generation</li>
+<li>Block production parameter tuning: PreCommit/ProveCommit pipeline optimization</li>
+</ul>
+</div>
+<div class="solution-detail">
+<h5>Other Networks</h5>
+<ul>
+<li>Arweave: permanent storage with EC redundancy, chunk-level deduplication</li>
+<li>Storj / Sia: erasure-coded shard hosting with bandwidth-optimized retrieval</li>
+<li>IPFS pinning service backend with S3-compatible hot storage tier</li>
+<li>Multi-chain node data archival with compaction-friendly append-only writes</li>
+</ul>
+</div>
+</div>
+<div class="solution-stats">
+<div class="solution-stat">
+<span class="stat-value">32 GiB</span>
+<span class="stat-desc">Sector-aligned layout</span>
+</div>
+<div class="solution-stat">
+<span class="stat-value">&lt; 30s</span>
+<span class="stat-desc">WindowPoSt response</span>
+</div>
+<div class="solution-stat">
+<span class="stat-value">&lt; 0.1s</span>
+<span class="stat-desc">MiningPoSt response</span>
+</div>
+<div class="solution-stat">
+<span class="stat-value">90.6%</span>
+<span class="stat-desc">Storage utilization (EC 29+3)</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Healthcare -->
+<section class="section" id="healthcare">
+<div class="container">
+<div class="solution-card reveal">
+<div class="solution-header">
+<div class="solution-icon green">
+<svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="2" viewbox="0 0 24 24"><path d="M22 12h-4l-3 9L9 3l-3 9H2"></path></svg>
+</div>
+<div>
+<span class="badge badge-green">Healthcare</span>
+<h3>Medical Imaging &amp; Genomics Storage</h3>
+</div>
+</div>
+<p class="solution-desc">Purpose-built for PACS medical imaging, genomics sequencing data, EMR systems, and clinical trial archives. KDSS delivers HIPAA-ready storage with high throughput for large DICOM files, genomics pipelines (~200 GB per genome), and long-term regulatory retention.</p>
+<div class="solution-grid">
+<div class="solution-detail">
+<h5>PACS &amp; Medical Imaging</h5>
+<ul>
+<li>DICOM-optimized large file streaming via S3 and FUSE interfaces</li>
+<li>CT/MRI study-level grouping for locality-aware shard placement</li>
+<li>7+ year regulatory retention with low-cost EC storage (vs. 3-replica)</li>
+<li>Integration with PACS viewers via standard S3/WADO-RS endpoints</li>
+</ul>
+</div>
+<div class="solution-detail">
+<h5>Genomics &amp; Clinical Research</h5>
+<ul>
+<li>~200 GB/genome throughput-optimized pipeline storage with parallel reads</li>
+<li>FASTQ/BAM/VCF file streaming with configurable read-ahead buffers</li>
+<li>Multi-center EMR data sharing via S3 cross-site replication</li>
+<li>Audit logging for compliance with HIPAA and regional regulations</li>
+</ul>
+</div>
+</div>
+<div class="solution-stats">
+<div class="solution-stat">
+<span class="stat-value">~200 GB</span>
+<span class="stat-desc">Per genome throughput</span>
+</div>
+<div class="solution-stat">
+<span class="stat-value">7+ yr</span>
+<span class="stat-desc">Regulatory retention</span>
+</div>
+<div class="solution-stat">
+<span class="stat-value">HIPAA</span>
+<span class="stat-desc">Compliance ready</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Video Surveillance -->
+<section class="section" id="surveillance">
+<div class="container">
+<div class="solution-card reveal">
+<div class="solution-header">
+<div class="solution-icon purple">
+<svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="2" viewbox="0 0 24 24"><path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"></path><circle cx="12" cy="13" r="4"></circle></svg>
+</div>
+<div>
+<span class="badge badge-purple">Video Surveillance</span>
+<h3>City-Scale Video Recording &amp; Retrieval</h3>
+</div>
+</div>
+<p class="solution-desc">Designed for city-level video surveillance systems with thousands of cameras recording 7x24. KDSS handles massive concurrent write streams, automatic hot/warm/cold data tiering, and fast clip retrieval for forensic analysis.</p>
+<div class="solution-grid">
+<div class="solution-detail">
+<h5>Continuous Recording</h5>
+<ul>
+<li>High-concurrency sequential writes optimized for thousands of camera streams</li>
+<li>Append-only raw disk engine eliminates write amplification for 7x24 recording</li>
+<li>Automatic time-based data lifecycle: hot (7d) → warm (30d) → cold (90d+)</li>
+<li>EC 9+2 recommended: 81.8% utilization with 2-disk fault tolerance</li>
+</ul>
+</div>
+<div class="solution-detail">
+<h5>Forensic Retrieval</h5>
+<ul>
+<li>Time-range and camera-ID indexed retrieval via S3 prefix queries</li>
+<li>Sub-second clip seek with shard-level offset indexing</li>
+<li>Concurrent export of multi-camera clips for evidence packaging</li>
+<li>Integration with mainstream VMS platforms via S3/RTSP bridge</li>
+</ul>
+</div>
+</div>
+<div class="solution-stats">
+<div class="solution-stat">
+<span class="stat-value">7x24</span>
+<span class="stat-desc">Continuous recording</span>
+</div>
+<div class="solution-stat">
+<span class="stat-value">1000+</span>
+<span class="stat-desc">Concurrent camera streams</span>
+</div>
+<div class="solution-stat">
+<span class="stat-value">81.8%</span>
+<span class="stat-desc">Utilization (EC 9+2)</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Content Distribution / Media -->
+<section class="section" id="media">
+<div class="container">
+<div class="solution-card reveal">
+<div class="solution-header">
+<div class="solution-icon cyan">
+<svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="2" viewbox="0 0 24 24"><polygon points="23 7 16 12 23 17 23 7"></polygon><rect height="14" rx="2" ry="2" width="15" x="1" y="5"></rect></svg>
+</div>
+<div>
+<span class="badge badge-cyan">Media &amp; CDN</span>
+<h3>Content Distribution &amp; Streaming</h3>
+</div>
+</div>
+<p class="solution-desc">High-throughput origin storage for video streaming platforms, CDN edge caching, and game asset distribution. KDSS delivers consistent read performance for popular content while maintaining cost-efficient cold storage for long-tail assets.</p>
+<div class="solution-grid">
+<div class="solution-detail">
+<h5>Video &amp; Streaming</h5>
+<ul>
+<li>CDN origin storage with S3-compatible pull interface and range requests</li>
+<li>HLS/DASH segment storage with low-latency parallel shard reads</li>
+<li>Transcoding output pipeline: ingest → encode → store in single workflow</li>
+<li>Multi-bitrate asset grouping for efficient cache warming</li>
+</ul>
+</div>
+<div class="solution-detail">
+<h5>Gaming &amp; Assets</h5>
+<ul>
+<li>Game patch and asset bundle distribution via presigned S3 URLs</li>
+<li>Delta update storage with deduplication-friendly chunk boundaries</li>
+<li>Global asset replication for multi-region game launches</li>
+<li>UGC (user-generated content) storage with per-bucket quotas and RBAC</li>
+</ul>
+</div>
+</div>
+<div class="solution-stats">
+<div class="solution-stat">
+<span class="stat-value">10+ Gbps</span>
+<span class="stat-desc">Origin read throughput</span>
+</div>
+<div class="solution-stat">
+<span class="stat-value">S3</span>
+<span class="stat-desc">CDN-native integration</span>
+</div>
+<div class="solution-stat">
+<span class="stat-value">85.7%</span>
+<span class="stat-desc">Utilization (EC 18+3)</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Finance / Trading -->
+<section class="section" id="finance">
+<div class="container">
+<div class="solution-card reveal">
+<div class="solution-header">
+<div class="solution-icon green">
+<svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="2" viewbox="0 0 24 24"><line x1="12" x2="12" y1="1" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"></path></svg>
+</div>
+<div>
+<span class="badge badge-green">Finance</span>
+<h3>Trading Data &amp; Compliance Archives</h3>
+</div>
+</div>
+<p class="solution-desc">Reliable storage for tick-level market data, audit logs, compliance recordings, and transaction archives. KDSS provides append-only immutability guarantees, high-throughput time-series ingestion, and long-term retention for regulatory compliance.</p>
+<div class="solution-grid">
+<div class="solution-detail">
+<h5>Market Data &amp; Trading</h5>
+<ul>
+<li>Tick-level market data ingestion at TB/day throughput with append-only writes</li>
+<li>Time-partitioned storage layout for efficient historical range queries</li>
+<li>Low-latency parallel reads for backtesting and quantitative analysis</li>
+<li>Data integrity verification via CRC32 checksums on every shard</li>
+</ul>
+</div>
+<div class="solution-detail">
+<h5>Audit &amp; Compliance</h5>
+<ul>
+<li>Immutable audit log storage with append-only write guarantee</li>
+<li>Voice/video compliance recording with 5+ year retention policies</li>
+<li>Tamper-evident storage with shard-level checksum chains</li>
+<li>Regulatory report generation from archived transaction data</li>
+</ul>
+</div>
+</div>
+<div class="solution-stats">
+<div class="solution-stat">
+<span class="stat-value">TB/day</span>
+<span class="stat-desc">Tick data ingestion</span>
+</div>
+<div class="solution-stat">
+<span class="stat-value">5+ yr</span>
+<span class="stat-desc">Compliance retention</span>
+</div>
+<div class="solution-stat">
+<span class="stat-value">CRC32</span>
+<span class="stat-desc">Per-shard integrity</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Industrial IoT -->
+<section class="section" id="iot">
+<div class="container">
+<div class="solution-card reveal">
+<div class="solution-header">
+<div class="solution-icon blue">
+<svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="2" viewbox="0 0 24 24"><rect height="16" rx="2" width="16" x="4" y="4"></rect><rect height="6" width="6" x="9" y="9"></rect><line x1="9" x2="9" y1="1" y2="4"></line><line x1="15" x2="15" y1="1" y2="4"></line><line x1="9" x2="9" y1="20" y2="23"></line><line x1="15" x2="15" y1="20" y2="23"></line><line x1="20" x2="23" y1="9" y2="9"></line><line x1="20" x2="23" y1="14" y2="14"></line><line x1="1" x2="4" y1="9" y2="9"></line><line x1="1" x2="4" y1="14" y2="14"></line></svg>
+</div>
+<div>
+<span class="badge badge-blue">Industrial IoT</span>
+<h3>Sensor Data &amp; Edge Computing Storage</h3>
+</div>
+</div>
+<p class="solution-desc">Scalable storage for industrial sensor networks, autonomous vehicle data pipelines, and smart grid telemetry. KDSS handles massive small-write ingestion, time-series compaction, and high-volume batch uploads from edge devices.</p>
+<div class="solution-grid">
+<div class="solution-detail">
+<h5>Autonomous Vehicles</h5>
+<ul>
+<li>~4 TB/day per vehicle: LiDAR, camera, radar, CAN bus data ingestion</li>
+<li>Batch upload pipeline from edge devices with resumable multipart uploads</li>
+<li>Training dataset versioning with S3-compatible object tagging</li>
+<li>PB-scale fleet data lake with cost-efficient EC storage</li>
+</ul>
+</div>
+<div class="solution-detail">
+<h5>Sensors &amp; Smart Grid</h5>
+<ul>
+<li>High-frequency sensor data ingestion with write-back buffering</li>
+<li>Time-series compaction for efficient long-term telemetry storage</li>
+<li>Smart grid SCADA data archival with regulatory retention compliance</li>
+<li>Edge-to-center data sync via S3 replication policies</li>
+</ul>
+</div>
+</div>
+<div class="solution-stats">
+<div class="solution-stat">
+<span class="stat-value">~4 TB/day</span>
+<span class="stat-desc">Per vehicle data</span>
+</div>
+<div class="solution-stat">
+<span class="stat-value">PB-scale</span>
+<span class="stat-desc">Fleet data lake</span>
+</div>
+<div class="solution-stat">
+<span class="stat-value">S3</span>
+<span class="stat-desc">Edge sync protocol</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Scientific Research / Big Data -->
+<section class="section" id="research">
+<div class="container">
+<div class="solution-card reveal">
+<div class="solution-header">
+<div class="solution-icon purple">
+<svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="2" viewbox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><line x1="2" x2="22" y1="12" y2="12"></line><path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"></path></svg>
+</div>
+<div>
+<span class="badge badge-purple">Scientific Research</span>
+<h3>Big Data &amp; High-Energy Physics</h3>
+</div>
+</div>
+<p class="solution-desc">Extreme-scale storage for astronomy observatories, particle physics experiments, AI/ML training datasets, and genomics research. KDSS delivers the throughput and capacity needed for data-intensive scientific workloads at a fraction of the cost of traditional storage.</p>
+<div class="solution-grid">
+<div class="solution-detail">
+<h5>Astronomy &amp; Physics</h5>
+<ul>
+<li>~700 TB/day telescope data ingestion (e.g., LSST/SKA-class observatories)</li>
+<li>~15 PB/year particle physics experiment data archival (e.g., LHC-class)</li>
+<li>EC 29+3 for maximum capacity: 90.6% utilization at exabyte scale</li>
+<li>POSIX FUSE mount for seamless integration with HPC job schedulers</li>
+</ul>
+</div>
+<div class="solution-detail">
+<h5>AI / ML Datasets</h5>
+<ul>
+<li>Large-scale training dataset storage with high-throughput parallel reads</li>
+<li>Dataset versioning and lineage tracking via S3 object tagging</li>
+<li>GPU cluster integration via FUSE mount or S3 connector</li>
+<li>Checkpoint storage for distributed training with fast write throughput</li>
+</ul>
+</div>
+</div>
+<div class="solution-stats">
+<div class="solution-stat">
+<span class="stat-value">~700 TB/day</span>
+<span class="stat-desc">Observatory ingestion</span>
+</div>
+<div class="solution-stat">
+<span class="stat-value">~15 PB/yr</span>
+<span class="stat-desc">Physics data archival</span>
+</div>
+<div class="solution-stat">
+<span class="stat-value">EB-scale</span>
+<span class="stat-desc">Capacity with EC 29+3</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Enterprise Backup / DR -->
+<section class="section" id="backup">
+<div class="container">
+<div class="solution-card reveal">
+<div class="solution-header">
+<div class="solution-icon cyan">
+<svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="2" viewbox="0 0 24 24"><polyline points="22 12 16 12 14 15 10 9 8 12 2 12"></polyline><path d="M5.45 5.11L2 12v6a2 2 0 002 2h16a2 2 0 002-2v-6l-3.45-6.89A2 2 0 0016.76 4H7.24a2 2 0 00-1.79 1.11z"></path></svg>
+</div>
+<div>
+<span class="badge badge-cyan">Backup &amp; DR</span>
+<h3>Enterprise Backup &amp; Disaster Recovery</h3>
+</div>
+</div>
+<p class="solution-desc">Cost-effective backup target for databases, virtual machines, and enterprise applications. KDSS replaces expensive tape libraries and 3-replica backup systems with erasure-coded storage, delivering 2-3x more usable capacity at the same hardware cost.</p>
+<div class="solution-grid">
+<div class="solution-detail">
+<h5>Database &amp; Application Backup</h5>
+<ul>
+<li>WAL/binlog continuous archival with append-only immutable storage</li>
+<li>MySQL, PostgreSQL, MongoDB backup target via S3-compatible interface</li>
+<li>VM snapshot storage for VMware/KVM/Hyper-V environments</li>
+<li>Incremental backup with deduplication-friendly chunk boundaries</li>
+</ul>
+</div>
+<div class="solution-detail">
+<h5>Disaster Recovery</h5>
+<ul>
+<li>Multi-site backup with cross-datacenter EC shard distribution</li>
+<li>RPO near-zero with continuous WAL streaming to KDSS</li>
+<li>Tape library replacement: 2-3x capacity at same hardware cost</li>
+<li>Automated retention policies with lifecycle-based data expiration</li>
+</ul>
+</div>
+</div>
+<div class="solution-stats">
+<div class="solution-stat">
+<span class="stat-value">2-3x</span>
+<span class="stat-desc">Capacity vs. 3-replica</span>
+</div>
+<div class="solution-stat">
+<span class="stat-value">~0 RPO</span>
+<span class="stat-desc">Continuous WAL archival</span>
+</div>
+<div class="solution-stat">
+<span class="stat-value">S3</span>
+<span class="stat-desc">Universal backup target</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- CTA Section -->
+<section class="section quickstart">
+<div class="container">
+<div class="section-header reveal">
+<h2>Ready to Optimize Your Storage?</h2>
+<p>Contact our team to discuss how KDSS can be tailored to your industry requirements.</p>
+</div>
+<div class="reveal" style="text-align: center;">
+<a class="btn btn-primary btn-lg" href="docs.html">Get Started</a>
+<a class="btn btn-secondary btn-lg" href="mailto:contact@kdss.io">Contact Us</a>
+</div>
+</div>
+</section>
+<!-- Footer -->
+<footer class="footer">
+<div class="container">
+<div class="footer-grid">
+<div class="footer-brand">
+<a class="nav-logo" href="./">
+<img alt="KDSS" height="40" src="images/logo.svg" width="40"/>
+<span>KDSS</span>
+</a>
+<p>High-performance distributed storage system powered by erasure coding technology.</p>
+</div>
+<div class="footer-col">
+<h4>Product</h4>
+<a href="features.html">Features</a>
+<a href="solutions.html">Solutions</a>
+<a href="architecture.html">Architecture</a>
+</div>
+<div class="footer-col">
+<h4>Documentation</h4>
+<a href="docs.html#requirements">Requirements</a>
+<a href="docs.html#capacity">Capacity Planning</a>
+<a href="docs.html#s3api">S3 API</a>
+</div>
+<div class="footer-col">
+<h4>Support</h4>
+<a href="mailto:support@kdss.io">Technical Support</a>
+<a href="mailto:support@kdss.io">Feedback</a>
+<a href="mailto:contact@kdss.io">Partnership</a>
+</div>
+</div>
+<div class="footer-bottom">
+<p>© 2025-2031 KDSS Project. All rights reserved.</p>
+<div class="footer-bottom-links">
+<span style="color: var(--text-muted); font-size: 13px;">Built with Go, gRPC, and Reed-Solomon</span>
+</div>
+</div>
+</div>
+</footer>
+<!-- Back to Top -->
+<button aria-label="Back to top" class="back-to-top">
+<svg fill="none" height="20" stroke="currentColor" stroke-linecap="round" stroke-width="2" viewbox="0 0 24 24" width="20"><path d="M18 15l-6-6-6 6"></path></svg>
+</button>
+
+<script src="js/nav.js"></script>
+<script src="js/animations.js"></script>
+</body>
+</html>

@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>文档中心 — KDSS</title>
+<meta content="KDSS 文档中心。部署说明、容量规划、S3 API 使用指南和配置参考。" name="description"/>
+<link href="../images/favicon.svg" rel="icon" type="image/svg+xml"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet"/>
+<link href="../css/base.css" rel="stylesheet"/>
+<link href="../css/components.css" rel="stylesheet"/>
+<link href="../css/layout.css" rel="stylesheet"/>
+<link href="../css/pages.css" rel="stylesheet"/>
+</head>
+<body>
+<!-- Navigation -->
+<nav class="navbar">
+<div class="container">
+<a class="nav-logo" href="./">
+<img alt="KDSS" height="40" src="../images/logo.svg" width="40"/>
+<span>KDSS</span>
+</a>
+<div class="nav-links">
+<a class="nav-link" href="features.html">产品特性</a>
+<a class="nav-link" href="solutions.html">解决方案</a>
+<a class="nav-link" href="architecture.html">系统架构</a>
+<a class="nav-link active" href="docs.html">文档</a>
+<a class="nav-link" href="about.html">关于</a>
+</div>
+<div class="nav-actions">
+<div class="lang-switch"><a class="lang-btn" href="../docs.html">EN</a>
+          <span class="lang-btn active">中</span></div>
+</div>
+<button aria-label="Menu" class="mobile-menu-btn">
+<span></span><span></span><span></span>
+</button>
+</div>
+</nav>
+<!-- Mobile Navigation -->
+<div class="mobile-nav">
+<a class="nav-link" href="features.html">产品特性</a>
+<a class="nav-link" href="solutions.html">解决方案</a>
+<a class="nav-link" href="architecture.html">系统架构</a>
+<a class="nav-link active" href="docs.html">文档</a>
+<a class="nav-link" href="about.html">关于</a>
+<div class="nav-actions">
+<div class="lang-switch"><a class="lang-btn" href="../docs.html">EN</a>
+          <span class="lang-btn active">中</span></div>
+</div>
+</div>
+<!-- Docs Layout -->
+<div class="container">
+<div class="docs-layout">
+<!-- Sidebar -->
+<aside class="docs-sidebar">
+<div class="docs-search">
+<svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="2" viewbox="0 0 24 24"><circle cx="11" cy="11" r="8"></circle><line x1="21" x2="16.65" y1="21" y2="16.65"></line></svg>
+<input placeholder="搜索文档..." type="text"/>
+</div>
+<div class="docs-sidebar-group">
+<h4>规划</h4>
+<a href="#requirements">环境要求</a>
+<a href="#capacity">容量规划</a>
+</div>
+<div class="docs-sidebar-group">
+<h4>使用指南</h4>
+<a href="#s3api">S3 接口</a>
+</div>
+<div class="docs-sidebar-group">
+<h4>参考</h4>
+<a href="#config">配置参考</a>
+</div>
+</aside>
+<!-- Content -->
+<main class="docs-content">
+<!-- ==================== Requirements ==================== -->
+<section id="requirements">
+<h2>环境要求</h2>
+<p>安装 KDSS 前，请确保您的环境满足以下要求。</p>
+<h3>最低硬件要求</h3>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr>
+<th>资源</th>
+<th>最低要求</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CPU</td>
+<td>8 核</td>
+<td>Storage 节点最低要求；建议 16 核</td>
+</tr>
+<tr>
+<td>内存</td>
+<td>32 GB</td>
+<td>混合节点（Master+Storage）需 64-128 GB</td>
+</tr>
+<tr>
+<td>系统盘</td>
+<td>200 GB SSD</td>
+<td>混合节点需 1 TB NVMe（MongoDB + BadgerDB）</td>
+</tr>
+<tr>
+<td>数据盘</td>
+<td>1+ 块裸盘</td>
+<td>每节点最多 36 × 16 TB HDD</td>
+</tr>
+<tr>
+<td>网络</td>
+<td>10 Gbps</td>
+<td>建议 20 Gbps 绑定双口</td>
+</tr>
+</tbody>
+</table>
+</div>
+<h3>推荐硬件配置</h3>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr>
+<th>资源</th>
+<th>推荐配置</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CPU</td>
+<td>16 核</td>
+<td>更多核心可加速 EC 编码</td>
+</tr>
+<tr>
+<td>内存</td>
+<td>128 GB</td>
+<td>混合节点：MongoDB 64 GB + 服务 32 GB</td>
+</tr>
+<tr>
+<td>系统盘</td>
+<td>2 TB NVMe</td>
+<td>NVMe 用于操作系统、元数据和索引</td>
+</tr>
+<tr>
+<td>数据盘</td>
+<td>36 × 16 TB</td>
+<td>大容量机械硬盘，用于存储节点</td>
+</tr>
+<tr>
+<td>网络</td>
+<td>20 Gbps</td>
+<td>绑定双口网卡实现高可用</td>
+</tr>
+</tbody>
+</table>
+</div>
+<h3>软件要求</h3>
+<ul>
+<li>Ubuntu 24.04 LTS（推荐），Linux 内核 4.15+</li>
+<li>MongoDB 8.0+（副本集部署以实现元数据高可用）</li>
+<li>Go 1.24+（仅编译时需要）</li>
+<li>FUSE 3.x（仅在使用 FUSE 挂载客户端时需要）</li>
+</ul>
+</section>
+<!-- ==================== Capacity Planning ==================== -->
+<section id="capacity">
+<h2>容量规划</h2>
+<p>根据存储需求和 EC 配置规划集群规模。</p>
+<h3>可用容量公式</h3>
+<p>可用存储容量由 EC 配置决定：</p>
+<div class="code-block">
+<div class="code-block-header">
+<span>formula</span>
+<button class="copy-btn">Copy</button>
+</div>
+<pre><code>Usable Capacity = Raw Capacity x (data_shards / (data_shards + parity_shards))</code></pre>
+</div>
+<h3>计算示例</h3>
+<p>下表展示了 100 TB 裸盘空间在不同 EC 配置下的可用容量：</p>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr>
+<th>EC 配置</th>
+<th>数据片</th>
+<th>校验片</th>
+<th>利用率</th>
+<th>可用容量 (100 TB 裸)</th>
+<th>容错能力</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>EC 5+2</code></td>
+<td>5</td>
+<td>2</td>
+<td class="highlight">71.4%</td>
+<td>71.4 TB</td>
+<td>容忍 2 块磁盘故障</td>
+</tr>
+<tr>
+<td><code>EC 9+2</code></td>
+<td>9</td>
+<td>2</td>
+<td class="highlight">81.8%</td>
+<td>81.8 TB</td>
+<td>容忍 2 块磁盘故障</td>
+</tr>
+<tr>
+<td><code>EC 18+3</code></td>
+<td>18</td>
+<td>3</td>
+<td class="highlight">85.7%</td>
+<td>85.7 TB</td>
+<td>容忍 3 块磁盘故障</td>
+</tr>
+<tr>
+<td><code>EC 29+3</code></td>
+<td>29</td>
+<td>3</td>
+<td class="highlight">90.6%</td>
+<td>90.6 TB</td>
+<td>容忍 3 块磁盘故障</td>
+</tr>
+<tr>
+<td><code>EC 31+2</code></td>
+<td>31</td>
+<td>2</td>
+<td class="highlight">93.9%</td>
+<td>93.9 TB</td>
+<td>容忍 2 块磁盘故障</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p><strong>提示：</strong>对于大多数生产工作负载，<code>EC 9+2</code> 在空间利用率（81.8%）和容错能力（容忍 2 块同时故障）之间提供了良好平衡。如果您的环境有更高的关联磁盘故障风险，建议使用 <code>EC 18+3</code> 或 <code>EC 29+3</code> 以获得更高的校验保护。</p>
+<p><strong>警告：</strong><code>EC 31+2</code> 极致密度模式仅适用于全新的存储服务器和全新企业级硬盘，且必须部署在 Tier 3+ 标准的 IDC 机房，配备 24 小时人员值守随时处理硬件故障。仅 2 个校验分片，容错余量极小——磁盘更换的任何延迟都会增加数据丢失风险。</p>
+</section>
+<!-- ==================== S3 API ==================== -->
+<section id="s3api">
+<h2>S3 接口</h2>
+<p>KDSS 提供完全兼容 S3 的 API 网关，支持标准 S3 工具和 SDK。默认端点为 http://<master-host>:9000。</master-host></p>
+<h3>AWS CLI</h3>
+<p>使用标准 AWS CLI 与 KDSS 交互，配置自定义端点指向 KDSS S3 网关。</p>
+<div class="code-block">
+<div class="code-block-header">
+<span>bash</span>
+<button class="copy-btn">Copy</button>
+</div>
+<pre><code># Configure credentials (use KDSS access key / secret key)
+aws configure
+# AWS Access Key ID: your-access-key
+# AWS Secret Access Key: your-secret-key
+# Default region name: us-east-1
+# Default output format: json
+
+# Set alias for convenience
+alias s3='aws --endpoint-url http://master-host:9000 s3'
+alias s3api='aws --endpoint-url http://master-host:9000 s3api'
+
+# Bucket operations
+s3 mb s3://my-bucket                          # Create bucket
+s3 ls                                         # List buckets
+s3 ls s3://my-bucket/                         # List objects
+s3 rb s3://my-bucket --force                  # Delete bucket
+
+# Upload / Download
+s3 cp local-file.dat s3://my-bucket/          # Upload file
+s3 cp s3://my-bucket/file.dat ./              # Download file
+s3 cp ./data/ s3://my-bucket/data/ --recursive  # Upload directory
+s3 sync ./backup/ s3://my-bucket/backup/      # Sync directory
+
+# Delete
+s3 rm s3://my-bucket/file.dat                 # Delete object
+s3 rm s3://my-bucket/ --recursive             # Delete all objects</code></pre>
+</div>
+<h3>s3cmd</h3>
+<p>s3cmd 是一个轻量级的 S3 兼容存储命令行工具。</p>
+<div class="code-block">
+<div class="code-block-header">
+<span>~/.s3cfg</span>
+<button class="copy-btn">Copy</button>
+</div>
+<pre><code>[default]
+access_key = your-access-key
+secret_key = your-secret-key
+host_base = master-host:9000
+host_bucket = master-host:9000/%(bucket)
+use_https = False
+signature_v2 = False</code></pre>
+</div>
+<div class="code-block">
+<div class="code-block-header">
+<span>bash</span>
+<button class="copy-btn">Copy</button>
+</div>
+<pre><code># Bucket operations
+s3cmd mb s3://my-bucket
+s3cmd ls
+
+# Upload / Download
+s3cmd put file.dat s3://my-bucket/
+s3cmd get s3://my-bucket/file.dat ./
+s3cmd sync ./data/ s3://my-bucket/data/
+
+# File info
+s3cmd info s3://my-bucket/file.dat</code></pre>
+</div>
+<h3>Python (boto3)</h3>
+<p>使用 boto3 SDK 通过 Python 编程方式访问 KDSS。</p>
+<div class="code-block">
+<div class="code-block-header">
+<span>python</span>
+<button class="copy-btn">Copy</button>
+</div>
+<pre><code>import boto3
+
+# Create S3 client pointing to KDSS
+s3 = boto3.client(
+    "s3",
+    endpoint_url="http://master-host:9000",
+    aws_access_key_id="your-access-key",
+    aws_secret_access_key="your-secret-key",
+    region_name="us-east-1",
+)
+
+# Create bucket
+s3.create_bucket(Bucket="my-bucket")
+
+# Upload file
+s3.upload_file("local-file.dat", "my-bucket", "path/to/file.dat")
+
+# Download file
+s3.download_file("my-bucket", "path/to/file.dat", "downloaded.dat")
+
+# List objects
+resp = s3.list_objects_v2(Bucket="my-bucket", Prefix="path/")
+for obj in resp.get("Contents", []):
+    print(obj["Key"], obj["Size"])
+
+# Generate presigned URL (valid for 1 hour)
+url = s3.generate_presigned_url(
+    "get_object",
+    Params={"Bucket": "my-bucket", "Key": "path/to/file.dat"},
+    ExpiresIn=3600,
+)
+print(url)
+
+# Delete object
+s3.delete_object(Bucket="my-bucket", Key="path/to/file.dat")</code></pre>
+</div>
+<h3>Go</h3>
+<p>使用 AWS SDK for Go (v2) 与 KDSS 交互。</p>
+<div class="code-block">
+<div class="code-block-header">
+<span>go</span>
+<button class="copy-btn">Copy</button>
+</div>
+<pre><code>package main
+
+import (
+    "context"
+    "fmt"
+    "os"
+
+    "github.com/aws/aws-sdk-go-v2/aws"
+    "github.com/aws/aws-sdk-go-v2/config"
+    "github.com/aws/aws-sdk-go-v2/credentials"
+    "github.com/aws/aws-sdk-go-v2/service/s3"
+)
+
+func main() {
+    // Create S3 client pointing to KDSS
+    cfg, _ := config.LoadDefaultConfig(context.TODO(),
+        config.WithRegion("us-east-1"),
+        config.WithCredentialsProvider(
+            credentials.NewStaticCredentialsProvider("your-access-key", "your-secret-key", ""),
+        ),
+    )
+    client := s3.NewFromConfig(cfg, func(o *s3.Options) {
+        o.BaseEndpoint = aws.String("http://master-host:9000")
+        o.UsePathStyle = true
+    })
+
+    // Upload file
+    file, _ := os.Open("local-file.dat")
+    defer file.Close()
+    client.PutObject(context.TODO(), &amp;s3.PutObjectInput{
+        Bucket: aws.String("my-bucket"),
+        Key:    aws.String("path/to/file.dat"),
+        Body:   file,
+    })
+
+    // List objects
+    resp, _ := client.ListObjectsV2(context.TODO(), &amp;s3.ListObjectsV2Input{
+        Bucket: aws.String("my-bucket"),
+    })
+    for _, obj := range resp.Contents {
+        fmt.Printf("%s  %d bytes\n", *obj.Key, *obj.Size)
+    }
+}</code></pre>
+</div>
+<h3>支持的 S3 操作</h3>
+<p>KDSS S3 网关支持以下 S3 API 操作：</p>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr>
+<th>分类</th>
+<th>操作</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>存储桶</td>
+<td><code>CreateBucket</code> <code>DeleteBucket</code> <code>ListBuckets</code> <code>HeadBucket</code></td>
+</tr>
+<tr>
+<td>对象</td>
+<td><code>PutObject</code> <code>GetObject</code> <code>DeleteObject</code> <code>HeadObject</code> <code>CopyObject</code></td>
+</tr>
+<tr>
+<td>列举</td>
+<td><code>ListObjectsV2</code> <code>ListObjectVersions</code></td>
+</tr>
+<tr>
+<td>分片上传</td>
+<td><code>CreateMultipartUpload</code> <code>UploadPart</code> <code>CompleteMultipartUpload</code> <code>AbortMultipartUpload</code></td>
+</tr>
+<tr>
+<td>预签名 URL</td>
+<td><code>GET</code> <code>PUT</code></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<!-- ==================== Configuration ==================== -->
+<section id="config">
+<h2>配置参考</h2>
+<p>所有配置文件的完整参考。</p>
+<h3>master.toml 参考</h3>
+<p>KDSS 主节点配置（TOML 格式）。</p>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr>
+<th>配置项</th>
+<th>默认值</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr><td><code>listen</code></td><td><code>:6700</code></td><td>gRPC 监听地址</td></tr>
+<tr><td><code>web_listen</code></td><td><code>:8081</code></td><td>Web 控制台监听地址</td></tr>
+<tr><td><code>s3_listen</code></td><td><code>:9000</code></td><td>S3 网关监听地址</td></tr>
+<tr><td><code>mongo_uri</code></td><td>（必填）</td><td>MongoDB 连接 URI</td></tr>
+<tr><td><code>mongo_db</code></td><td><code>kdss</code></td><td>MongoDB 数据库名称</td></tr>
+<tr><td><code>ec.data_shards</code></td><td>（必填）</td><td>每条条带的数据分片数</td></tr>
+<tr><td><code>ec.parity_shards</code></td><td>（必填）</td><td>每条条带的校验分片数</td></tr>
+<tr><td><code>leader.lock_ttl_sec</code></td><td><code>10</code></td><td>Leader 锁超时（秒）</td></tr>
+<tr><td><code>leader.renew_interval_sec</code></td><td><code>3</code></td><td>Leader 锁续约间隔（秒）</td></tr>
+<tr><td><code>gc.interval_sec</code></td><td><code>3600</code></td><td>GC 巡检扫描间隔（秒）</td></tr>
+<tr><td><code>gc.auto_gc_pending_hours</code></td><td><code>48</code></td><td>gc_pending 超时自动删除（小时）</td></tr>
+<tr><td><code>capacity.alert_pct</code></td><td><code>95</code></td><td>集群容量告警阈值（%）</td></tr>
+<tr><td><code>capacity.reject_pct</code></td><td><code>99</code></td><td>集群容量拒写阈值（%）</td></tr>
+<tr><td><code>repair.concurrency</code></td><td><code>4</code></td><td>每台 Master 并发修复任务数</td></tr>
+<tr><td><code>log.level</code></td><td><code>info</code></td><td>日志级别 (debug, info, warn, error)</td></tr>
+<tr><td><code>log.file</code></td><td><code>/var/log/kdss/master.log</code></td><td>日志文件路径</td></tr>
+</tbody>
+</table>
+</div>
+<h3>storage.toml 参考</h3>
+<p>KDSS 存储节点配置（TOML 格式）。</p>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr>
+<th>配置项</th>
+<th>默认值</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr><td><code>node_id</code></td><td>（必填）</td><td>节点唯一标识</td></tr>
+<tr><td><code>listen</code></td><td><code>:6800</code></td><td>gRPC 监听地址</td></tr>
+<tr><td><code>master_addrs</code></td><td>（必填）</td><td>Master 节点地址列表</td></tr>
+<tr><td><code>index_dir</code></td><td><code>/opt/kdss/index</code></td><td>BadgerDB 索引目录（建议 SSD）</td></tr>
+<tr><td><code>[[disks]].disk_id</code></td><td>（必填）</td><td>磁盘标识</td></tr>
+<tr><td><code>[[disks]].device</code></td><td>（必填）</td><td>磁盘设备路径（建议 /dev/disk/by-id/）</td></tr>
+<tr><td><code>heartbeat.interval_sec</code></td><td><code>60</code></td><td>心跳间隔（秒）</td></tr>
+<tr><td><code>heartbeat.timeout_sec</code></td><td><code>180</code></td><td>心跳超时（秒）</td></tr>
+<tr><td><code>checker.enabled</code></td><td><code>true</code></td><td>启用 CRC32 完整性巡检</td></tr>
+<tr><td><code>checker.rate_mb_per_sec</code></td><td><code>50</code></td><td>巡检速率限制（MB/s/盘）</td></tr>
+<tr><td><code>compactor.enabled</code></td><td><code>true</code></td><td>启用后台压缩</td></tr>
+<tr><td><code>compactor.threshold</code></td><td><code>0.2</code></td><td>软压缩阈值（20%）</td></tr>
+<tr><td><code>compactor.force_threshold</code></td><td><code>0.5</code></td><td>强制压缩阈值（50%）</td></tr>
+<tr><td><code>sync.mode</code></td><td><code>immediate</code></td><td>fsync 策略：immediate / batch / deferred</td></tr>
+<tr><td><code>log.level</code></td><td><code>info</code></td><td>日志级别</td></tr>
+<tr><td><code>log.file</code></td><td><code>/var/log/kdss/storage.log</code></td><td>日志文件路径</td></tr>
+</tbody>
+</table>
+</div>
+<h3>mount.toml 参考</h3>
+<p>KDSS FUSE 挂载客户端配置（TOML 格式）。</p>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr>
+<th>配置项</th>
+<th>默认值</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr><td><code>cluster.masters</code></td><td>（必填）</td><td>Master 节点地址列表</td></tr>
+<tr><td><code>auth.access_key</code></td><td>（必填）</td><td>S3 访问密钥</td></tr>
+<tr><td><code>auth.secret_key</code></td><td>（必填）</td><td>S3 密钥</td></tr>
+<tr><td><code>auth.bucket</code></td><td>（必填）</td><td>目标 Bucket 名称</td></tr>
+<tr><td><code>mount.mountpoint</code></td><td>（必填）</td><td>本地挂载点路径</td></tr>
+<tr><td><code>mount.entry_timeout_s</code></td><td><code>3600</code></td><td>内核 dentry 缓存 TTL（秒）</td></tr>
+<tr><td><code>mount.attr_timeout_s</code></td><td><code>3600</code></td><td>内核属性缓存 TTL（秒）</td></tr>
+<tr><td><code>performance.chunk_size_mb</code></td><td><code>256</code></td><td>chunk 大小（MB），1 chunk = 1 stripe</td></tr>
+<tr><td><code>performance.read_rate_limit_mb</code></td><td><code>0</code></td><td>读取速率限制（MB/s，0=不限）</td></tr>
+<tr><td><code>performance.write_rate_limit_mb</code></td><td><code>0</code></td><td>写入速率限制（MB/s，0=不限）</td></tr>
+<tr><td><code>timeout.master_timeout_ms</code></td><td><code>5000</code></td><td>Master RPC 超时（毫秒）</td></tr>
+<tr><td><code>timeout.storage_timeout_ms</code></td><td><code>10000</code></td><td>Storage RPC 超时（毫秒）</td></tr>
+<tr><td><code>log.level</code></td><td><code>info</code></td><td>日志级别</td></tr>
+<tr><td><code>log.file</code></td><td>（stdout）</td><td>日志文件路径</td></tr>
+</tbody>
+</table>
+</div>
+</section>
+</main>
+</div>
+</div>
+<!-- Footer -->
+<footer class="footer">
+<div class="container">
+<div class="footer-grid">
+<div class="footer-brand">
+<a class="nav-logo" href="./">
+<img alt="KDSS" height="40" src="../images/logo.svg" width="40"/>
+<span>KDSS</span>
+</a>
+<p>基于纠删码技术的高性能分布式存储系统。</p>
+</div>
+<div class="footer-col">
+<h4>产品</h4>
+<a href="features.html">产品特性</a>
+<a href="solutions.html">解决方案</a>
+<a href="architecture.html">系统架构</a>
+</div>
+<div class="footer-col">
+<h4>文档</h4>
+<a href="docs.html#requirements">环境要求</a>
+<a href="docs.html#capacity">容量规划</a>
+<a href="docs.html#s3api">S3 接口</a>
+</div>
+<div class="footer-col">
+<h4>支持</h4>
+<a href="mailto:support@kdss.io">技术支持</a>
+<a href="mailto:support@kdss.io">问题反馈</a>
+<a href="mailto:contact@kdss.io">合作咨询</a>
+</div>
+</div>
+<div class="footer-bottom">
+<p>© 2025-2031 KDSS 项目. 保留所有权利。</p>
+<div class="footer-bottom-links">
+<span style="color: var(--text-muted); font-size: 13px;">使用 Go、gRPC 和 Reed-Solomon 构建</span>
+</div>
+</div>
+</div>
+</footer>
+<!-- Back to Top -->
+<button aria-label="Back to top" class="back-to-top">
+<svg fill="none" height="20" stroke="currentColor" stroke-linecap="round" stroke-width="2" viewbox="0 0 24 24" width="20"><path d="M18 15l-6-6-6 6"></path></svg>
+</button>
+
+<script src="../js/nav.js"></script>
+<script src="../js/animations.js"></script>
+</body>
+</html>

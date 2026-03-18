@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>解决方案 — KDSS</title>
+<meta content="KDSS 行业解决方案：区块链/Web3、医疗健康、视频监控、媒体与 CDN、金融、工业物联网、科学研究和企业备份容灾。" name="description"/>
+<link href="../images/favicon.svg" rel="icon" type="image/svg+xml"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet"/>
+<link href="../css/base.css" rel="stylesheet"/>
+<link href="../css/components.css" rel="stylesheet"/>
+<link href="../css/layout.css" rel="stylesheet"/>
+<link href="../css/pages.css" rel="stylesheet"/>
+</head>
+<body>
+<!-- Navigation -->
+<nav class="navbar">
+<div class="container">
+<a class="nav-logo" href="./">
+<img alt="KDSS" height="40" src="../images/logo.svg" width="40"/>
+<span>KDSS</span>
+</a>
+<div class="nav-links">
+<a class="nav-link" href="features.html">产品特性</a>
+<a class="nav-link active" href="solutions.html">解决方案</a>
+<a class="nav-link" href="architecture.html">系统架构</a>
+<a class="nav-link" href="docs.html">文档</a>
+<a class="nav-link" href="about.html">关于</a>
+</div>
+<div class="nav-actions">
+<div class="lang-switch"><a class="lang-btn" href="../solutions.html">EN</a>
+          <span class="lang-btn active">中</span></div>
+</div>
+<button aria-label="Menu" class="mobile-menu-btn">
+<span></span><span></span><span></span>
+</button>
+</div>
+</nav>
+<!-- Mobile Navigation -->
+<div class="mobile-nav">
+<a class="nav-link" href="features.html">产品特性</a>
+<a class="nav-link active" href="solutions.html">解决方案</a>
+<a class="nav-link" href="architecture.html">系统架构</a>
+<a class="nav-link" href="docs.html">文档</a>
+<a class="nav-link" href="about.html">关于</a>
+<div class="nav-actions">
+<div class="lang-switch"><a class="lang-btn" href="../solutions.html">EN</a>
+          <span class="lang-btn active">中</span></div>
+</div>
+</div>
+<!-- Page Header -->
+<section class="page-header">
+<div class="container">
+<h1>行业解决方案</h1>
+<p>针对各行业高要求存储场景的专项优化。</p>
+</div>
+</section>
+<!-- Blockchain / Web3 -->
+<section class="section" id="blockchain">
+<div class="container">
+<div class="solution-card reveal">
+<div class="solution-header">
+<div class="solution-icon blue">
+<svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="2" viewbox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"></path><line x1="12" x2="12" y1="9" y2="13"></line><line x1="12" x2="12.01" y1="17" y2="17"></line></svg>
+</div>
+<div>
+<span class="badge badge-blue">区块链 / Web3</span>
+<h3>去中心化存储基础设施</h3>
+</div>
+</div>
+<p class="solution-desc">针对 Filecoin、Arweave、Storj 等去中心化存储网络深度优化。KDSS 提供扇区对齐存储、时空证明加速、爆块参数调优，最大化挖矿效率与存储利用率。</p>
+<div class="solution-grid">
+<div class="solution-detail">
+<h5>Filecoin 优化</h5>
+<ul>
+<li>32 GiB 扇区对齐存储布局，消除填充浪费</li>
+<li>时空证明 (PoSt) 读取路径加速，分片级缓存</li>
+<li>WindowPoSt 截止时间感知 I/O 调度，优先保证证明生成</li>
+<li>爆块参数调优：PreCommit/ProveCommit 流水线优化</li>
+</ul>
+</div>
+<div class="solution-detail">
+<h5>其他网络</h5>
+<ul>
+<li>Arweave：EC 冗余永久存储，块级去重</li>
+<li>Storj / Sia：纠删码分片托管，带宽优化检索</li>
+<li>IPFS Pinning 服务后端，S3 兼容热存储层</li>
+<li>多链节点数据归档，压缩友好的追加写模式</li>
+</ul>
+</div>
+</div>
+<div class="solution-stats">
+<div class="solution-stat">
+<span class="stat-value">32 GiB</span>
+<span class="stat-desc">扇区对齐布局</span>
+</div>
+<div class="solution-stat">
+<span class="stat-value">&lt; 30s</span>
+<span class="stat-desc">WindowPoSt 响应</span>
+</div>
+<div class="solution-stat">
+<span class="stat-value">&lt; 0.1s</span>
+<span class="stat-desc">MiningPoSt 响应</span>
+</div>
+<div class="solution-stat">
+<span class="stat-value">90.6%</span>
+<span class="stat-desc">存储利用率 (EC 29+3)</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Healthcare -->
+<section class="section" id="healthcare">
+<div class="container">
+<div class="solution-card reveal">
+<div class="solution-header">
+<div class="solution-icon green">
+<svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="2" viewbox="0 0 24 24"><path d="M22 12h-4l-3 9L9 3l-3 9H2"></path></svg>
+</div>
+<div>
+<span class="badge badge-green">医疗健康</span>
+<h3>医学影像与基因组存储</h3>
+</div>
+</div>
+<p class="solution-desc">专为 PACS 医学影像、基因组测序数据、EMR 电子病历系统和临床试验归档设计。KDSS 提供 HIPAA 就绪存储，支持大型 DICOM 文件高吞吐、基因组流水线（~200 GB/基因组）及长期合规留存。</p>
+<div class="solution-grid">
+<div class="solution-detail">
+<h5>PACS 与医学影像</h5>
+<ul>
+<li>DICOM 优化的大文件流式传输，支持 S3 和 FUSE 接口</li>
+<li>CT/MRI 检查级分组，局部性感知分片放置</li>
+<li>7 年以上合规留存，低成本 EC 存储（对比三副本）</li>
+<li>通过标准 S3/WADO-RS 端点对接 PACS 阅片器</li>
+</ul>
+</div>
+<div class="solution-detail">
+<h5>基因组与临床研究</h5>
+<ul>
+<li>~200 GB/基因组吞吐优化流水线存储，并行读取</li>
+<li>FASTQ/BAM/VCF 文件流式传输，可配置预读缓冲</li>
+<li>多中心 EMR 数据共享，S3 跨站复制</li>
+<li>审计日志，满足 HIPAA 及地区法规合规要求</li>
+</ul>
+</div>
+</div>
+<div class="solution-stats">
+<div class="solution-stat">
+<span class="stat-value">~200 GB</span>
+<span class="stat-desc">单基因组吞吐量</span>
+</div>
+<div class="solution-stat">
+<span class="stat-value">7+ yr</span>
+<span class="stat-desc">合规留存期限</span>
+</div>
+<div class="solution-stat">
+<span class="stat-value">HIPAA</span>
+<span class="stat-desc">合规就绪</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Video Surveillance -->
+<section class="section" id="surveillance">
+<div class="container">
+<div class="solution-card reveal">
+<div class="solution-header">
+<div class="solution-icon purple">
+<svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="2" viewbox="0 0 24 24"><path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"></path><circle cx="12" cy="13" r="4"></circle></svg>
+</div>
+<div>
+<span class="badge badge-purple">视频监控</span>
+<h3>城市级视频录制与检索</h3>
+</div>
+</div>
+<p class="solution-desc">面向城市级视频监控系统设计，支持数千路摄像头 7×24 小时连续录制。KDSS 处理大规模并发写入流、自动冷热温数据分层以及快速录像片段检索。</p>
+<div class="solution-grid">
+<div class="solution-detail">
+<h5>连续录制</h5>
+<ul>
+<li>高并发顺序写入，优化数千路摄像头流</li>
+<li>追加写裸盘引擎消除写放大，支持 7×24 录制</li>
+<li>自动基于时间的数据生命周期：热 (7天) → 温 (30天) → 冷 (90天+)</li>
+<li>推荐 EC 9+2：81.8% 利用率，容忍 2 块磁盘故障</li>
+</ul>
+</div>
+<div class="solution-detail">
+<h5>取证检索</h5>
+<ul>
+<li>基于时间范围和摄像头 ID 的索引检索，S3 前缀查询</li>
+<li>亚秒级录像片段定位，分片级偏移索引</li>
+<li>多路摄像头录像并发导出，证据打包</li>
+<li>对接主流 VMS 平台，S3/RTSP 桥接</li>
+</ul>
+</div>
+</div>
+<div class="solution-stats">
+<div class="solution-stat">
+<span class="stat-value">7x24</span>
+<span class="stat-desc">连续录制</span>
+</div>
+<div class="solution-stat">
+<span class="stat-value">1000+</span>
+<span class="stat-desc">并发摄像头流</span>
+</div>
+<div class="solution-stat">
+<span class="stat-value">81.8%</span>
+<span class="stat-desc">利用率 (EC 9+2)</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Content Distribution / Media -->
+<section class="section" id="media">
+<div class="container">
+<div class="solution-card reveal">
+<div class="solution-header">
+<div class="solution-icon cyan">
+<svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="2" viewbox="0 0 24 24"><polygon points="23 7 16 12 23 17 23 7"></polygon><rect height="14" rx="2" ry="2" width="15" x="1" y="5"></rect></svg>
+</div>
+<div>
+<span class="badge badge-cyan">媒体与 CDN</span>
+<h3>内容分发与流媒体</h3>
+</div>
+</div>
+<p class="solution-desc">面向视频流媒体平台、CDN 边缘缓存和游戏资产分发的高吞吐源站存储。KDSS 为热门内容提供稳定的读取性能，同时为长尾资产保持高性价比冷存储。</p>
+<div class="solution-grid">
+<div class="solution-detail">
+<h5>视频与流媒体</h5>
+<ul>
+<li>CDN 源站存储，S3 兼容回源接口，支持 Range 请求</li>
+<li>HLS/DASH 分片存储，低延迟并行分片读取</li>
+<li>转码输出流水线：采集 → 编码 → 存储一体化</li>
+<li>多码率资产分组，高效缓存预热</li>
+</ul>
+</div>
+<div class="solution-detail">
+<h5>游戏与资产</h5>
+<ul>
+<li>游戏补丁和资产包通过预签名 S3 URL 分发</li>
+<li>增量更新存储，去重友好的分块边界</li>
+<li>多区域全球资产复制，支持多地同步发行</li>
+<li>UGC（用户生成内容）存储，按 Bucket 配额和 RBAC 控制</li>
+</ul>
+</div>
+</div>
+<div class="solution-stats">
+<div class="solution-stat">
+<span class="stat-value">10+ Gbps</span>
+<span class="stat-desc">源站读取吞吐</span>
+</div>
+<div class="solution-stat">
+<span class="stat-value">S3</span>
+<span class="stat-desc">CDN 原生集成</span>
+</div>
+<div class="solution-stat">
+<span class="stat-value">85.7%</span>
+<span class="stat-desc">利用率 (EC 18+3)</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Finance / Trading -->
+<section class="section" id="finance">
+<div class="container">
+<div class="solution-card reveal">
+<div class="solution-header">
+<div class="solution-icon green">
+<svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="2" viewbox="0 0 24 24"><line x1="12" x2="12" y1="1" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"></path></svg>
+</div>
+<div>
+<span class="badge badge-green">金融</span>
+<h3>交易数据与合规归档</h3>
+</div>
+</div>
+<p class="solution-desc">为逐笔行情数据、审计日志、合规录音和交易归档提供可靠存储。KDSS 提供追加写不可变保证、高吞吐时序数据摄入及长期合规留存。</p>
+<div class="solution-grid">
+<div class="solution-detail">
+<h5>行情数据与交易</h5>
+<ul>
+<li>逐笔行情数据摄入，TB/天吞吐量，追加写模式</li>
+<li>按时间分区的存储布局，高效历史范围查询</li>
+<li>低延迟并行读取，支持回测与量化分析</li>
+<li>每个分片 CRC32 校验，数据完整性验证</li>
+</ul>
+</div>
+<div class="solution-detail">
+<h5>审计与合规</h5>
+<ul>
+<li>不可变审计日志存储，追加写保证</li>
+<li>语音/视频合规录音，5 年以上留存策略</li>
+<li>分片级校验链，防篡改存储</li>
+<li>从归档交易数据生成监管报表</li>
+</ul>
+</div>
+</div>
+<div class="solution-stats">
+<div class="solution-stat">
+<span class="stat-value">TB/day</span>
+<span class="stat-desc">逐笔数据摄入</span>
+</div>
+<div class="solution-stat">
+<span class="stat-value">5+ yr</span>
+<span class="stat-desc">合规留存期限</span>
+</div>
+<div class="solution-stat">
+<span class="stat-value">CRC32</span>
+<span class="stat-desc">逐分片完整性</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Industrial IoT -->
+<section class="section" id="iot">
+<div class="container">
+<div class="solution-card reveal">
+<div class="solution-header">
+<div class="solution-icon blue">
+<svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="2" viewbox="0 0 24 24"><rect height="16" rx="2" width="16" x="4" y="4"></rect><rect height="6" width="6" x="9" y="9"></rect><line x1="9" x2="9" y1="1" y2="4"></line><line x1="15" x2="15" y1="1" y2="4"></line><line x1="9" x2="9" y1="20" y2="23"></line><line x1="15" x2="15" y1="20" y2="23"></line><line x1="20" x2="23" y1="9" y2="9"></line><line x1="20" x2="23" y1="14" y2="14"></line><line x1="1" x2="4" y1="9" y2="9"></line><line x1="1" x2="4" y1="14" y2="14"></line></svg>
+</div>
+<div>
+<span class="badge badge-blue">工业物联网</span>
+<h3>传感器数据与边缘计算存储</h3>
+</div>
+</div>
+<p class="solution-desc">面向工业传感器网络、自动驾驶数据管线和智能电网遥测的可扩展存储。KDSS 处理海量小写入摄入、时序数据压缩和边缘设备批量上传。</p>
+<div class="solution-grid">
+<div class="solution-detail">
+<h5>自动驾驶</h5>
+<ul>
+<li>单车约 4 TB/天：LiDAR、摄像头、雷达、CAN 总线数据摄入</li>
+<li>边缘设备批量上传管线，支持断点续传分段上传</li>
+<li>训练数据集版本管理，S3 兼容对象标签</li>
+<li>PB 级车队数据湖，高性价比 EC 存储</li>
+</ul>
+</div>
+<div class="solution-detail">
+<h5>传感器与智能电网</h5>
+<ul>
+<li>高频传感器数据摄入，写回缓冲</li>
+<li>时序数据压缩，高效长期遥测存储</li>
+<li>智能电网 SCADA 数据归档，满足监管留存要求</li>
+<li>边缘到中心数据同步，S3 复制策略</li>
+</ul>
+</div>
+</div>
+<div class="solution-stats">
+<div class="solution-stat">
+<span class="stat-value">~4 TB/day</span>
+<span class="stat-desc">单车数据量</span>
+</div>
+<div class="solution-stat">
+<span class="stat-value">PB-scale</span>
+<span class="stat-desc">车队数据湖</span>
+</div>
+<div class="solution-stat">
+<span class="stat-value">S3</span>
+<span class="stat-desc">边缘同步协议</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Scientific Research / Big Data -->
+<section class="section" id="research">
+<div class="container">
+<div class="solution-card reveal">
+<div class="solution-header">
+<div class="solution-icon purple">
+<svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="2" viewbox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><line x1="2" x2="22" y1="12" y2="12"></line><path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"></path></svg>
+</div>
+<div>
+<span class="badge badge-purple">科学研究</span>
+<h3>大数据与高能物理</h3>
+</div>
+</div>
+<p class="solution-desc">面向天文台、粒子物理实验、AI/ML 训练数据集和基因组研究的超大规模存储。KDSS 以传统存储成本的一小部分提供数据密集型科学工作负载所需的吞吐量和容量。</p>
+<div class="solution-grid">
+<div class="solution-detail">
+<h5>天文与物理</h5>
+<ul>
+<li>约 700 TB/天望远镜数据摄入（如 LSST/SKA 级天文台）</li>
+<li>约 15 PB/年粒子物理实验数据归档（如 LHC 级）</li>
+<li>EC 29+3 最大容量：EB 级 90.6% 利用率</li>
+<li>POSIX FUSE 挂载，无缝对接 HPC 作业调度器</li>
+</ul>
+</div>
+<div class="solution-detail">
+<h5>AI / ML 数据集</h5>
+<ul>
+<li>大规模训练数据集存储，高吞吐并行读取</li>
+<li>数据集版本管理与血缘追踪，S3 对象标签</li>
+<li>GPU 集群对接，FUSE 挂载或 S3 连接器</li>
+<li>分布式训练 Checkpoint 存储，快速写入吞吐</li>
+</ul>
+</div>
+</div>
+<div class="solution-stats">
+<div class="solution-stat">
+<span class="stat-value">~700 TB/day</span>
+<span class="stat-desc">天文台数据摄入</span>
+</div>
+<div class="solution-stat">
+<span class="stat-value">~15 PB/yr</span>
+<span class="stat-desc">物理实验数据归档</span>
+</div>
+<div class="solution-stat">
+<span class="stat-value">EB-scale</span>
+<span class="stat-desc">EC 29+3 容量</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Enterprise Backup / DR -->
+<section class="section" id="backup">
+<div class="container">
+<div class="solution-card reveal">
+<div class="solution-header">
+<div class="solution-icon cyan">
+<svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="2" viewbox="0 0 24 24"><polyline points="22 12 16 12 14 15 10 9 8 12 2 12"></polyline><path d="M5.45 5.11L2 12v6a2 2 0 002 2h16a2 2 0 002-2v-6l-3.45-6.89A2 2 0 0016.76 4H7.24a2 2 0 00-1.79 1.11z"></path></svg>
+</div>
+<div>
+<span class="badge badge-cyan">备份与容灾</span>
+<h3>企业备份与灾难恢复</h3>
+</div>
+</div>
+<p class="solution-desc">面向数据库、虚拟机和企业应用的高性价比备份目标存储。KDSS 以纠删码存储替代昂贵的磁带库和三副本备份系统，同等硬件成本下提供 2-3 倍可用容量。</p>
+<div class="solution-grid">
+<div class="solution-detail">
+<h5>数据库与应用备份</h5>
+<ul>
+<li>WAL/binlog 持续归档，追加写不可变存储</li>
+<li>MySQL、PostgreSQL、MongoDB 备份目标，S3 兼容接口</li>
+<li>VMware/KVM/Hyper-V 虚拟机快照存储</li>
+<li>增量备份，去重友好的分块边界</li>
+</ul>
+</div>
+<div class="solution-detail">
+<h5>灾难恢复</h5>
+<ul>
+<li>多站点备份，跨数据中心 EC 分片分布</li>
+<li>RPO 近零，持续 WAL 流式写入 KDSS</li>
+<li>磁带库替代：同等硬件成本 2-3 倍容量</li>
+<li>自动留存策略，基于生命周期的数据过期</li>
+</ul>
+</div>
+</div>
+<div class="solution-stats">
+<div class="solution-stat">
+<span class="stat-value">2-3x</span>
+<span class="stat-desc">对比三副本容量</span>
+</div>
+<div class="solution-stat">
+<span class="stat-value">~0 RPO</span>
+<span class="stat-desc">持续 WAL 归档</span>
+</div>
+<div class="solution-stat">
+<span class="stat-value">S3</span>
+<span class="stat-desc">通用备份目标</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- CTA Section -->
+<section class="section quickstart">
+<div class="container">
+<div class="section-header reveal">
+<h2>准备优化您的存储？</h2>
+<p>联系我们的团队，讨论如何根据您的行业需求定制 KDSS 解决方案。</p>
+</div>
+<div class="reveal" style="text-align: center;">
+<a class="btn btn-primary btn-lg" href="docs.html">快速开始</a>
+<a class="btn btn-secondary btn-lg" href="mailto:contact@kdss.io">联系我们</a>
+</div>
+</div>
+</section>
+<!-- Footer -->
+<footer class="footer">
+<div class="container">
+<div class="footer-grid">
+<div class="footer-brand">
+<a class="nav-logo" href="./">
+<img alt="KDSS" height="40" src="../images/logo.svg" width="40"/>
+<span>KDSS</span>
+</a>
+<p>基于纠删码技术的高性能分布式存储系统。</p>
+</div>
+<div class="footer-col">
+<h4>产品</h4>
+<a href="features.html">产品特性</a>
+<a href="solutions.html">解决方案</a>
+<a href="architecture.html">系统架构</a>
+</div>
+<div class="footer-col">
+<h4>文档</h4>
+<a href="docs.html#requirements">环境要求</a>
+<a href="docs.html#capacity">容量规划</a>
+<a href="docs.html#s3api">S3 接口</a>
+</div>
+<div class="footer-col">
+<h4>支持</h4>
+<a href="mailto:support@kdss.io">技术支持</a>
+<a href="mailto:support@kdss.io">问题反馈</a>
+<a href="mailto:contact@kdss.io">合作咨询</a>
+</div>
+</div>
+<div class="footer-bottom">
+<p>© 2025-2031 KDSS 项目. 保留所有权利。</p>
+<div class="footer-bottom-links">
+<span style="color: var(--text-muted); font-size: 13px;">使用 Go、gRPC 和 Reed-Solomon 构建</span>
+</div>
+</div>
+</div>
+</footer>
+<!-- Back to Top -->
+<button aria-label="Back to top" class="back-to-top">
+<svg fill="none" height="20" stroke="currentColor" stroke-linecap="round" stroke-width="2" viewbox="0 0 24 24" width="20"><path d="M18 15l-6-6-6 6"></path></svg>
+</button>
+
+<script src="../js/nav.js"></script>
+<script src="../js/animations.js"></script>
+</body>
+</html>

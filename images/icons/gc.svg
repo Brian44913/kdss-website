@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+  <!-- Garbage collection: Recycle/circular arrows -->
+  <!-- Three curved arrows forming a cycle -->
+  <!-- Top arrow (going right) -->
+  <path d="M12,3 Q18,3 19.5,8"/>
+  <path d="M17.5,7 L19.5,8 L20,5.8"/>
+  <!-- Bottom-right arrow (going bottom-left) -->
+  <path d="M19.5,12 Q18,18 12,19.5"/>
+  <path d="M13.5,17.5 L12,19.5 L14.2,20"/>
+  <!-- Bottom-left arrow (going top) -->
+  <path d="M8,19 Q3,16 3,10"/>
+  <path d="M5,11.5 L3,10 L2.5,12.2"/>
+  <!-- Center dot -->
+  <circle cx="12" cy="12" r="1.5" fill="currentColor" opacity="0.3"/>
+</svg>
