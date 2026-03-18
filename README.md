@@ -560,13 +560,15 @@ make tidy             # go mod tidy
 
 | 文档 | 说明 |
 |------|------|
-| [CLI 命令参考](https://github.com/Brian44913/kdss/blob/main/docs/cli.md) | kdss / ksfs 全部命令、参数、用法示例与运维场景速查 |
-| [部署指南](https://github.com/Brian44913/kdss/blob/main/docs/deployment.md) | 集群规划、环境准备、Master/Storage/FUSE 部署、MongoDB 副本集配置 |
-| [容量规划](https://github.com/Brian44913/kdss/blob/main/docs/capacity-planning.md) | 内存、SSD、MongoDB、CPU 资源评估方法与 Filecoin 场景实例 |
-| [日常维护](https://github.com/Brian44913/kdss/blob/main/docs/maintenance.md) | 健康检查、磁盘管理、巡检/GC/压缩、监控告警、日志管理 |
-| [故障排查](https://github.com/Brian44913/kdss/blob/main/docs/troubleshooting.md) | 12 类故障场景的症状分析、诊断方法与恢复步骤 |
-| [无缝升级](https://github.com/Brian44913/kdss/blob/main/docs/upgrade.md) | 滚动升级流程、回滚方案、版本兼容性说明 |
-| [FUSE 客户端](https://github.com/Brian44913/kdss/blob/main/docs/ksfs.md) | ksfs 安装、配置、挂载参数与性能调优 |
+| CLI 命令参考 | kdss / ksfs 全部命令、参数、用法示例与运维场景速查 |
+| 部署指南 | 集群规划、环境准备、Master/Storage/FUSE 部署、MongoDB 副本集配置 |
+| 容量规划 | 内存、SSD、MongoDB、CPU 资源评估方法与 Filecoin 场景实例 |
+| 日常维护 | 健康检查、磁盘管理、巡检/GC/压缩、监控告警、日志管理 |
+| 故障排查 | 12 类故障场景的症状分析、诊断方法与恢复步骤 |
+| 无缝升级 | 滚动升级流程、回滚方案、版本兼容性说明 |
+| FUSE 客户端 | ksfs 安装、配置、挂载参数与性能调优 |
+
+> 完整文档随产品交付，或联系我们获取。
 
 ## 许可证
 
