@@ -188,6 +188,7 @@
         </div>
         <p class="small muted">"Tolerates" is the number of shards (disks or nodes) a stripe can lose at the same time. Automatic schemes follow the node count and are conservative defaults. For manual schemes, the minimum node count is the total number of shards plus one.</p>
         <div class="callout warn"><strong>31+2 has only 2 parity shards.</strong> It tolerates fewer failures than the 3-parity schemes, so any delay in replacing a failed disk adds risk directly. Use it with care.</div>
+        <div class="callout"><strong>Recommendation: prefer a 3-parity scheme.</strong> Rolling upgrades proceed one node at a time by default, and the number of nodes in maintenance at once is capped at parity shards − 1; a 3-parity scheme lets you service two nodes together while still leaving headroom for an unexpected failure. Where possible, plan for 22 nodes or more. For reference, a single cluster is about 18 PB raw (36 nodes × 36 × 14 TB drives).</div>
       </section>
 
       <!-- S3 -->

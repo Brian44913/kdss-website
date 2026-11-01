@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Solutions — KDSS Distributed Storage</title>
-<meta name="description" content="KDSS solutions: decentralized storage sector data, cold-data archiving, video and media assets, backup and disaster recovery, AI and big-data lakes, private-cloud object storage — plus guidance on erasure-coding profiles and cluster sizing.">
+<meta name="description" content="KDSS solutions: decentralized storage sector data, cold-data archiving, video and media assets, backup and disaster recovery, AI and big-data lakes, private-cloud object storage.">
 <link rel="icon" href="favicon.ico?v=26.11.2" sizes="32x32">
 <link rel="icon" href="images/favicon.svg?v=26.11.2" type="image/svg+xml">
 <link rel="apple-touch-icon" href="apple-touch-icon.png?v=26.11.2">
@@ -16,14 +16,14 @@
 <meta property="og:site_name" content="KDSS">
 <meta property="og:locale" content="en_US">
 <meta property="og:title" content="Solutions — KDSS Distributed Storage">
-<meta property="og:description" content="KDSS solutions: decentralized storage sector data, cold-data archiving, video and media assets, backup and disaster recovery, AI and big-data lakes, private-cloud object storage — plus guidance on erasure-coding profiles and cluster sizing.">
+<meta property="og:description" content="KDSS solutions: decentralized storage sector data, cold-data archiving, video and media assets, backup and disaster recovery, AI and big-data lakes, private-cloud object storage.">
 <meta property="og:url" content="https://www.kdss.io/solutions.html">
 <meta property="og:image" content="https://www.kdss.io/images/og-en.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Solutions — KDSS Distributed Storage">
-<meta name="twitter:description" content="KDSS solutions: decentralized storage sector data, cold-data archiving, video and media assets, backup and disaster recovery, AI and big-data lakes, private-cloud object storage — plus guidance on erasure-coding profiles and cluster sizing.">
+<meta name="twitter:description" content="KDSS solutions: decentralized storage sector data, cold-data archiving, video and media assets, backup and disaster recovery, AI and big-data lakes, private-cloud object storage.">
 <meta name="twitter:image" content="https://www.kdss.io/images/og-en.png">
 <link rel="stylesheet" href="css/site.css?v=26.11.2">
 <link rel="stylesheet" href="css/pages/solutions.css?v=26.11.2">
@@ -58,45 +58,6 @@
     <div class="breadcrumb"><a href="./">Home</a> / Solutions</div>
     <h1>Solutions</h1>
     <p class="lead">KDSS is built for large files that are written once, kept for years and must come back intact when needed. Here is where it fits — and, for each use case, what problem it solves and how.</p>
-  </div>
-</section>
-
-<!-- Sizing guide -->
-<section class="section" id="sizing">
-  <div class="container">
-    <div class="section-head">
-      <span class="eyebrow">Sizing guide</span>
-      <h2>Choosing an erasure-coding profile and cluster size</h2>
-      <p class="lead">Node count determines which profiles are available: the more nodes, the higher the storage efficiency. By default KDSS picks a conservative profile for your node count automatically, so manual selection is rarely needed.</p>
-    </div>
-
-    <div class="table-wrap reveal">
-      <table class="table sizing">
-        <thead><tr><th>Nodes</th><th>Profile</th><th class="num">Efficiency</th><th>Notes</th></tr></thead>
-        <tbody>
-          <tr><td>8 – 11</td><td>EC 5+2<span class="sub">tolerates 2</span></td><td class="num">71.4%</td><td>Minimum viable size, for getting started and evaluation</td></tr>
-          <tr><td>12 – 21</td><td>EC 9+2<span class="sub">tolerates 2</span></td><td class="num">81.8%</td><td>Small to mid-size clusters</td></tr>
-          <tr><td>22 – 32</td><td>EC 18+3<span class="sub">tolerates 3</span></td><td class="num">85.7%</td><td>Three parity shards; from 26 nodes, 22+3 (88.0%) can be selected manually</td></tr>
-          <tr class="highlight"><td><strong>33+</strong></td><td><strong>EC 29+3</strong><span class="sub">tolerates 3</span></td><td class="num"><strong>90.6%</strong></td><td>Recommended for large production clusters; lowest cost per usable TB</td></tr>
-        </tbody>
-      </table>
-    </div>
-
-    <div class="grid grid-3" style="margin-top:32px">
-      <div class="card card-flat reveal">
-        <h3>Prefer three parity shards</h3>
-        <p>Rolling upgrades go one node at a time by default, and the number of nodes in maintenance together is capped at parity shards − 1. Three-parity profiles let you maintain two nodes at a time while still leaving headroom for unplanned failures — plan for 22 or more nodes where you can.</p>
-      </div>
-      <div class="card card-flat reveal">
-        <h3>Reference hardware</h3>
-        <p>From production experience: per storage node, 36 × 16 TB enterprise HDDs (JBOD pass-through), a 20-core-class Xeon, 64 GB of memory, 2 × 10 GbE bonded and a RAID1 system disk; the MongoDB replica set on SSD.</p>
-      </div>
-      <div class="card card-flat reveal">
-        <h3>Leave capacity headroom</h3>
-        <p>New writes stop once the cluster reaches the reject line (99% by default). Plan expansion against the console's max and conservative writable figures rather than raw free space.</p>
-      </div>
-    </div>
-    <p class="small muted" style="margin-top:16px">Single-cluster reference: about 18 PB raw (36 nodes × 36 × 14 TB disks). For detailed planning, <a href="#contact">contact us</a>.</p>
   </div>
 </section>
 
