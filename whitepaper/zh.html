@@ -49,7 +49,7 @@
     <div class="metric"><strong>90.6<small>%</small></strong><span>得盘率（EC 29+3）</span></div>
     <div class="metric"><strong>3</strong><span>可同时丢失的分片数（盘或节点）</span></div>
     <div class="metric"><strong>≈16<small>PB</small></strong><span>单集群裸容量（36 节点 × 36 盘）</span></div>
-    <div class="metric"><strong>近 50<small>PB</small></strong><span>生产集群累计裸容量</span></div>
+    <div class="metric"><strong>近 190<small>PB</small></strong><span>生产集群累计裸容量</span></div>
   </div>
 
   <p>KDSS 的设计围绕三个目标：</p>
@@ -60,7 +60,7 @@
   </ul>
 
   <h3>生产验证</h3>
-  <p>KDSS 已在多个生产集群长期运行：累计裸容量近 50 PB，100 余个存储节点、3,600 余块数据盘，管理的条带超过 1.8 亿条。生产环境中约 99% 的读写通过 FUSE 挂载完成。</p>
+  <p>KDSS 已在多个生产集群长期运行：累计裸容量近 190 PB，300 余个存储节点、1.1 万余块数据盘，管理的条带超过 7 亿条。生产环境中约 99% 的读写通过 FUSE 挂载完成。</p>
 
   <h3>关于本文</h3>
   <p>本文面向需要评估或部署 KDSS 的架构师、运维工程师与技术决策者，介绍系统架构、纠删码与数据布局、存储引擎、可靠性机制、访问接口、运维与安全能力，并给出容量规划方法与推荐硬件配置。文中所述能力与参数对应版本 26.11.1。</p>

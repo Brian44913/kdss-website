@@ -49,7 +49,7 @@
     <div class="metric"><strong>90.6<small>%</small></strong><span>Storage efficiency (EC 29+3)</span></div>
     <div class="metric"><strong>3</strong><span>Shards (disks or nodes) that can fail at once</span></div>
     <div class="metric"><strong>≈16<small>PB</small></strong><span>Raw capacity per cluster (36 nodes × 36 disks)</span></div>
-    <div class="metric"><strong>~50<small>PB</small></strong><span>Raw capacity in production</span></div>
+    <div class="metric"><strong>~190<small>PB</small></strong><span>Raw capacity in production</span></div>
   </div>
 
   <p>KDSS is designed around three goals:</p>
@@ -60,7 +60,7 @@
   </ul>
 
   <h3>Proven in production</h3>
-  <p>KDSS runs in multiple long-lived production clusters with close to 50 PB of raw capacity in total, more than 100 storage nodes and over 3,600 data disks, managing more than 180 million stripes. About 99% of production reads and writes go through the FUSE mount.</p>
+  <p>KDSS runs in multiple long-lived production clusters with close to 190 PB of raw capacity in total, more than 300 storage nodes and over 11,000 data disks, managing more than 700 million stripes. About 99% of production reads and writes go through the FUSE mount.</p>
 
   <h3>About this paper</h3>
   <p>This paper is written for architects, operations engineers and technical decision-makers evaluating or deploying KDSS. It covers the architecture, erasure coding and data layout, the storage engine, reliability mechanisms, access interfaces, operations and security, and closes with a capacity-planning method and recommended hardware. Everything described applies to version 26.11.1.</p>
