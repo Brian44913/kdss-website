@@ -8,3 +8,18 @@
   .cost-table th { font-size: .8rem; }
   .cost-table { font-size: .88rem; }
 }
+
+/* Capability cards: "Learn more" links line up at the bottom. / 能力卡片："了解更多"底部对齐。 */
+.cap-cards > .card { display: flex; flex-direction: column; }
+.cap-cards > .card .card-link { margin-top: auto; padding-top: 16px; align-self: flex-start; }
+
+.figure-more { margin-top: 16px; text-align: center; }
+
+/* Hero diagram scrolls inside its frame on phones. / 手机上首屏图在框内横向滚动。 */
+.hero-visual .scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+.hero-visual .hint { display: none; font-size: .78rem; color: var(--ink-500); margin-top: 8px; text-align: center; }
+@media (max-width: 640px) {
+  .hero-visual { padding: 14px; }
+  .hero-visual .scroll img { width: 560px; max-width: none; }
+  .hero-visual .hint { display: block; }
+}

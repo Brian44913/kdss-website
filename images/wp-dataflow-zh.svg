@@ -18,6 +18,6 @@
 <rect x="456" y="198" width="205" height="80" rx="10" fill="#fff" stroke="#0f8a7e"/><text x="558.5" y="235.0" font-size="16" font-weight="700" fill="#111827" text-anchor="middle">缺片实时解码</text><text x="558.5" y="255.0" font-size="13" font-weight="400" fill="#6b7280" text-anchor="middle">任意 29 片即可还原</text>
 <line x1="662" y1="238" x2="673" y2="238" stroke="#9fb1cf" stroke-width="1.8" marker-end="url(#ah)"/>
 <rect x="674" y="198" width="205" height="80" rx="10" fill="#fff" stroke="#d3d9e4"/><text x="776.5" y="235.0" font-size="16" font-weight="700" fill="#111827" text-anchor="middle">返回数据</text><text x="776.5" y="255.0" font-size="13" font-weight="400" fill="#6b7280" text-anchor="middle">流式读取同样校验</text>
-<text x="20" y="320" font-size="13.5" font-weight="400" fill="#6b7280" text-anchor="start">以 29+3 为例：每个分片约 8.8 MB。</text>
+<text x="20" y="320" font-size="13.5" font-weight="400" fill="#6b7280" text-anchor="start">以 29+3 为例：每个分片约 8.8 MiB。</text>
 <text x="20" y="344" font-size="13.5" font-weight="400" fill="#6b7280" text-anchor="start">数据在客户端与存储节点之间直接传输，Master 只处理元数据。</text>
 </svg>

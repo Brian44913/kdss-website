@@ -8,7 +8,7 @@
 .principle .num { display: block; font-size: .8rem; font-weight: 800; letter-spacing: .12em; color: var(--blue-600); margin-bottom: 12px; }
 
 /* Tech stack cards: compact / 技术栈卡片：紧凑 */
-.stack-card h4 { font-family: var(--font-mono); font-size: .98rem; color: var(--navy-800); margin-bottom: 6px; overflow-wrap: anywhere; }
+.stack-card h4, .stack-card .h4 { font-family: var(--font-mono); font-size: .98rem; color: var(--navy-800); margin-bottom: 6px; overflow-wrap: anywhere; }
 .stack-card p { font-size: .92rem; color: var(--ink-500); }
 
 /* Production note under metrics / 指标条下方说明 */

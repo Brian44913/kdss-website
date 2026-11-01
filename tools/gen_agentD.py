@@ -105,7 +105,7 @@ def dataflow(lang):
         o.append(box(x, 198, bw2, 80, a, b, stroke=TEAL if i == 2 else LINE))
         if i < len(rs) - 1:
             o.append(arrow(x + bw2 + 1, 238, x + bw2 + gap2 - 1, 238))
-    o.append(T(20, 320, "以 29+3 为例：每个分片约 8.8 MB。" if z else "Shown for EC 29+3: each shard is about 8.8 MB.", 13.5, MUTED))
+    o.append(T(20, 320, "以 29+3 为例：每个分片约 8.8 MiB。" if z else "Shown for EC 29+3: each shard is about 8.8 MiB.", 13.5, MUTED))
     o.append(T(20, 344, "数据在客户端与存储节点之间直接传输，Master 只处理元数据。" if z else
                "Data moves directly between clients and storage nodes; the Master handles metadata only.", 13.5, MUTED))
     o.append("</svg>")

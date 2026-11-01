@@ -9,14 +9,14 @@ def box(x, y, w, h, title, sub="", fill="#fff", stroke=LINE, tcol=INK, scol=MUTE
     cy = y + h / 2 + (0 if not sub else -6)
     s += f'<text x="{x+w/2}" y="{cy+5}" font-size="{ts}" font-weight="700" fill="{tcol}" text-anchor="middle">{title}</text>'
     if sub:
-        s += f'<text x="{x+w/2}" y="{cy+24}" font-size="11.5" fill="{scol}" text-anchor="middle">{sub}</text>'
+        s += f'<text x="{x+w/2}" y="{cy+24}" font-size="12" fill="{scol}" text-anchor="middle">{sub}</text>'
     return s
 
 def arrow(x1, y1, x2, y2, label="", col="#9fb1cf", dash=False, lx=None, ly=None):
     d = ' stroke-dasharray="5 4"' if dash else ""
     s = f'<line x1="{x1}" y1="{y1}" x2="{x2}" y2="{y2}" stroke="{col}" stroke-width="1.6" marker-end="url(#ah)"{d}/>'
     if label:
-        s += f'<text x="{lx if lx is not None else (x1+x2)/2+6}" y="{ly if ly is not None else (y1+y2)/2}" font-size="11" fill="{MUTED}">{label}</text>'
+        s += f'<text x="{lx if lx is not None else (x1+x2)/2+6}" y="{ly if ly is not None else (y1+y2)/2}" font-size="12" fill="{MUTED}">{label}</text>'
     return s
 
 HEAD = ('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {w} {h}" font-family="' + FONT + '">'
@@ -56,15 +56,15 @@ def architecture(lang):
     for i in range(6):
         x = 40 + i * 172
         o.append(box(x, 352, 156, 64, t["st"] + f" {i+1}", t["st_s"]))
-    o.append(f'<text x="{W-40}" y="440" font-size="11" fill="{MUTED}" text-anchor="end">{t["more"]}</text>')
+    o.append(f'<text x="{W-40}" y="440" font-size="12" fill="{MUTED}" text-anchor="end">{t["more"]}</text>')
     # data (blue, dashed): clients -> storage, bypassing the master / 数据直达存储节点
     o.append(f'<path d="M90 168 L90 350" stroke="{BLUE}" stroke-width="1.8" fill="none" marker-end="url(#ah)" stroke-dasharray="6 4"/>')
     o.append(f'<path d="M650 168 L650 350" stroke="{BLUE}" stroke-width="1.8" fill="none" marker-end="url(#ah)" stroke-dasharray="6 4"/>')
-    o.append(f'<text x="98" y="318" font-size="11.5" fill="{BLUE}" font-weight="600">{t["data"]}</text>')
+    o.append(f'<text x="98" y="318" font-size="12" fill="{BLUE}" font-weight="600">{t["data"]}</text>')
     # control (grey, dashed): master <-> storage heartbeat & scheduling
     o.append(f'<path d="M380 292 L380 350" stroke="#9fb1cf" stroke-width="1.6" fill="none" marker-end="url(#ah)" stroke-dasharray="3 4"/>')
-    o.append(f'<text x="388" y="326" font-size="11" fill="{MUTED}">{"心跳 · 调度（修复/均衡/回收）" if z else "heartbeats · repair / balance / GC scheduling"}</text>')
-    o.append(f'<text x="{W-40}" y="322" font-size="11" fill="{MUTED}" text-anchor="end">{t["prom"]}</text>')
+    o.append(f'<text x="388" y="326" font-size="12" fill="{MUTED}">{"心跳 · 调度（修复/均衡/回收）" if z else "heartbeats · repair / balance / GC scheduling"}</text>')
+    o.append(f'<text x="{W-40}" y="322" font-size="12" fill="{MUTED}" text-anchor="end">{t["prom"]}</text>')
     o.append('</svg>')
     return "\n".join(o)
 
@@ -73,7 +73,7 @@ def console_capacity(lang):
     t = dict(
         title="容量概览" if z else "Capacity overview",
         total="总容量" if z else "Total", used="已使用" if z else "Used", recycle="回收站" if z else "Recycle bin",
-        maxw="当前最大可写" if z else "Max writable now", cons="当前保守可写" if z else "Conservative writable", avail="可用空间" if z else "Available",
+        maxw="当前最大可写" if z else "Max writable now", cons="保守可写" if z else "Conservative writable", demo="示意" if z else "Illustrative", avail="可用空间" if z else "Available",
         nodes="可写节点" if z else "Writable nodes", need="需要 ≥ 32" if z else "need ≥ 32", ok="正常" if z else "Healthy",
         bar="集群水位" if z else "Cluster watermark", reject="拒写线 99%" if z else "Reject line 99%")
     W, H = 560, 380
@@ -82,24 +82,27 @@ def console_capacity(lang):
     o.append(f'<rect x="0" y="0" width="{W}" height="46" rx="12" fill="{SURF}"/><rect x="0" y="34" width="{W}" height="12" fill="{SURF}"/>')
     o.append(f'<circle cx="22" cy="23" r="5" fill="#e5e8ef"/><circle cx="38" cy="23" r="5" fill="#e5e8ef"/><circle cx="54" cy="23" r="5" fill="#e5e8ef"/>')
     o.append(f'<text x="80" y="28" font-size="13" font-weight="700" fill="{INK}">{t["title"]}</text>')
-    o.append(f'<rect x="{W-110}" y="13" width="88" height="20" rx="10" fill="#e3f4f2"/><text x="{W-66}" y="27" font-size="11" fill="{TEAL}" text-anchor="middle" font-weight="700">● {t["ok"]}</text>')
+    o.append(f'<rect x="{W-110}" y="13" width="88" height="20" rx="10" fill="#e3f4f2"/><text x="{W-66}" y="27" font-size="12" fill="#0b6b62" text-anchor="middle" font-weight="700">● {t["ok"]}</text>')
+    # "Illustrative" tag next to the title / 标题旁的"示意"标记
+    dx = 150 if z else 210; dw = 44 if z else 84
+    o.append(f'<rect x="{dx}" y="13" width="{dw}" height="20" rx="10" fill="#fbf1df"/><text x="{dx+dw/2}" y="27" font-size="12" fill="#8a5a12" text-anchor="middle" font-weight="700">{t["demo"]}</text>')
     # Illustrative round numbers only (not a real cluster's readings). / 仅为取整示意值，非真实集群读数。
-    cards = [(t["total"], "16.0", "PB", INK), (t["used"], "15.4", "PB", INK), (t["recycle"], "0.2", "PB", INK),
-             (t["maxw"], "120", "TB", BLUE), (t["cons"], "108", "TB", BLUE), (t["avail"], "600", "TB", INK)]
+    cards = [(t["total"], "10", "PB", INK), (t["used"], "9", "PB", INK), (t["recycle"], "0.2", "PB", INK),
+             (t["maxw"], "500", "TB", BLUE), (t["cons"], "400", "TB", BLUE), (t["avail"], "800", "TB", INK)]
     for i, (lab, val, unit, col) in enumerate(cards):
         r, c = divmod(i, 3)
         x = 22 + c * 176; y = 64 + r * 92
         hl = col == BLUE
         o.append(f'<rect x="{x}" y="{y}" width="164" height="80" rx="9" fill="{"#f3f7fe" if hl else "#fff"}" stroke="{"#bcd2f7" if hl else LINE}"/>')
-        o.append(f'<text x="{x+14}" y="{y+26}" font-size="11.5" fill="{MUTED}">{lab}</text>')
+        o.append(f'<text x="{x+14}" y="{y+26}" font-size="12" fill="{MUTED}">{lab}</text>')
         o.append(f'<text x="{x+14}" y="{y+60}" font-size="26" font-weight="800" fill="{NAVY if not hl else BLUE}">{val}<tspan font-size="13" font-weight="700" dx="4">{unit}</tspan></text>')
     y = 266
-    o.append(f'<text x="22" y="{y}" font-size="11.5" fill="{MUTED}">{t["bar"]}</text>')
+    o.append(f'<text x="22" y="{y}" font-size="12" fill="{MUTED}">{t["bar"]}</text>')
     o.append(f'<rect x="22" y="{y+10}" width="516" height="12" rx="6" fill="#eef2f7"/>')
-    o.append(f'<rect x="22" y="{y+10}" width="{516*0.966:.0f}" height="12" rx="6" fill="{NAVY2}"/>')
+    o.append(f'<rect x="22" y="{y+10}" width="{516*0.90:.0f}" height="12" rx="6" fill="{NAVY2}"/>')
     o.append(f'<line x1="{22+516*0.99:.0f}" y1="{y+4}" x2="{22+516*0.99:.0f}" y2="{y+28}" stroke="#b7791f" stroke-width="2"/>')
-    o.append(f'<text x="{22+516*0.99:.0f}" y="{y+44}" font-size="10.5" fill="#b7791f" text-anchor="end">{t["reject"]}</text>')
-    o.append(f'<text x="22" y="{y+76}" font-size="11.5" fill="{MUTED}">{t["nodes"]}</text>')
+    o.append(f'<text x="{22+516*0.99:.0f}" y="{y+44}" font-size="12" fill="#8a5a12" text-anchor="end">{t["reject"]}</text>')
+    o.append(f'<text x="22" y="{y+76}" font-size="12" fill="{MUTED}">{t["nodes"]}</text>')
     o.append(f'<text x="22" y="{y+100}" font-size="20" font-weight="800" fill="{NAVY}">36 <tspan font-size="12" fill="{MUTED}" font-weight="500">/ 36 · {t["need"]}</tspan></text>')
     for i in range(36):
         o.append(f'<rect x="{230 + i*8.6:.1f}" y="{y+86}" width="6" height="16" rx="1.5" fill="{TEAL}"/>')

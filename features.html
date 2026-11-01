@@ -5,34 +5,53 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Product — KDSS Distributed Storage</title>
 <meta name="description" content="KDSS capabilities: erasure coding and self-healing, a raw-disk storage engine, FUSE and S3 access, a web console with built-in alerting, and role-based security.">
+<link rel="icon" href="favicon.ico" sizes="32x32">
 <link rel="icon" href="images/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="canonical" href="https://www.kdss.io/features.html">
 <link rel="alternate" hreflang="en" href="https://www.kdss.io/features.html">
 <link rel="alternate" hreflang="zh-CN" href="https://www.kdss.io/zh/features.html">
+<link rel="alternate" hreflang="x-default" href="https://www.kdss.io/features.html">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="KDSS">
+<meta property="og:locale" content="en_US">
+<meta property="og:title" content="Product — KDSS Distributed Storage">
+<meta property="og:description" content="KDSS capabilities: erasure coding and self-healing, a raw-disk storage engine, FUSE and S3 access, a web console with built-in alerting, and role-based security.">
+<meta property="og:url" content="https://www.kdss.io/features.html">
+<meta property="og:image" content="https://www.kdss.io/images/og-en.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Product — KDSS Distributed Storage">
+<meta name="twitter:description" content="KDSS capabilities: erasure coding and self-healing, a raw-disk storage engine, FUSE and S3 access, a web console with built-in alerting, and role-based security.">
+<meta name="twitter:image" content="https://www.kdss.io/images/og-en.png">
 <link rel="stylesheet" href="css/site.css">
 <link rel="stylesheet" href="css/pages/features.css">
 </head>
 <body>
+<a class="skip-link" href="#main">Skip to content</a>
 
 <header class="site-header">
   <div class="container">
     <a class="brand" href="./"><img src="images/logo.svg" alt="" width="30" height="30">KDSS<small>Distributed Storage</small></a>
-    <nav class="nav" aria-label="Main navigation">
+    <nav class="nav" id="site-nav" aria-label="Main navigation">
       <a href="./">Home</a>
       <a href="features.html" aria-current="page">Product</a>
       <a href="solutions.html">Solutions</a>
       <a href="architecture.html">Architecture</a>
       <a href="docs.html">Docs</a>
       <a href="about.html">About</a>
+      <a class="btn btn-primary nav-contact" href="#contact">Contact us</a>
     </nav>
     <div class="nav-actions">
       <div class="lang"><a href="zh/features.html" hreflang="zh-CN">中</a><span>EN</span></div>
       <a class="btn btn-primary btn-sm" href="#contact">Contact us</a>
     </div>
-    <button class="menu-btn" aria-label="Menu" aria-expanded="false"><span></span></button>
+    <button class="menu-btn" aria-controls="site-nav" aria-label="Menu" aria-expanded="false"><span></span></button>
   </div>
 </header>
 
-<main>
+<main id="main" tabindex="-1">
 
 <section class="page-hero">
   <div class="container">
@@ -65,12 +84,12 @@
         <ul class="ticks">
           <li>29+3: any 3 shards (disks or nodes) can be lost at once and data stays readable and rebuildable</li>
           <li>90.6% storage efficiency, versus 33.3% for triple replication</li>
-          <li>Large stripes keep metadata small — MongoDB tracks stripes, not chunks</li>
+          <li>Large stripes keep metadata small — data locations are recorded per stripe (plus directory and file metadata)</li>
           <li>Encoding built on klauspost/reedsolomon with SIMD acceleration</li>
         </ul>
       </div>
       <figure class="figure reveal">
-        <img src="images/ec-efficiency-en.svg" alt="Storage efficiency by profile: 3 replicas 33.3%, 5+2 71.4%, 9+2 81.8%, 18+3 85.7%, 22+3 88.0%, 29+3 90.6%, 31+3 91.2%" width="560" height="480">
+        <img loading="lazy" src="images/ec-efficiency-en.svg" alt="Storage efficiency by profile: 3 replicas 33.3%, 5+2 71.4%, 9+2 81.8%, 18+3 85.7%, 22+3 88.0%, 29+3 90.6%, 31+3 91.2%" width="560" height="480">
       </figure>
     </div>
 
@@ -115,7 +134,7 @@
         </ul>
       </div>
       <figure class="figure reveal">
-        <img src="images/disk-health-en.svg" alt="Four detection layers lead to automatic isolation, storage-side rebuild and in-place repair, restoring full redundancy" width="560" height="450">
+        <img loading="lazy" src="images/disk-health-en.svg" alt="Four detection layers lead to automatic isolation, storage-side rebuild and in-place repair, restoring full redundancy" width="560" height="450">
       </figure>
     </div>
 
@@ -152,7 +171,7 @@
     <div class="grid grid-3">
       <article class="card reveal">
         <h3>Sequential appends, longer HDD life</h3>
-        <p>All writes are sequential appends aligned to 4 KB. Fewer seeks mean steadier throughput, longer drive life and lower failure rates.</p>
+        <p>All writes are sequential appends aligned to 4 KB. Fewer seeks mean steadier throughput and help extend drive life.</p>
       </article>
       <article class="card reveal">
         <h3>Dual superblocks, self-identifying disks</h3>
@@ -176,7 +195,7 @@
           <tbody>
             <tr class="highlight"><td><code>immediate</code> <span class="tag">Default</span></td><td>Every write is flushed to disk</td><td>General purpose, safest</td></tr>
             <tr><td><code>batch</code></td><td>Group commit — several writes flushed together</td><td>Write-heavy workloads that benefit from fewer flushes</td></tr>
-            <tr><td><code>deferred</code></td><td>Flushes are deferred</td><td>Hardware with power-loss protection, such as RAID cards with a BBU</td></tr>
+            <tr><td><code>deferred</code></td><td>Flushed in the background every 5 seconds; a power loss can lose up to the last ~5 seconds of writes</td><td>Hardware with power-loss protection (such as a RAID card with a BBU), where that window is acceptable</td></tr>
           </tbody>
         </table>
       </div>
@@ -193,7 +212,7 @@
         </ul>
       </div>
       <figure class="figure reveal">
-        <img src="images/hole-reuse-en.svg" alt="Deletes leave holes, same-size shards reuse them, and compaction moves tail data into holes before truncating" width="580" height="420">
+        <img loading="lazy" src="images/hole-reuse-en.svg" alt="Deletes leave holes, same-size shards reuse them, and compaction moves tail data into holes before truncating" width="580" height="420">
       </figure>
     </div>
 
@@ -208,7 +227,7 @@
         </ul>
       </div>
       <figure class="figure reveal">
-        <img src="images/capacity-guard-en.svg" alt="Three-tier capacity protection: cluster at 99% stops new writes; a disk at 99.5% leaves the write ring; a disk under 4 GiB free becomes read-only" width="460" height="470">
+        <img loading="lazy" src="images/capacity-guard-en.svg" alt="Three-tier capacity protection: cluster at 99% stops new writes; a disk at 99.5% leaves the write ring; a disk under 4 GiB free becomes read-only" width="460" height="470">
       </figure>
     </div>
   </div>
@@ -219,7 +238,7 @@
   <div class="container">
     <div class="section-head">
       <span class="eyebrow">Access</span>
-      <h2>Mount it like a local directory, or reach it with S3 tools</h2>
+      <h2>Mount it like a local directory, or access it over S3</h2>
       <p class="lead">One cluster serves both POSIX file access and an S3-compatible API. In production, about 99% of reads and writes go through the FUSE client.</p>
     </div>
 
@@ -238,7 +257,7 @@
       <article class="card reveal">
         <span class="tag teal">S3</span>
         <h3 style="margin-top:12px">S3-compatible gateway</h3>
-        <p>Works with standard tools and SDKs such as the AWS CLI, s3cmd, boto3 and the AWS SDK for Go.</p>
+        <p>Supports the core S3 API. Verified clients: AWS CLI, boto3 and s3cmd (configured as documented).</p>
         <ul class="ticks">
           <li>Streaming I/O for large objects: buffered up to 64 MB, streamed in parts beyond that, with bounded memory</li>
           <li>Range reads and multipart uploads</li>
@@ -254,7 +273,7 @@
           <table class="table api-table">
             <thead><tr><th>Scope</th><th>Operations</th></tr></thead>
             <tbody>
-              <tr><td>Bucket</td><td>ListBuckets · CreateBucket · DeleteBucket · HeadBucket · ListObjects</td></tr>
+              <tr><td>Bucket</td><td>ListBuckets · CreateBucket · DeleteBucket · HeadBucket · ListObjectsV2</td></tr>
               <tr><td>Object</td><td>PutObject · GetObject (incl. Range) · HeadObject · DeleteObject · CopyObject</td></tr>
               <tr><td>Multipart</td><td>CreateMultipartUpload · UploadPart · CompleteMultipartUpload · AbortMultipartUpload · ListParts · ListMultipartUploads</td></tr>
             </tbody>
@@ -291,7 +310,7 @@ aws --endpoint-url $EP s3 ls s3://archive/2026/</pre>
         <p style="margin-top:12px">The capacity panel goes beyond free space. It combines the reject line, per-node headroom and erasure-coding placement rules to show <strong>max writable</strong> and <strong>conservative writable</strong> capacity in real time — how much you can actually still write.</p>
       </div>
       <figure class="figure reveal">
-        <img src="images/console-capacity-en.svg" alt="Console capacity panel: total, used, recycle bin, max writable and conservative writable" width="560" height="380">
+        <img loading="lazy" src="images/console-capacity-en.svg" alt="Console capacity panel: total, used, recycle bin, max writable and conservative writable" width="560" height="380">
         <figcaption>Capacity panel (illustrative values)</figcaption>
       </figure>
     </div>
@@ -303,12 +322,11 @@ aws --endpoint-url $EP s3 ls s3://archive/2026/</pre>
         <ul class="ticks">
           <li>Too few writable nodes, capacity pressure</li>
           <li>Disk failures, MongoDB liveness</li>
-          <li>License validation failures</li>
         </ul>
       </article>
       <article class="card reveal">
         <h3>Prometheus and alert templates</h3>
-        <p>All metrics live in the <code>kdss_*</code> namespace, and <code>/metrics</code> supports Bearer-token authentication. Each release ships 62 alert-rule templates ready for your existing monitoring stack.</p>
+        <p>All metrics live in the <code>kdss_*</code> namespace, and <code>/metrics</code> supports Bearer-token authentication. Each release ships 63 alert-rule templates ready for your existing monitoring stack.</p>
       </article>
       <article class="card reveal">
         <h3>Replicated Masters with leader election</h3>
@@ -319,8 +337,8 @@ aws --endpoint-url $EP s3 ls s3://archive/2026/</pre>
     <div class="split" style="margin-top:56px">
       <div>
         <h3 style="font-size:1.5rem;margin-bottom:14px">Rolling upgrades, no maintenance window</h3>
-        <p>Upgrades proceed one node at a time. Each node enters maintenance mode, waits for in-flight writes to drain, is replaced and verified, and only then returns to service.</p>
-        <div class="callout">At any moment, the number of nodes offline never exceeds the parity count minus one. With 29+3, at most two nodes are under maintenance at once, leaving headroom for unexpected failures.</div>
+        <p>By default, upgrades proceed one node at a time. Each node enters maintenance mode, waits for in-flight writes to drain, is replaced and verified, and only then returns to service.</p>
+        <div class="callout">The number of nodes in maintenance at the same time is capped at parity shards − 1. With 29+3, that is two nodes, leaving headroom for unexpected failures.</div>
       </div>
       <div class="card reveal">
         <div class="steps">
@@ -339,7 +357,7 @@ aws --endpoint-url $EP s3 ls s3://archive/2026/</pre>
   <div class="container">
     <div class="section-head">
       <span class="eyebrow">Security</span>
-      <h2>Guarded accounts, interfaces and licensing</h2>
+      <h2>Guarded accounts, interfaces and traffic</h2>
       <p class="lead">KDSS is usually deployed on a private network. On top of that, the console, the metrics endpoint and inter-component traffic each have their own authentication and protection.</p>
     </div>
     <div class="grid grid-3">
@@ -360,12 +378,12 @@ aws --endpoint-url $EP s3 ls s3://archive/2026/</pre>
         <p>Mutual TLS can be enabled for gRPC traffic between components, or left off to simplify private-network deployments.</p>
       </article>
       <article class="card card-flat reveal">
-        <h3>Online license validation</h3>
-        <p>Licenses are validated online, and a failed check raises a cluster alert instead of failing silently.</p>
+        <h3>S3 access keys</h3>
+        <p>S3 requests are signed with AWS SigV4, and access keys are created and managed centrally in the console.</p>
       </article>
       <article class="card card-flat reveal">
-        <h3>Access keys and audit logs</h3>
-        <p>S3 access keys are created and managed centrally in the console, and audit logs record administrative actions for later review.</p>
+        <h3>Audit logs</h3>
+        <p>Console audit logs record administrative actions for later review.</p>
       </article>
     </div>
   </div>
@@ -396,11 +414,11 @@ aws --endpoint-url $EP s3 ls s3://archive/2026/</pre>
         <a class="brand" href="./"><img src="images/logo-light.svg" alt="" width="30" height="30">KDSS<small>Distributed Storage</small></a>
         <p>Erasure-coded distributed storage for petabyte-scale data — low-cost, highly reliable infrastructure for long-term retention.</p>
       </div>
-      <div><h4>Product</h4><ul><li><a href="features.html">Features</a></li><li><a href="architecture.html">Architecture</a></li><li><a href="solutions.html">Solutions</a></li></ul></div>
-      <div><h4>Resources</h4><ul><li><a href="docs.html">Docs</a></li><li><a href="downloads/kdss-whitepaper-en.pdf">Whitepaper</a></li><li><a href="docs.html#s3">S3 API</a></li></ul></div>
-      <div><h4>Contact</h4><ul><li><a href="mailto:contact@kdss.io">contact@kdss.io</a></li><li><a href="mailto:support@kdss.io">support@kdss.io</a></li><li><a href="about.html">About</a></li></ul></div>
+      <div><p class="footer-title">Product</p><ul><li><a href="features.html">Features</a></li><li><a href="architecture.html">Architecture</a></li><li><a href="solutions.html">Solutions</a></li></ul></div>
+      <div><p class="footer-title">Resources</p><ul><li><a href="docs.html">Docs</a></li><li><a href="downloads/kdss-whitepaper-en.pdf">Whitepaper</a></li><li><a href="docs.html#s3">S3 API</a></li></ul></div>
+      <div><p class="footer-title">Contact</p><ul><li><a href="mailto:contact@kdss.io">contact@kdss.io</a></li><li><a href="mailto:support@kdss.io">support@kdss.io</a></li><li><a href="about.html">About</a></li></ul></div>
     </div>
-    <div class="legal"><span>© 2026 KDSS. All rights reserved.</span><span>Version 26.11.1</span></div>
+    <div class="legal"><span>© 2026 KDSS. All rights reserved.</span><span>Version 26.11.2</span></div>
   </div>
 </footer>
 

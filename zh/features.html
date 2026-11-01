@@ -5,34 +5,53 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>产品能力 — KDSS 分布式存储</title>
 <meta name="description" content="KDSS 产品能力：纠删码与自愈、裸盘直写引擎、FUSE 与 S3 双接口、可视化运维与内置告警、RBAC 与传输安全。">
+<link rel="icon" href="../favicon.ico" sizes="32x32">
 <link rel="icon" href="../images/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="../apple-touch-icon.png">
+<link rel="canonical" href="https://www.kdss.io/zh/features.html">
 <link rel="alternate" hreflang="en" href="https://www.kdss.io/features.html">
 <link rel="alternate" hreflang="zh-CN" href="https://www.kdss.io/zh/features.html">
+<link rel="alternate" hreflang="x-default" href="https://www.kdss.io/features.html">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="KDSS">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:title" content="产品能力 — KDSS 分布式存储">
+<meta property="og:description" content="KDSS 产品能力：纠删码与自愈、裸盘直写引擎、FUSE 与 S3 双接口、可视化运维与内置告警、RBAC 与传输安全。">
+<meta property="og:url" content="https://www.kdss.io/zh/features.html">
+<meta property="og:image" content="https://www.kdss.io/images/og-zh.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="产品能力 — KDSS 分布式存储">
+<meta name="twitter:description" content="KDSS 产品能力：纠删码与自愈、裸盘直写引擎、FUSE 与 S3 双接口、可视化运维与内置告警、RBAC 与传输安全。">
+<meta name="twitter:image" content="https://www.kdss.io/images/og-zh.png">
 <link rel="stylesheet" href="../css/site.css">
 <link rel="stylesheet" href="../css/pages/features.css">
 </head>
 <body>
+<a class="skip-link" href="#main">跳到正文</a>
 
 <header class="site-header">
   <div class="container">
     <a class="brand" href="./"><img src="../images/logo.svg" alt="" width="30" height="30">KDSS<small>分布式存储</small></a>
-    <nav class="nav" aria-label="主导航">
+    <nav class="nav" id="site-nav" aria-label="主导航">
       <a href="./">首页</a>
       <a href="features.html" aria-current="page">产品能力</a>
       <a href="solutions.html">解决方案</a>
       <a href="architecture.html">技术架构</a>
       <a href="docs.html">文档</a>
       <a href="about.html">关于我们</a>
+      <a class="btn btn-primary nav-contact" href="#contact">联系我们</a>
     </nav>
     <div class="nav-actions">
       <div class="lang"><span>中</span><a href="../features.html" hreflang="en">EN</a></div>
       <a class="btn btn-primary btn-sm" href="#contact">联系我们</a>
     </div>
-    <button class="menu-btn" aria-label="菜单" aria-expanded="false"><span></span></button>
+    <button class="menu-btn" aria-controls="site-nav" aria-label="菜单" aria-expanded="false"><span></span></button>
   </div>
 </header>
 
-<main>
+<main id="main" tabindex="-1">
 
 <section class="page-hero">
   <div class="container">
@@ -54,7 +73,7 @@
   <div class="container">
     <div class="section-head">
       <span class="eyebrow">数据可靠性与自愈</span>
-      <h2>多盘同时故障不丢数据，坏盘自动发现、自动修复</h2>
+      <h2>多盘同时故障数据保持完整，坏盘自动发现、自动修复</h2>
       <p class="lead">Reed-Solomon 纠删码提供冗余，放置约束保证冗余真实有效，四层健康监测与存储侧重建让集群在故障后自行回到完整状态。</p>
     </div>
 
@@ -65,12 +84,12 @@
         <ul class="ticks">
           <li>29+3：任意 3 个分片（盘或节点）同时丢失，数据仍可读、可重建</li>
           <li>得盘率 90.6%，同等容错下远高于三副本的 33.3%</li>
-          <li>条带粒度大，MongoDB 只记条带级元数据，元数据量小</li>
+          <li>条带粒度大，按条带记录数据位置（另有目录与文件元数据），元数据规模小</li>
           <li>编解码基于 klauspost/reedsolomon，SIMD 加速</li>
         </ul>
       </div>
       <figure class="figure reveal">
-        <img src="../images/ec-efficiency-zh.svg" alt="各纠删码档位得盘率对比：三副本 33.3%，5+2 71.4%，9+2 81.8%，18+3 85.7%，22+3 88.0%，29+3 90.6%，31+3 91.2%" width="560" height="480">
+        <img loading="lazy" src="../images/ec-efficiency-zh.svg" alt="各纠删码档位得盘率对比：三副本 33.3%，5+2 71.4%，9+2 81.8%，18+3 85.7%，22+3 88.0%，29+3 90.6%，31+3 91.2%" width="560" height="480">
       </figure>
     </div>
 
@@ -115,7 +134,7 @@
         </ul>
       </div>
       <figure class="figure reveal">
-        <img src="../images/disk-health-zh.svg" alt="磁盘健康四层监测，经自动隔离、存储侧重建、换盘后原位修复，恢复完整冗余" width="560" height="450">
+        <img loading="lazy" src="../images/disk-health-zh.svg" alt="磁盘健康四层监测，经自动隔离、存储侧重建、换盘后原位修复，恢复完整冗余" width="560" height="450">
       </figure>
     </div>
 
@@ -152,7 +171,7 @@
     <div class="grid grid-3">
       <article class="card reveal">
         <h3>顺序追加，延长 HDD 寿命</h3>
-        <p>所有写入顺序追加、4 KB 对齐。磁头寻道少，吞吐稳定，硬盘寿命更长、故障率更低。</p>
+        <p>所有写入顺序追加、4 KB 对齐。减少寻道，吞吐稳定，有利于延长硬盘寿命。</p>
       </article>
       <article class="card reveal">
         <h3>双超级块与盘身份</h3>
@@ -176,7 +195,7 @@
           <tbody>
             <tr class="highlight"><td><code>immediate</code> <span class="tag">默认</span></td><td>每次写入立即落盘</td><td>通用，最稳妥</td></tr>
             <tr><td><code>batch</code></td><td>组提交，合并多次写入一起落盘</td><td>希望减少落盘次数的写入密集场景</td></tr>
-            <tr><td><code>deferred</code></td><td>延后落盘</td><td>带 BBU 的阵列卡等有掉电保护的硬件</td></tr>
+            <tr><td><code>deferred</code></td><td>后台每 5 秒落盘；断电可能丢失最近约 5 秒的写入</td><td>有掉电保护（如带 BBU 的阵列卡）且可接受该窗口的场景</td></tr>
           </tbody>
         </table>
       </div>
@@ -193,7 +212,7 @@
         </ul>
       </div>
       <figure class="figure reveal">
-        <img src="../images/hole-reuse-zh.svg" alt="删除后形成空洞，同尺寸新分片复用空洞，碎片整理把尾部数据搬入空洞后截断" width="580" height="420">
+        <img loading="lazy" src="../images/hole-reuse-zh.svg" alt="删除后形成空洞，同尺寸新分片复用空洞，碎片整理把尾部数据搬入空洞后截断" width="580" height="420">
       </figure>
     </div>
 
@@ -208,7 +227,7 @@
         </ul>
       </div>
       <figure class="figure reveal">
-        <img src="../images/capacity-guard-zh.svg" alt="三级容量保护：集群 99% 停止新写入；单盘 99.5% 退出写入环；单盘剩余小于 4 GiB 只读" width="460" height="470">
+        <img loading="lazy" src="../images/capacity-guard-zh.svg" alt="三级容量保护：集群 99% 停止新写入；单盘 99.5% 退出写入环；单盘剩余小于 4 GiB 只读" width="460" height="470">
       </figure>
     </div>
   </div>
@@ -219,7 +238,7 @@
   <div class="container">
     <div class="section-head">
       <span class="eyebrow">访问接口</span>
-      <h2>像本地目录一样挂载，也能用 S3 工具直接访问</h2>
+      <h2>像本地目录一样挂载，也可通过 S3 接口访问</h2>
       <p class="lead">同一个集群同时提供 POSIX 文件挂载与 S3 兼容接口。生产环境中约 99% 的读写走 FUSE 客户端。</p>
     </div>
 
@@ -238,7 +257,7 @@
       <article class="card reveal">
         <span class="tag teal">S3</span>
         <h3 style="margin-top:12px">S3 兼容网关</h3>
-        <p>可直接使用 AWS CLI、s3cmd、boto3、Go SDK 等通用工具与 SDK。</p>
+        <p>兼容核心 S3 API；已验证客户端：AWS CLI、boto3、s3cmd（按文档配置）。</p>
         <ul class="ticks">
           <li>大对象流式读写：64 MB 以内缓冲，超过则分段流式处理，内存占用可控</li>
           <li>支持 Range 读取与分段上传</li>
@@ -254,7 +273,7 @@
           <table class="table api-table">
             <thead><tr><th>类别</th><th>操作</th></tr></thead>
             <tbody>
-              <tr><td>Bucket</td><td>ListBuckets · CreateBucket · DeleteBucket · HeadBucket · ListObjects</td></tr>
+              <tr><td>Bucket</td><td>ListBuckets · CreateBucket · DeleteBucket · HeadBucket · ListObjectsV2</td></tr>
               <tr><td>对象</td><td>PutObject · GetObject（含 Range）· HeadObject · DeleteObject · CopyObject</td></tr>
               <tr><td>分段上传</td><td>CreateMultipartUpload · UploadPart · CompleteMultipartUpload · AbortMultipartUpload · ListParts · ListMultipartUploads</td></tr>
             </tbody>
@@ -291,7 +310,7 @@ aws --endpoint-url $EP s3 ls s3://archive/2026/</pre>
         <p style="margin-top:12px">容量面板不只显示"剩余空间"。它综合拒写线、各节点余量与纠删码放置约束，实时给出<strong>当前最大可写</strong>与<strong>保守可写</strong>，回答"现在还能真正写进多少数据"。</p>
       </div>
       <figure class="figure reveal">
-        <img src="../images/console-capacity-zh.svg" alt="控制台容量面板示意：总容量、已使用、回收站、当前最大可写、保守可写" width="560" height="380">
+        <img loading="lazy" src="../images/console-capacity-zh.svg" alt="控制台容量面板示意：总容量、已使用、回收站、当前最大可写、保守可写" width="560" height="380">
         <figcaption>容量面板（图中为示意数值）</figcaption>
       </figure>
     </div>
@@ -303,12 +322,11 @@ aws --endpoint-url $EP s3 ls s3://archive/2026/</pre>
         <ul class="ticks">
           <li>可写节点不足、容量告急</li>
           <li>磁盘故障、MongoDB 存活</li>
-          <li>许可证校验失败</li>
         </ul>
       </article>
       <article class="card reveal">
         <h3>Prometheus 与告警模板</h3>
-        <p>全量指标统一在 <code>kdss_*</code> 命名空间，<code>/metrics</code> 支持 Bearer 令牌认证。随版本提供 62 条告警规则模板，可直接接入现有监控体系。</p>
+        <p>全量指标统一在 <code>kdss_*</code> 命名空间，<code>/metrics</code> 支持 Bearer 令牌认证。随版本提供 63 条告警规则模板，可直接接入现有监控体系。</p>
       </article>
       <article class="card reveal">
         <h3>Master 多副本选主</h3>
@@ -319,8 +337,8 @@ aws --endpoint-url $EP s3 ls s3://archive/2026/</pre>
     <div class="split" style="margin-top:56px">
       <div>
         <h3 style="font-size:1.5rem;margin-bottom:14px">滚动升级，不需要停机窗口</h3>
-        <p>升级逐台进行。每台节点先进入维护模式，等在途写入清零后再替换和验证，确认无误才恢复服务。</p>
-        <div class="callout">任何时刻，同时离线的节点数不超过校验分片数减 1。以 29+3 为例，最多同时维护 2 台，其余容错余量留给意外故障。</div>
+        <p>升级默认逐台进行。每台节点先进入维护模式，等在途写入清零后再替换和验证，确认无误才恢复服务。</p>
+        <div class="callout">同时维护的节点数上限为校验分片数 − 1。以 29+3 为例，最多同时维护 2 台，其余容错余量留给意外故障。</div>
       </div>
       <div class="card reveal">
         <div class="steps">
@@ -339,7 +357,7 @@ aws --endpoint-url $EP s3 ls s3://archive/2026/</pre>
   <div class="container">
     <div class="section-head">
       <span class="eyebrow">安全</span>
-      <h2>账号、接口与许可证，各有一道门</h2>
+      <h2>账号、接口与通信，各有一道门</h2>
       <p class="lead">KDSS 通常部署在内网。在此基础上，控制台、指标接口与节点间通信都提供了相应的认证与防护手段。</p>
     </div>
     <div class="grid grid-3">
@@ -360,12 +378,12 @@ aws --endpoint-url $EP s3 ls s3://archive/2026/</pre>
         <p>组件之间的 gRPC 通信可启用双向 TLS；纯内网部署也可以关闭以简化运维。</p>
       </article>
       <article class="card card-flat reveal">
-        <h3>许可证在线校验</h3>
-        <p>许可证在线校验；校验失败时集群发出告警，不会无声失效。</p>
+        <h3>S3 访问密钥</h3>
+        <p>S3 请求使用 AWS SigV4 签名；访问密钥在控制台集中创建与管理。</p>
       </article>
       <article class="card card-flat reveal">
-        <h3>访问密钥与审计日志</h3>
-        <p>S3 访问密钥在控制台集中创建与管理；控制台的审计日志记录管理操作，便于事后追溯。</p>
+        <h3>审计日志</h3>
+        <p>控制台的审计日志记录管理操作，便于事后追溯。</p>
       </article>
     </div>
   </div>
@@ -396,11 +414,11 @@ aws --endpoint-url $EP s3 ls s3://archive/2026/</pre>
         <a class="brand" href="./"><img src="../images/logo-light.svg" alt="" width="30" height="30">KDSS<small>分布式存储</small></a>
         <p>面向 PB 级数据的纠删码分布式存储系统，为海量数据的长期保存提供低成本、高可靠的基础设施。</p>
       </div>
-      <div><h4>产品</h4><ul><li><a href="features.html">产品能力</a></li><li><a href="architecture.html">技术架构</a></li><li><a href="solutions.html">解决方案</a></li></ul></div>
-      <div><h4>资源</h4><ul><li><a href="docs.html">文档</a></li><li><a href="../downloads/kdss-whitepaper-zh.pdf">技术白皮书</a></li><li><a href="docs.html#s3">S3 接口</a></li></ul></div>
-      <div><h4>联系</h4><ul><li><a href="mailto:contact@kdss.io">contact@kdss.io</a></li><li><a href="mailto:support@kdss.io">support@kdss.io</a></li><li><a href="about.html">关于我们</a></li></ul></div>
+      <div><p class="footer-title">产品</p><ul><li><a href="features.html">产品能力</a></li><li><a href="architecture.html">技术架构</a></li><li><a href="solutions.html">解决方案</a></li></ul></div>
+      <div><p class="footer-title">资源</p><ul><li><a href="docs.html">文档</a></li><li><a href="../downloads/kdss-whitepaper-zh.pdf">技术白皮书</a></li><li><a href="docs.html#s3">S3 接口</a></li></ul></div>
+      <div><p class="footer-title">联系</p><ul><li><a href="mailto:contact@kdss.io">contact@kdss.io</a></li><li><a href="mailto:support@kdss.io">support@kdss.io</a></li><li><a href="about.html">关于我们</a></li></ul></div>
     </div>
-    <div class="legal"><span>© 2026 KDSS. 保留所有权利。</span><span>当前版本 26.11.1</span></div>
+    <div class="legal"><span>© 2026 KDSS. 保留所有权利。</span><span>当前版本 26.11.2</span></div>
   </div>
 </footer>
 

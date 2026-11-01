@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>KDSS Distributed Storage — Technical Whitepaper</title>
-<meta name="description" content="KDSS technical whitepaper (version 26.11.1): architecture, erasure coding, raw-disk storage engine, reliability and self-healing, access interfaces, operations, security and capacity planning.">
+<meta name="description" content="KDSS technical whitepaper (version 26.11.2): architecture, erasure coding, raw-disk storage engine, reliability and self-healing, access interfaces, operations, security and capacity planning.">
 <link rel="icon" href="../images/favicon.svg" type="image/svg+xml">
 <link rel="stylesheet" href="whitepaper.css">
 </head>
@@ -21,13 +21,13 @@
   </div>
   <ul class="points">
     <li><b>Low cost</b>90.6% storage efficiency with EC 29+3; sequential raw-disk writes</li>
-    <li><b>Highly reliable</b>Data stays readable and rebuildable with any 3 shards lost</li>
+    <li><b>Highly reliable</b>With 29+3, data stays readable and rebuildable with any 3 shards lost</li>
     <li><b>Easy to operate</b>Non-disruptive rolling upgrades, built-in console and alerts</li>
   </ul>
   <div class="visual"><img src="../images/hero-stripe-en.svg" alt="EC 29+3 stripe placement"></div>
   <div class="band"></div>
   <div class="meta">
-    <div class="ver"><small>Version</small>26.11.1<small style="margin-top:3mm">November 2026</small></div>
+    <div class="ver"><small>Version</small>26.11.2<small style="margin-top:3mm">November 2026</small></div>
     <div class="contact">www.kdss.io<br>contact@kdss.io</div>
   </div>
 </section>
@@ -48,22 +48,22 @@
   <div class="metrics">
     <div class="metric"><strong>90.6<small>%</small></strong><span>Storage efficiency (EC 29+3)</span></div>
     <div class="metric"><strong>3</strong><span>Shards (disks or nodes) that can fail at once</span></div>
-    <div class="metric"><strong>≈16<small>PB</small></strong><span>Raw capacity per cluster (36 nodes × 36 disks)</span></div>
-    <div class="metric"><strong>~190<small>PB</small></strong><span>Raw capacity in production</span></div>
+    <div class="metric"><strong>~18<small>PB</small></strong><span>Raw capacity per cluster (36 nodes × 36 × 14 TB disks)</span></div>
+    <div class="metric"><strong>~190<small>PB</small></strong><span>Deployed footprint (raw capacity)</span></div>
   </div>
 
   <p>KDSS is designed around three goals:</p>
   <ul class="ticks">
-    <li><strong>Low cost.</strong> Storage efficiency reaches up to 91.2% (31+3). The 29+3 profile, selected automatically for large clusters, delivers 90.6% — about 37% of the raw capacity that triple replication needs for the same usable capacity. The engine appends sequentially to the block device, which keeps head seeks low and helps extend HDD service life.</li>
+    <li><strong>Low cost.</strong> Storage efficiency reaches up to 91.2% (31+3). The 29+3 profile, selected automatically for large clusters, delivers 90.6% — about 37% of the raw capacity that triple replication needs for the same usable capacity. The engine appends sequentially to the block device, which reduces seeks and helps extend drive life.</li>
     <li><strong>High reliability.</strong> Shards of a stripe never share a node; with 29+3, data remains readable and rebuildable even when any 3 shards are lost at once. Every read is CRC32-verified, background scrubbing and placement audits run continuously, four layers of disk-health monitoring isolate failing disks automatically, and repair runs locally on the storage nodes.</li>
-    <li><strong>Simple operations.</strong> Upgrades roll through the cluster one node at a time without downtime. The web console shows cluster, node, disk and capacity views — including real-time “max writable now” and “conservative writable” figures. Built-in P0/P1/P2 alerts are pushed to Lark and email, and a full set of Prometheus metrics is exposed.</li>
+    <li><strong>Simple operations.</strong> Upgrades roll through the cluster without downtime, one node at a time by default. The web console shows cluster, node, disk and capacity views — including real-time “max writable now” and “conservative writable” figures. Built-in P0/P1/P2 alerts are pushed to Lark and email, and a full set of Prometheus metrics is exposed.</li>
   </ul>
 
   <h3>Proven in production</h3>
-  <p>KDSS runs in multiple long-lived production clusters with close to 190 PB of raw capacity in total, more than 300 storage nodes and over 11,000 data disks, managing more than 700 million stripes. About 99% of production reads and writes go through the FUSE mount.</p>
+  <p>KDSS runs in multiple long-lived production clusters, with a deployed footprint of ~190 PB of raw capacity, more than 300 storage nodes and over 11,000 data disks, managing hundreds of millions of stripes. About 99% of production reads and writes go through the FUSE mount.</p>
 
   <h3>About this paper</h3>
-  <p>This paper is written for architects, operations engineers and technical decision-makers evaluating or deploying KDSS. It covers the architecture, erasure coding and data layout, the storage engine, reliability mechanisms, access interfaces, operations and security, and closes with a capacity-planning method and recommended hardware. Everything described applies to version 26.11.1.</p>
+  <p>This paper is written for architects, operations engineers and technical decision-makers evaluating or deploying KDSS. It covers the architecture, erasure coding and data layout, the storage engine, reliability mechanisms, access interfaces, operations and security, and closes with a capacity-planning method and recommended hardware. Everything described applies to version 26.11.2.</p>
 </section>
 
 <!-- ============ 2 ============ -->
@@ -107,19 +107,19 @@
   <p class="intro">KDSS treats redundancy, on-disk layout, access and operations as one design: erasure coding sets cost and fault tolerance, the raw-disk engine sets disk efficiency and data verification, FUSE and S3 set how applications connect, and the console and alerts determine whether the system can be run reliably for years.</p>
 
   <h3 id="s3-1"><span class="no">3.1</span>Positioning</h3>
-  <p>KDSS is built for large, mostly large-file data that must be retained for a long time: sealed data for decentralized storage networks, cold archives, video and media assets, backup copies, and raw data for AI and analytics. It organizes data into 256 MB stripes and keeps metadata at stripe level only, so metadata stays small even at petabyte scale.</p>
+  <p>KDSS is built for large, mostly large-file data that must be retained for a long time: sealed data for decentralized storage networks, cold archives, video and media assets, backup copies, and raw data for AI and analytics. It organizes data into 256 MB stripes and records data locations per stripe (plus directory and file metadata), so metadata stays small even at petabyte scale.</p>
 
   <h3 id="s3-2"><span class="no">3.2</span>Key specifications</h3>
   <table class="table">
-    <caption>Table 3-1 Key specifications (version 26.11.1)</caption>
+    <caption>Table 3-1 Key specifications (version 26.11.2)</caption>
     <thead><tr><th style="width:28%">Item</th><th>Specification</th></tr></thead>
     <tbody>
       <tr><td>Redundancy</td><td>Reed-Solomon erasure coding (klauspost/reedsolomon, SIMD-accelerated)</td></tr>
       <tr><td>EC profiles</td><td>Automatic: 5+2, 9+2, 18+3, 29+3. Manual high-density: 19+3, 21+3, 22+3, 31+3, 31+2</td></tr>
       <tr><td>Storage efficiency</td><td>71.4% (5+2), 90.6% (29+3), 91.2% (31+3)</td></tr>
       <tr><td>Fault tolerance</td><td>3-parity profiles: any 3 shards (disks or nodes) can be lost at once</td></tr>
-      <tr><td>Stripe size</td><td>One 256 MB block = one stripe; about 8.8 MB per shard with 29+3</td></tr>
-      <tr><td>Cluster size</td><td>From 8 nodes (5+2); 36 nodes × 36 disks, about 16 PB raw, per cluster</td></tr>
+      <tr><td>Stripe size</td><td>One 256 MB block = one stripe; about 8.8 MiB per shard with 29+3</td></tr>
+      <tr><td>Cluster size</td><td>From 8 nodes (5+2); about 18 PB raw per cluster (36 nodes × 36 × 14 TB disks)</td></tr>
       <tr><td>Storage engine</td><td>Raw-disk, sequential append, 4 KB aligned; dual superblocks; BadgerDB local index</td></tr>
       <tr><td>Data verification</td><td>CRC32 on every read, including streaming reads; background CRC scrub, 20 MB/s per node by default</td></tr>
       <tr><td>Access</td><td>ksfs FUSE client (POSIX mount); S3-compatible gateway</td></tr>
@@ -129,14 +129,14 @@
 
   <h3 id="s3-3"><span class="no">3.3</span>Design principles</h3>
   <div class="cards four">
-    <div class="card flat"><h4>Large stripes, little metadata</h4><p>256 MB stripes; MongoDB stores stripe-level metadata only, so metadata grows slowly.</p></div>
+    <div class="card flat"><h4>Large stripes, little metadata</h4><p>256 MB stripes; data locations are recorded per stripe (plus directory and file metadata), so metadata stays small and grows slowly.</p></div>
     <div class="card flat"><h4>Data bypasses the Master</h4><p>Clients encode locally and talk to storage nodes in parallel; the Master handles metadata, election and scheduling.</p></div>
     <div class="card flat"><h4>Failure is normal</h4><p>Detection, isolation, repair and scrubbing are automatic; repair continues after the cluster stops accepting writes.</p></div>
     <div class="card flat"><h4>Conservative defaults</h4><p>EC profiles are chosen conservatively from the node count; fsync defaults to every write.</p></div>
   </div>
 
   <h3 id="s3-4"><span class="no">3.4</span>Versioning and technology</h3>
-  <p>KDSS uses calendar versioning (YY.MM.PATCH); this paper covers 26.11.1. Technology stack: Go, gRPC + Protocol Buffers, MongoDB, klauspost/reedsolomon, hanwen/go-fuse, BadgerDB, Gin, Vue 3 + Element Plus, Zap and the Prometheus client.</p>
+  <p>KDSS uses calendar versioning (YY.MM.PATCH); this paper covers 26.11.2. Technology stack: Go, gRPC + Protocol Buffers, MongoDB, klauspost/reedsolomon, hanwen/go-fuse, BadgerDB, Gin, Vue 3 + Element Plus, Zap and the Prometheus client.</p>
 </section>
 
 <!-- ============ 4 ============ -->
@@ -177,7 +177,7 @@
     <li><b>Allocate:</b> it asks the Master for a new stripe and its shard locations.</li>
     <li><b>Encode locally:</b> the client performs EC encoding — with 29+3, 29 data shards and 3 parity shards.</li>
     <li><b>Write in parallel:</b> all 32 shards are written in parallel to 32 different storage nodes.</li>
-    <li><b>Commit:</b> once every shard is on disk, the stripe metadata is committed to the Master.</li>
+    <li><b>Commit:</b> once all data shards and at least one parity shard are written, the stripe metadata is committed to the Master; repair fills in any missing shards.</li>
   </ol>
   <h4>Read</h4>
   <ol class="steps">
@@ -205,10 +205,11 @@
       <tr><td>9+2</td><td class="num">81.8%</td><td class="c">2</td><td class="num">12</td><td><span class="tag teal">Auto</span></td></tr>
       <tr><td>18+3</td><td class="num">85.7%</td><td class="c">3</td><td class="num">22</td><td><span class="tag teal">Auto</span></td></tr>
       <tr class="hl"><td>29+3</td><td class="num">90.6%</td><td class="c">3</td><td class="num">33</td><td><span class="tag teal">Auto</span> Recommended at scale</td></tr>
-      <tr><td>19+3 / 21+3</td><td class="num">86.4% / 87.5%</td><td class="c">3</td><td class="num">—</td><td><span class="tag">Manual</span> High density</td></tr>
+      <tr><td>19+3</td><td class="num">86.4%</td><td class="c">3</td><td class="num">23</td><td><span class="tag">Manual</span> High density</td></tr>
+      <tr><td>21+3</td><td class="num">87.5%</td><td class="c">3</td><td class="num">25</td><td><span class="tag">Manual</span> High density</td></tr>
       <tr><td>22+3</td><td class="num">88.0%</td><td class="c">3</td><td class="num">26</td><td><span class="tag">Manual</span> High density</td></tr>
-      <tr><td>31+3</td><td class="num">91.2%</td><td class="c">3</td><td class="num">—</td><td><span class="tag">Manual</span> High density</td></tr>
-      <tr><td>31+2</td><td class="num">93.9%</td><td class="c">2</td><td class="num">—</td><td><span class="tag amber">Manual</span> Lower tolerance; use with care</td></tr>
+      <tr><td>31+3</td><td class="num">91.2%</td><td class="c">3</td><td class="num">35</td><td><span class="tag">Manual</span> High density</td></tr>
+      <tr><td>31+2</td><td class="num">93.9%</td><td class="c">2</td><td class="num">34</td><td><span class="tag amber">Manual</span> Lower tolerance; use with care</td></tr>
     </tbody>
   </table>
   <p class="muted" style="font-size:8.5pt">Note: efficiency for 19+3, 21+3 and 31+2 is computed as k/(k+m). Each minimum node count equals the stripe width k+m plus one.</p>
@@ -221,7 +222,7 @@
   </figure>
 
   <h3 id="s5-3"><span class="no">5.3</span>Stripe layout</h3>
-  <p>Each 256 MB block forms one stripe. With 29+3, the block is split into 29 data shards of about 8.8 MB, 3 parity shards are computed, and all 32 shards are written to 32 different nodes. Large stripes keep every disk I/O large and let metadata stay at stripe level.</p>
+  <p>Each 256 MB block forms one stripe. With 29+3, the block is split into 29 data shards of about 8.8 MiB, 3 parity shards are computed, and all 32 shards are written to 32 different nodes. Large stripes keep every disk I/O large and let data locations be recorded per stripe, keeping metadata small.</p>
   <figure class="figure narrow">
     <img src="../images/hero-stripe-en.svg" alt="EC 29+3 stripe placement">
     <figcaption>Figure 5-2 Placement of an EC 29+3 stripe across nodes</figcaption>
@@ -241,7 +242,7 @@
   <p class="intro">Storage nodes read and write block devices directly, bypassing the local file system. Shards are appended sequentially, located through a local index, and verified on every read.</p>
 
   <h3 id="s6-1"><span class="no">6.1</span>Sequential append</h3>
-  <p>Shards are 4 KB aligned and appended at the write frontier. Compared with keeping many files on a file system, this avoids random file-system metadata updates and reduces head seeks: throughput is steadier, HDDs last longer and fail less often.</p>
+  <p>Shards are 4 KB aligned and appended at the write frontier. Compared with keeping many files on a file system, this avoids random file-system metadata updates and reduces head seeks: throughput is steadier, which helps extend drive life.</p>
   <figure class="figure">
     <img src="../images/wp-disk-en.svg" alt="Raw-disk layout">
     <figcaption>Figure 6-1 Raw-disk layout (illustrative, not to scale)</figcaption>
@@ -272,7 +273,7 @@
     <tbody>
       <tr><td>immediate (default)</td><td>Every write is flushed to disk before it is acknowledged</td></tr>
       <tr><td>batch</td><td>Group commit: several writes share one flush</td></tr>
-      <tr><td>deferred</td><td>For hardware that guarantees power-loss safety, such as RAID controllers with a BBU</td></tr>
+      <tr><td>deferred</td><td>Flushed in the background every 5 seconds; a power loss can lose up to the last ~5 seconds of writes. For hardware with power-loss protection (such as a RAID controller with a BBU) where that window is acceptable</td></tr>
     </tbody>
   </table>
 
@@ -353,12 +354,12 @@
   </ul>
 
   <h3 id="s8-2"><span class="no">8.2</span>S3-compatible gateway</h3>
-  <p>The S3 gateway supports the APIs below (verified against the code). Large objects are streamed: up to 64 MB is buffered, anything larger is streamed in segments, keeping memory use bounded. Standard tools such as the AWS CLI, s3cmd, boto3 and the Go SDK work directly.</p>
+  <p>The S3 gateway supports the core S3 API (see the table below). Verified clients: AWS CLI, boto3 and s3cmd (configured as documented). Requests are signed with AWS SigV4; clients use path-style addressing with region us-east-1. Large objects are streamed: up to 64 MB is buffered, anything larger is streamed in 64 MB segments, keeping memory use bounded.</p>
   <table class="table">
     <caption>Table 8-1 Supported S3 APIs</caption>
     <thead><tr><th style="width:22%">Category</th><th>APIs</th></tr></thead>
     <tbody>
-      <tr><td>Bucket</td><td>ListBuckets, CreateBucket, DeleteBucket, HeadBucket, ListObjects</td></tr>
+      <tr><td>Bucket</td><td>ListBuckets, CreateBucket, DeleteBucket, HeadBucket, ListObjectsV2</td></tr>
       <tr><td>Object</td><td>PutObject, GetObject (incl. Range), HeadObject, DeleteObject, CopyObject</td></tr>
       <tr><td>Multipart upload</td><td>CreateMultipartUpload, UploadPart, CompleteMultipartUpload, AbortMultipartUpload, ListParts, ListMultipartUploads</td></tr>
     </tbody>
@@ -372,9 +373,11 @@ aws --endpoint-url http://&lt;gateway&gt;:9000 s3 ls s3://archive/2026/</pre>
 
   <div class="code-title">Python (boto3)</div>
 <pre>import boto3
+from botocore.config import Config
 
 s3 = boto3.client("s3", endpoint_url="http://&lt;gateway&gt;:9000",
-                  aws_access_key_id="&lt;ACCESS_KEY&gt;", aws_secret_access_key="&lt;SECRET_KEY&gt;")
+                  aws_access_key_id="&lt;ACCESS_KEY&gt;", aws_secret_access_key="&lt;SECRET_KEY&gt;",
+                  region_name="us-east-1", config=Config(s3={"addressing_style": "path"}))
 s3.upload_file("dataset.tar", "archive", "2026/dataset.tar")   <span class="c"># large files use multipart upload automatically</span>
 obj = s3.get_object(Bucket="archive", Key="2026/dataset.tar", Range="bytes=0-1048575")</pre>
 
@@ -407,13 +410,13 @@ obj = s3.get_object(Bucket="archive", Key="2026/dataset.tar", Range="bytes=0-104
 
   <h3 id="s9-3"><span class="no">9.3</span>Metrics and alerting</h3>
   <ul class="ticks">
-    <li><strong>Prometheus metrics:</strong> a complete set under the <code>kdss_*</code> namespace; <code>/metrics</code> supports Bearer-token authentication; 62 alert-rule templates ship with each release.</li>
+    <li><strong>Prometheus metrics:</strong> a complete set under the <code>kdss_*</code> namespace; <code>/metrics</code> supports Bearer-token authentication; 63 alert-rule templates ship with each release.</li>
     <li><strong>Built-in alerting:</strong> P0 / P1 / P2 severities, debouncing and reminder intervals, delivery to Lark and email, and alert history.</li>
-    <li><strong>Built-in rules:</strong> cover too few writable nodes, capacity, disk failures, MongoDB liveness, license-check failures and more.</li>
+    <li><strong>Built-in rules:</strong> cover too few writable nodes, capacity, disk failures, MongoDB liveness and more.</li>
   </ul>
 
   <h3 id="s9-4"><span class="no">9.4</span>Non-disruptive rolling upgrades</h3>
-  <p>Upgrades proceed one node at a time. Each node goes through:</p>
+  <p>By default, upgrades proceed one node at a time. Each node goes through:</p>
   <ol class="steps">
     <li><b>Cordon:</b> the node enters maintenance mode and stops accepting new writes.</li>
     <li><b>Drain:</b> wait until in-flight writes reach zero.</li>
@@ -421,7 +424,7 @@ obj = s3.get_object(Bucket="archive", Key="2026/dataset.tar", Range="bytes=0-104
     <li><b>Verify:</b> confirm the node is healthy.</li>
     <li><b>Uncordon:</b> the node accepts writes again; move on to the next one.</li>
   </ol>
-  <div class="callout"><b>Constraint:</b> the number of nodes offline at the same time never exceeds the number of parity shards minus one. A 29+3 cluster, for example, takes at most 2 nodes offline at once, keeping redundancy in reserve during the upgrade.</div>
+  <div class="callout"><b>Constraint:</b> the number of nodes in maintenance at the same time is capped at parity shards − 1. A 29+3 cluster, for example, has at most 2 nodes in maintenance at once, keeping redundancy in reserve during the upgrade.</div>
 
   <h3 id="s9-5"><span class="no">9.5</span>High availability</h3>
   <p>The Master runs as several replicas (typically five) and elects a leader together with the MongoDB replica set (majority writes). Failover is automatic, and client writes are redirected to the leader. Storage-node failures are covered by erasure-coded redundancy and trigger automatic repair.</p>
@@ -430,7 +433,7 @@ obj = s3.get_object(Bucket="archive", Key="2026/dataset.tar", Range="bytes=0-104
 <!-- ============ 10 ============ -->
 <section class="chapter" id="s10">
   <h2><span class="no">10</span>Security</h2>
-  <p class="intro">KDSS is deployed on internal networks by default. Its security controls cover identity and permissions on the management plane, access to the metrics endpoint, encryption between components, and license verification.</p>
+  <p class="intro">KDSS is deployed on internal networks by default. Its security controls cover identity and permissions on the management plane, access to the metrics endpoint, and encryption between components.</p>
 
   <table class="table">
     <caption>Table 10-1 Security controls</caption>
@@ -440,10 +443,9 @@ obj = s3.get_object(Bucket="archive", Key="2026/dataset.tar", Range="bytes=0-104
       <tr><td>Authentication</td><td>JWT sessions; passwords stored with bcrypt; login rate limiting and CAPTCHA</td></tr>
       <tr><td>Web protection</td><td>CSRF protection</td></tr>
       <tr><td>Audit</td><td>Audit log of console operations</td></tr>
-      <tr><td>S3 access</td><td>Buckets and access keys created and managed in the console</td></tr>
+      <tr><td>S3 access</td><td>AWS SigV4 signing; buckets and access keys created and managed in the console</td></tr>
       <tr><td>Metrics endpoint</td><td><code>/metrics</code> supports Bearer-token authentication</td></tr>
       <tr><td>Inter-component traffic</td><td>Optional gRPC mTLS; can be left off for internal-only deployments</td></tr>
-      <tr><td>License</td><td>Online verification; failures raise a built-in alert</td></tr>
     </tbody>
   </table>
 
@@ -467,21 +469,21 @@ obj = s3.get_object(Bucket="archive", Key="2026/dataset.tar", Range="bytes=0-104
   <h3 id="s11-2"><span class="no">11.2</span>Worked examples</h3>
   <table class="table">
     <caption>Table 11-1 Sizing examples (illustrative; 16 TB disks, decimal TB)</caption>
-    <thead><tr><th>Configuration</th><th class="num">Raw</th><th>Profile</th><th class="num">× efficiency</th><th class="num">× 99% watermark</th><th class="c">Tolerance</th></tr></thead>
+    <thead><tr><th>Configuration</th><th class="num">Raw</th><th>Profile</th><th class="num">Efficiency</th><th class="num">Usable (× 99% watermark)</th><th class="c">Tolerance</th></tr></thead>
     <tbody>
-      <tr><td>8 nodes × 36 disks</td><td class="num">4,608 TB</td><td>5+2</td><td class="num">3,291 TB</td><td class="num">≈ 3.3 PB</td><td class="c">2</td></tr>
-      <tr><td>12 nodes × 36 disks</td><td class="num">6,912 TB</td><td>9+2</td><td class="num">5,655 TB</td><td class="num">≈ 5.6 PB</td><td class="c">2</td></tr>
-      <tr><td>22 nodes × 36 disks</td><td class="num">12,672 TB</td><td>18+3</td><td class="num">10,862 TB</td><td class="num">≈ 10.8 PB</td><td class="c">3</td></tr>
-      <tr class="hl"><td>33 nodes × 36 disks</td><td class="num">19,008 TB</td><td>29+3</td><td class="num">17,226 TB</td><td class="num">≈ 17.1 PB</td><td class="c">3</td></tr>
+      <tr><td>8 nodes × 36 disks</td><td class="num">4,608 TB</td><td>5+2</td><td class="num">71.4%</td><td class="num">≈ 3,259 TB</td><td class="c">2</td></tr>
+      <tr><td>12 nodes × 36 disks</td><td class="num">6,912 TB</td><td>9+2</td><td class="num">81.8%</td><td class="num">≈ 5,599 TB</td><td class="c">2</td></tr>
+      <tr><td>22 nodes × 36 disks</td><td class="num">12,672 TB</td><td>18+3</td><td class="num">85.7%</td><td class="num">≈ 10,753 TB</td><td class="c">3</td></tr>
+      <tr class="hl"><td>33 nodes × 36 disks</td><td class="num">19,008 TB</td><td>29+3</td><td class="num">90.6%</td><td class="num">≈ 17,054 TB</td><td class="c">3</td></tr>
     </tbody>
   </table>
-  <p class="muted" style="font-size:8.5pt">Note: efficiency uses the exact k/(k+m). System disks, reserved space and the difference between nominal and usable disk capacity are not included.</p>
+  <p class="muted" style="font-size:8.5pt">Note: usable = raw × k/(k+m) × 99%, using the exact efficiency (e.g. 19,008 TB × 29/32 × 99% ≈ 17,054 TB). System disks, reserved space and the difference between nominal and usable disk capacity are not included.</p>
 
   <h3 id="s11-3"><span class="no">11.3</span>Planning guidelines</h3>
   <ul class="ticks">
     <li><strong>One node more than the stripe width.</strong> The minimum node count for each profile is k+m+1 — at least 33 nodes for 29+3.</li>
     <li><strong>Choose the profile by fault tolerance.</strong> To survive 3 simultaneous shard failures, use 18+3 or higher. Use 31+2 only where reduced tolerance is an explicit, accepted trade-off.</li>
-    <li><strong>Leave room for maintenance.</strong> During rolling upgrades, no more than m − 1 nodes may be offline at once.</li>
+    <li><strong>Leave room for maintenance.</strong> Rolling upgrades go one node at a time by default; the number of nodes in maintenance together is capped at m − 1.</li>
     <li><strong>Watch writable nodes.</strong> Writing a stripe needs k+m nodes that can accept writes. As nodes fill up, expand before the “too few writable nodes” alert fires.</li>
   </ul>
 
@@ -508,7 +510,7 @@ obj = s3.get_object(Bucket="archive", Key="2026/dataset.tar", Range="bytes=0-104
     <div class="body">
       <div><h5>Challenge</h5><p>Sealed data is large and long-lived; storage cost directly drives returns, and lost data means lost revenue.</p></div>
       <div><h5>Approach</h5><p>Sealed output lands sequentially through the FUSE mount, stored with high-density EC; automatic repair and scrubbing keep it available.</p></div>
-      <div><h5>Outcome</h5><p>Over 90% storage efficiency; no data loss from concurrent disk failures; existing programs use the POSIX mount as is.</p></div>
+      <div><h5>Outcome</h5><p>Over 90% storage efficiency (90.6% with 29+3); data stays intact through multiple concurrent failures; existing programs use the POSIX mount as is.</p></div>
     </div>
   </div>
   <div class="case">
@@ -523,7 +525,7 @@ obj = s3.get_object(Bucket="archive", Key="2026/dataset.tar", Range="bytes=0-104
     <div class="label"><h4>Video and media</h4><span class="tag">Media</span></div>
     <div class="body">
       <div><h5>Challenge</h5><p>Large assets and fast growth; high sequential throughput plus random-access reads.</p></div>
-      <div><h5>Approach</h5><p>256 MB stripes read and written in parallel; S3 GetObject with Range reads; scale out by adding nodes.</p></div>
+      <div><h5>Approach</h5><p>Large stripes read and written in parallel (256 MB stripes over FUSE, 64 MB segments for large S3 objects); S3 GetObject with Range reads; scale out by adding nodes.</p></div>
       <div><h5>Outcome</h5><p>Steady large-file throughput; file and object access to the same cluster.</p></div>
     </div>
   </div>
@@ -531,8 +533,8 @@ obj = s3.get_object(Bucket="archive", Key="2026/dataset.tar", Range="bytes=0-104
     <div class="label"><h4>Backup and disaster recovery</h4><span class="tag teal">Backup</span></div>
     <div class="body">
       <div><h5>Challenge</h5><p>Backup copies consume large amounts of capacity, and the backup target itself must be reliable and easy to manage.</p></div>
-      <div><h5>Approach</h5><p>Existing backup tools connect over S3 with multipart upload for large objects; alerts go to Lark and email.</p></div>
-      <div><h5>Outcome</h5><p>Backups stored with erasure coding instead of replicas; S3 tooling works without changes.</p></div>
+      <div><h5>Approach</h5><p>Backup software with S3 support connects over S3 (validate compatibility before going live), with multipart upload for large objects; alerts go to Lark and email.</p></div>
+      <div><h5>Outcome</h5><p>Backups stored with erasure coding instead of replicas; deletions go to the recycle bin first, adding a layer of recovery.</p></div>
     </div>
   </div>
   <div class="case">
@@ -540,7 +542,15 @@ obj = s3.get_object(Bucket="archive", Key="2026/dataset.tar", Range="bytes=0-104
     <div class="body">
       <div><h5>Challenge</h5><p>Raw datasets keep growing, read both by file-based training jobs and by object-based pipelines.</p></div>
       <div><h5>Approach</h5><p>Compute nodes read through the FUSE mount; pipelines write and distribute through S3.</p></div>
-      <div><h5>Outcome</h5><p>One storage system for both access patterns; capacity scales with nodes.</p></div>
+      <div><h5>Outcome</h5><p>One storage system for both access patterns; capacity scales out with nodes.</p></div>
+    </div>
+  </div>
+  <div class="case">
+    <div class="label"><h4>Private cloud object storage</h4><span class="tag teal">On-premises</span></div>
+    <div class="body">
+      <div><h5>Challenge</h5><p>Build in-house object storage on standard servers, with a full management console, permissions and monitoring.</p></div>
+      <div><h5>Approach</h5><p>Runs in your own data center on standard servers with JBOD disks; the console manages buckets, access keys and users with three RBAC roles; Prometheus metrics and built-in alerting.</p></div>
+      <div><h5>Outcome</h5><p>You control deployment and growth; it plugs into existing monitoring; rolling upgrades keep maintenance out of the way.</p></div>
     </div>
   </div>
 </section>
@@ -556,7 +566,7 @@ obj = s3.get_object(Bucket="archive", Key="2026/dataset.tar", Range="bytes=0-104
   <p style="margin-top:14pt">Website: <a href="https://www.kdss.io/">www.kdss.io</a></p>
 
   <div class="legal">
-    <p>Features and parameters described in this document apply to KDSS version 26.11.1. Figures and examples marked “illustrative” explain principles and do not represent measured results of a specific deployment. Product features may change between releases; the released version is authoritative.</p>
+    <p>Features and parameters described in this document apply to KDSS version 26.11.2. Figures and examples marked “illustrative” explain principles and do not represent measured results of a specific deployment. Product features may change between releases; the released version is authoritative.</p>
     <p>Third-party names and trademarks mentioned herein belong to their respective owners.</p>
     <p>© 2026 KDSS. All rights reserved.</p>
   </div>

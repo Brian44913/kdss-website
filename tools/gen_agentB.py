@@ -91,7 +91,7 @@ def write_flow(z):
     o.append(box(50, 72, 310, 50, T("写缓冲攒满 256 MB", "Buffer writes up to 256 MB"), fill=SURF, stroke=SURF, ts=14))
     o.append(badge(50, 72, 1))
     o.append(box(50, 140, 310, 62, T("本地 EC 编码（29+3）", "Local EC encode (29+3)"),
-                 T("29 个数据分片 + 3 个校验分片，每片约 8.8 MB", "29 data + 3 parity shards, ≈8.8 MB each"), fill=SURF, stroke=SURF, ts=14))
+                 T("29 个数据分片 + 3 个校验分片，每片约 8.8 MiB", "29 data + 3 parity shards, ≈8.8 MiB each"), fill=SURF, stroke=SURF, ts=14))
     o.append(badge(50, 140, 3))
     # master + mongo / Master 与 MongoDB
     o.append(box(550, 30, 180, 70, T("Master（Leader）", "Master (leader)"), T("分配条带与目标节点", "allocates stripe + nodes"),
@@ -106,7 +106,11 @@ def write_flow(z):
     # commit / 提交元数据
     o.append(path("M380 190 H640 V102"))
     o.append(badge(470, 190, 5))
-    o.append(text(488, 182, T("全部分片写完后提交元数据", "commit metadata after all shards land"), 12.5))
+    # Commit rule: all data shards + at least one parity shard; repair fills the rest.
+    # 提交时机：数据分片全部写入且至少一个校验分片成功；缺少的分片由修复补齐。
+    for j, s in enumerate(T(("提交元数据：", "数据分片全部写入，", "且至少 1 个校验分片成功；", "缺少的分片由修复补齐"),
+                            ("Commit metadata once", "all data shards and at least", "one parity shard are written;", "repair fills in the rest"))):
+        o.append(text(652, 124 + j * 18, s, 12.5, INK if j == 0 else MUTED, weight="600" if j == 0 else "400"))
     # shards / 分片
     centers, step = shard_row(o, 30, 300, 46)
     for i in (0, 7, 15, 23, 31):
@@ -116,7 +120,7 @@ def write_flow(z):
     o.append(text(30, 410, T("每个节点只存放这条条带的 1 个分片", "Each node holds exactly one shard of this stripe"), 12.5, INK, weight="600"))
     brace(o, 30, 30 + 29 * step - 4, 352, T("29 个数据分片", "29 data shards"))
     brace(o, 30 + 29 * step, 850, 352, T("3 个校验分片", "3 parity"))
-    o.append(text(850, 410, T("示意：以 EC 29+3 为例", "Illustrative: EC 29+3"), 11.5, MUTED, "end"))
+    o.append(text(850, 410, T("示意：以 EC 29+3 为例", "Illustrative: EC 29+3"), 12, MUTED, "end"))
     o.append('</svg>')
     return "\n".join(o)
 
@@ -160,8 +164,8 @@ def stripe_placement(z):
     T = lambda a, b: a if z else b
     H = 494
     o = [head(H)]
-    o.append(text(30, 40, T("一个 256 MB 数据块 = 一条条带 → 32 个分片（EC 29+3，每片约 8.8 MB）",
-                            "One 256 MB block = one stripe → 32 shards (EC 29+3, ≈8.8 MB each)"), 14, INK, weight="700"))
+    o.append(text(30, 40, T("一个 256 MB 数据块 = 一条条带 → 32 个分片（EC 29+3，每片约 8.8 MiB）",
+                            "One 256 MB block = one stripe → 32 shards (EC 29+3, ≈8.8 MiB each)"), 14, INK, weight="700"))
     centers, step = shard_row(o, 30, 56, 40)
     brace(o, 30, 30 + 29 * step - 4, 102, T("29 个数据分片", "29 data shards"))
     brace(o, 30 + 29 * step, 850, 102, T("3 个校验分片", "3 parity"))
@@ -178,7 +182,7 @@ def stripe_placement(z):
         use = n not in unused
         dash = "" if use else ' stroke-dasharray="4 3"'
         o.append(f'<rect x="{x:.1f}" y="{y}" width="{cw}" height="{ch}" rx="8" fill="#fff" stroke="{LINE}"{dash}/>')
-        o.append(text(x + cw / 2, y + 17, T("节点 ", "Node ") + str(n + 1), 11, MUTED if use else "#b6bfcd", "middle"))
+        o.append(text(x + cw / 2, y + 17, T("节点 ", "Node ") + str(n + 1), 12, MUTED if use else "#b6bfcd", "middle"))
         hit = (k * 7) % 6 if use else -1
         for d in range(6):
             dx = x + 7 + d * 8.3
@@ -194,7 +198,7 @@ def stripe_placement(z):
     o.append(text(50, y + 27, T("放置约束：同一条带的任意两个分片绝不落在同一节点", "Placement rule: no two shards of a stripe ever share a node"), 14.5, NAVY, weight="700"))
     o.append(text(50, y + 50, T("写入、修复、均衡三条路径强制校验；后台放置审计持续全量巡检",
                                 "Enforced on write, repair and rebalance; a background placement audit sweeps continuously"), 12.5))
-    o.append(text(850, H - 14, T("示意：36 节点集群，虚线节点存放其他条带", "Illustrative 36-node cluster; dashed nodes hold other stripes"), 11.5, MUTED, "end"))
+    o.append(text(850, H - 14, T("示意：36 节点集群，虚线节点存放其他条带", "Illustrative 36-node cluster; dashed nodes hold other stripes"), 12, MUTED, "end"))
     o.append('</svg>')
     return "\n".join(o)
 
@@ -209,8 +213,8 @@ def disk_layout(z):
     # superblocks / 超级块
     o.append(f'<rect x="30" y="{y}" width="34" height="{h}" rx="8" fill="{NAVY}"/><rect x="50" y="{y}" width="14" height="{h}" fill="{NAVY}"/>')
     o.append(f'<rect x="64" y="{y}" width="30" height="{h}" fill="{NAVY2}"/>')
-    o.append(text(47, y + h / 2 + 4, T("主", "P"), 11.5, "#fff", "middle", "700"))
-    o.append(text(79, y + h / 2 + 4, T("备", "B"), 11.5, "#fff", "middle", "700"))
+    o.append(text(47, y + h / 2 + 4, T("主", "P"), 12, "#fff", "middle", "700"))
+    o.append(text(79, y + h / 2 + 4, T("备", "B"), 12, "#fff", "middle", "700"))
     segs = [(94, 120, "rec"), (214, 80, "rec"), (294, 74, "hole"), (368, 140, "rec"), (508, 66, "rec"), (574, 60, "hole"), (634, 76, "rec")]
     for x, w, kind in segs:
         if kind == "rec":
@@ -282,23 +286,23 @@ def deploy(z):
     for i in range(5):
         x = 46 + i * 66
         o.append(f'<rect x="{x}" y="{gy+42}" width="58" height="128" rx="8" fill="{SURF}" stroke="{LINE}"/>')
-        o.append(f'<rect x="{x+6}" y="{gy+50}" width="46" height="26" rx="5" fill="{NAVY}"/>')
-        o.append(text(x + 29, gy + 67, "Master", 10.5, "#fff", "middle", "700"))
-        o.append(f'<rect x="{x+6}" y="{gy+82}" width="46" height="26" rx="5" fill="#dbe7fb"/>')
-        o.append(text(x + 29, gy + 99, "Storage", 10.5, NAVY, "middle", "700"))
+        o.append(f'<rect x="{x+3}" y="{gy+50}" width="52" height="26" rx="5" fill="{NAVY}"/>')
+        o.append(text(x + 29, gy + 67, "Master", 12, "#fff", "middle", "600"))
+        o.append(f'<rect x="{x+3}" y="{gy+82}" width="52" height="26" rx="5" fill="#dbe7fb"/>')
+        o.append(text(x + 29, gy + 99, "Storage", 12, NAVY, "middle", "600"))
         for d in range(4):
             o.append(f'<rect x="{x+8+d*11}" y="{gy+116}" width="8" height="26" rx="1.5" fill="#c8d3e6"/>')
-    o.append(text(210, gy + 190, T("Master 与 Storage 同机 · 系统盘 RAID1", "Master + Storage on one host · RAID1 system disk"), 11.5, MUTED, "middle"))
+    o.append(text(210, gy + 190, T("Master 与 Storage 同机 · 系统盘 RAID1", "Master + Storage on one host · RAID1 system disk"), 12, MUTED, "middle"))
     o.append(line(210, 174, 210, gy, head=False))
     # mongo / 副本集
     o.append(f'<rect x="410" y="{gy}" width="130" height="200" rx="12" fill="#fff" stroke="{LINE}"/>')
     o.append(text(475, gy + 26, "MongoDB", 14, INK, "middle", "700"))
-    o.append(text(475, gy + 46, T("副本集 · SSD", "replica set · SSD"), 11.5, MUTED, "middle"))
+    o.append(text(475, gy + 46, T("副本集 · SSD", "replica set · SSD"), 12, MUTED, "middle"))
     for i in range(3):
         yy = gy + 62 + i * 36
         o.append(f'<ellipse cx="475" cy="{yy+4}" rx="34" ry="6" fill="#e3f4f2" stroke="{TEAL}"/>')
         o.append(f'<path d="M441 {yy+4} v16 a34 6 0 0 0 68 0 v-16" fill="#e3f4f2" stroke="{TEAL}"/>')
-    o.append(text(475, gy + 186, T("多数派写入", "majority writes"), 11.5, TEAL, "middle", "600"))
+    o.append(text(475, gy + 186, T("多数派写入", "majority writes"), 12, TEAL, "middle", "600"))
     o.append(line(475, 174, 475, gy, head=False))
     # pure storage / 纯存储节点
     o.append(f'<rect x="560" y="{gy}" width="290" height="200" rx="12" fill="#fff" stroke="{LINE}"/>')
@@ -306,15 +310,15 @@ def deploy(z):
     for i in range(4):
         x = 576 + i * 62
         o.append(f'<rect x="{x}" y="{gy+42}" width="54" height="128" rx="8" fill="{SURF}" stroke="{LINE}"/>')
-        o.append(f'<rect x="{x+5}" y="{gy+50}" width="44" height="26" rx="5" fill="#dbe7fb"/>')
-        o.append(text(x + 27, gy + 67, "Storage", 10, NAVY, "middle", "700"))
+        o.append(f'<rect x="{x+2}" y="{gy+50}" width="50" height="26" rx="5" fill="#dbe7fb"/>')
+        o.append(text(x + 27, gy + 67, "Storage", 12, NAVY, "middle", "600"))
         for r in range(3):
             for d in range(4):
                 o.append(f'<rect x="{x+6+d*11}" y="{gy+84+r*22}" width="8" height="18" rx="1.5" fill="#c8d3e6"/>')
     o.append(text(836, gy + 115, "…", 18, MUTED, "end", "700"))
-    o.append(text(705, gy + 190, T("36 × HDD · JBOD 直通", "36 × HDD · JBOD pass-through"), 11.5, MUTED, "middle"))
+    o.append(text(705, gy + 190, T("36 × HDD · JBOD 直通", "36 × HDD · JBOD pass-through"), 12, MUTED, "middle"))
     o.append(line(705, 174, 705, gy, head=False))
-    o.append(text(850, H - 16, T("示意：节点数量与盘数按规模规划", "Illustrative: node and disk counts follow capacity planning"), 11.5, MUTED, "end"))
+    o.append(text(850, H - 16, T("示意：节点数量与盘数按规模规划", "Illustrative: node and disk counts follow capacity planning"), 12, MUTED, "end"))
     o.append('</svg>')
     return "\n".join(o)
 

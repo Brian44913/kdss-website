@@ -5,34 +5,53 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Solutions — KDSS Distributed Storage</title>
 <meta name="description" content="KDSS solutions: decentralized storage sector data, cold-data archiving, video and media assets, backup and disaster recovery, AI and big-data lakes, private-cloud object storage — plus guidance on erasure-coding profiles and cluster sizing.">
+<link rel="icon" href="favicon.ico" sizes="32x32">
 <link rel="icon" href="images/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="canonical" href="https://www.kdss.io/solutions.html">
 <link rel="alternate" hreflang="en" href="https://www.kdss.io/solutions.html">
 <link rel="alternate" hreflang="zh-CN" href="https://www.kdss.io/zh/solutions.html">
+<link rel="alternate" hreflang="x-default" href="https://www.kdss.io/solutions.html">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="KDSS">
+<meta property="og:locale" content="en_US">
+<meta property="og:title" content="Solutions — KDSS Distributed Storage">
+<meta property="og:description" content="KDSS solutions: decentralized storage sector data, cold-data archiving, video and media assets, backup and disaster recovery, AI and big-data lakes, private-cloud object storage — plus guidance on erasure-coding profiles and cluster sizing.">
+<meta property="og:url" content="https://www.kdss.io/solutions.html">
+<meta property="og:image" content="https://www.kdss.io/images/og-en.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Solutions — KDSS Distributed Storage">
+<meta name="twitter:description" content="KDSS solutions: decentralized storage sector data, cold-data archiving, video and media assets, backup and disaster recovery, AI and big-data lakes, private-cloud object storage — plus guidance on erasure-coding profiles and cluster sizing.">
+<meta name="twitter:image" content="https://www.kdss.io/images/og-en.png">
 <link rel="stylesheet" href="css/site.css">
 <link rel="stylesheet" href="css/pages/solutions.css">
 </head>
 <body>
+<a class="skip-link" href="#main">Skip to content</a>
 
 <header class="site-header">
   <div class="container">
     <a class="brand" href="./"><img src="images/logo.svg" alt="" width="30" height="30">KDSS<small>Distributed Storage</small></a>
-    <nav class="nav" aria-label="Main navigation">
+    <nav class="nav" id="site-nav" aria-label="Main navigation">
       <a href="./">Home</a>
       <a href="features.html">Product</a>
       <a href="solutions.html" aria-current="page">Solutions</a>
       <a href="architecture.html">Architecture</a>
       <a href="docs.html">Docs</a>
       <a href="about.html">About</a>
+      <a class="btn btn-primary nav-contact" href="#contact">Contact us</a>
     </nav>
     <div class="nav-actions">
       <div class="lang"><a href="zh/solutions.html" hreflang="zh-CN">中</a><span>EN</span></div>
       <a class="btn btn-primary btn-sm" href="#contact">Contact us</a>
     </div>
-    <button class="menu-btn" aria-label="Menu" aria-expanded="false"><span></span></button>
+    <button class="menu-btn" aria-controls="site-nav" aria-label="Menu" aria-expanded="false"><span></span></button>
   </div>
 </header>
 
-<main>
+<main id="main" tabindex="-1">
 
 <section class="page-hero">
   <div class="container">
@@ -66,7 +85,7 @@
     <div class="grid grid-3" style="margin-top:32px">
       <div class="card card-flat reveal">
         <h3>Prefer three parity shards</h3>
-        <p>During rolling upgrades, the number of nodes offline never exceeds the parity count minus one. Three-parity profiles let you maintain two nodes at a time while still leaving headroom for unplanned failures — plan for 22 or more nodes where you can.</p>
+        <p>Rolling upgrades go one node at a time by default, and the number of nodes in maintenance together is capped at parity shards − 1. Three-parity profiles let you maintain two nodes at a time while still leaving headroom for unplanned failures — plan for 22 or more nodes where you can.</p>
       </div>
       <div class="card card-flat reveal">
         <h3>Reference hardware</h3>
@@ -77,7 +96,7 @@
         <p>New writes stop once the cluster reaches the reject line (99% by default). Plan expansion against the console's max and conservative writable figures rather than raw free space.</p>
       </div>
     </div>
-    <p class="small muted" style="margin-top:16px">Production reference for a single cluster: 36 nodes × 36 disks, about 16 PB raw. For detailed planning, <a href="#contact">contact us</a>.</p>
+    <p class="small muted" style="margin-top:16px">Single-cluster reference: about 18 PB raw (36 nodes × 36 × 14 TB disks). For detailed planning, <a href="#contact">contact us</a>.</p>
   </div>
 </section>
 
@@ -92,7 +111,7 @@
 
     <div class="cases">
       <article class="case" id="dsn">
-        <div class="case-label">
+        <div class="case-label"><span id="blockchain" class="anchor-alias" aria-hidden="true"></span>
           <span class="tag">In production at scale</span>
           <h3>Decentralized storage</h3>
           <p class="small muted" style="margin-top:8px">Sealed sector data for Filecoin and similar networks</p>
@@ -115,15 +134,15 @@
             <h4>Outcome</h4>
             <ul class="ticks">
               <li>90.6% storage efficiency, versus 33.3% for three replicas</li>
-              <li>Data stays readable with any 3 shards lost at once</li>
-              <li>Multiple long-running production clusters, close to 190 PB raw in total</li>
+              <li>With 29+3, data stays readable with any 3 shards lost at once</li>
+              <li>Multiple long-running production clusters, with a deployed footprint of ~190 PB</li>
             </ul>
           </div>
         </div>
       </article>
 
       <article class="case" id="archive">
-        <div class="case-label">
+        <div class="case-label"><span id="healthcare" class="anchor-alias" aria-hidden="true"></span><span id="research" class="anchor-alias" aria-hidden="true"></span>
           <span class="tag teal">Cold data</span>
           <h3>Cold-data archiving</h3>
           <p class="small muted" style="margin-top:8px">Imaging, logs, raw research data and other long-term records</p>
@@ -145,7 +164,7 @@
             <h4>Outcome</h4>
             <ul class="ticks">
               <li>Fewer drives per usable TB</li>
-              <li>Data stays online and readable at any time</li>
+              <li>Data stays online and can be read directly when needed, with no restore step</li>
               <li>Sequential appends reduce seeks and extend HDD life</li>
             </ul>
           </div>
@@ -153,7 +172,7 @@
       </article>
 
       <article class="case" id="media">
-        <div class="case-label">
+        <div class="case-label"><span id="surveillance" class="anchor-alias" aria-hidden="true"></span>
           <span class="tag amber">Media</span>
           <h3>Video and media assets</h3>
           <p class="small muted" style="margin-top:8px">Source libraries, masters and transcoded renditions</p>
@@ -175,7 +194,7 @@
             <h4>Outcome</h4>
             <ul class="ticks">
               <li>File and object access share a single copy of the data</li>
-              <li>Standard S3 tools and SDKs connect directly</li>
+              <li>Core S3 API support, verified with AWS CLI, boto3 and s3cmd</li>
               <li>The library grows smoothly, node by node</li>
             </ul>
           </div>
@@ -214,7 +233,7 @@
       </article>
 
       <article class="case" id="datalake">
-        <div class="case-label">
+        <div class="case-label"><span id="iot" class="anchor-alias" aria-hidden="true"></span>
           <span class="tag teal">AI / Big data</span>
           <h3>Raw data lake</h3>
           <p class="small muted" style="margin-top:8px">Training corpora, sensor and experimental data</p>
@@ -245,7 +264,7 @@
       </article>
 
       <article class="case" id="private-cloud">
-        <div class="case-label">
+        <div class="case-label"><span id="finance" class="anchor-alias" aria-hidden="true"></span>
           <span class="tag amber">On-premises</span>
           <h3>Private-cloud object storage</h3>
           <p class="small muted" style="margin-top:8px">Your data center, standard servers</p>
@@ -266,7 +285,7 @@
           <div>
             <h4>Outcome</h4>
             <ul class="ticks">
-              <li>Data never leaves your facility; you control deployment and growth</li>
+              <li>Runs in your own data center on standard servers; you control deployment and growth</li>
               <li>Plugs into existing monitoring with tiered alerts</li>
               <li>Rolling upgrades keep maintenance invisible to applications</li>
             </ul>
@@ -302,11 +321,11 @@
         <a class="brand" href="./"><img src="images/logo-light.svg" alt="" width="30" height="30">KDSS<small>Distributed Storage</small></a>
         <p>Erasure-coded distributed storage for petabyte-scale data — low-cost, highly reliable infrastructure for long-term retention.</p>
       </div>
-      <div><h4>Product</h4><ul><li><a href="features.html">Features</a></li><li><a href="architecture.html">Architecture</a></li><li><a href="solutions.html">Solutions</a></li></ul></div>
-      <div><h4>Resources</h4><ul><li><a href="docs.html">Docs</a></li><li><a href="downloads/kdss-whitepaper-en.pdf">Whitepaper</a></li><li><a href="docs.html#s3">S3 API</a></li></ul></div>
-      <div><h4>Contact</h4><ul><li><a href="mailto:contact@kdss.io">contact@kdss.io</a></li><li><a href="mailto:support@kdss.io">support@kdss.io</a></li><li><a href="about.html">About</a></li></ul></div>
+      <div><p class="footer-title">Product</p><ul><li><a href="features.html">Features</a></li><li><a href="architecture.html">Architecture</a></li><li><a href="solutions.html">Solutions</a></li></ul></div>
+      <div><p class="footer-title">Resources</p><ul><li><a href="docs.html">Docs</a></li><li><a href="downloads/kdss-whitepaper-en.pdf">Whitepaper</a></li><li><a href="docs.html#s3">S3 API</a></li></ul></div>
+      <div><p class="footer-title">Contact</p><ul><li><a href="mailto:contact@kdss.io">contact@kdss.io</a></li><li><a href="mailto:support@kdss.io">support@kdss.io</a></li><li><a href="about.html">About</a></li></ul></div>
     </div>
-    <div class="legal"><span>© 2026 KDSS. All rights reserved.</span><span>Version 26.11.1</span></div>
+    <div class="legal"><span>© 2026 KDSS. All rights reserved.</span><span>Version 26.11.2</span></div>
   </div>
 </footer>
 

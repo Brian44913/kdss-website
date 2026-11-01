@@ -4,35 +4,54 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>KDSS 分布式存储 — 可信赖的 PB 级纠删码存储</title>
-<meta name="description" content="KDSS 是面向 PB 级数据的分布式存储系统：Reed-Solomon 纠删码、裸盘直写引擎、POSIX 与 S3 双接口、自动修复与滚动升级，生产环境累计近 190 PB。">
+<meta name="description" content="KDSS 是面向 PB 级数据的分布式存储系统：Reed-Solomon 纠删码、裸盘直写引擎、POSIX 与 S3 双接口、自动修复与滚动升级，累计部署规模近 190 PB。">
+<link rel="icon" href="../favicon.ico" sizes="32x32">
 <link rel="icon" href="../images/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="../apple-touch-icon.png">
+<link rel="canonical" href="https://www.kdss.io/zh/">
 <link rel="alternate" hreflang="en" href="https://www.kdss.io/">
 <link rel="alternate" hreflang="zh-CN" href="https://www.kdss.io/zh/">
+<link rel="alternate" hreflang="x-default" href="https://www.kdss.io/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="KDSS">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:title" content="KDSS 分布式存储 — 可信赖的 PB 级纠删码存储">
+<meta property="og:description" content="KDSS 是面向 PB 级数据的分布式存储系统：Reed-Solomon 纠删码、裸盘直写引擎、POSIX 与 S3 双接口、自动修复与滚动升级，累计部署规模近 190 PB。">
+<meta property="og:url" content="https://www.kdss.io/zh/">
+<meta property="og:image" content="https://www.kdss.io/images/og-zh.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="KDSS 分布式存储 — 可信赖的 PB 级纠删码存储">
+<meta name="twitter:description" content="KDSS 是面向 PB 级数据的分布式存储系统：Reed-Solomon 纠删码、裸盘直写引擎、POSIX 与 S3 双接口、自动修复与滚动升级，累计部署规模近 190 PB。">
+<meta name="twitter:image" content="https://www.kdss.io/images/og-zh.png">
 <link rel="stylesheet" href="../css/site.css">
 <link rel="stylesheet" href="../css/pages/index.css">
 </head>
 <body>
+<a class="skip-link" href="#main">跳到正文</a>
 
 <header class="site-header">
   <div class="container">
     <a class="brand" href="./"><img src="../images/logo.svg" alt="" width="30" height="30">KDSS<small>分布式存储</small></a>
-    <nav class="nav" aria-label="主导航">
+    <nav class="nav" id="site-nav" aria-label="主导航">
       <a href="./" aria-current="page">首页</a>
       <a href="features.html">产品能力</a>
       <a href="solutions.html">解决方案</a>
       <a href="architecture.html">技术架构</a>
       <a href="docs.html">文档</a>
       <a href="about.html">关于我们</a>
+      <a class="btn btn-primary nav-contact" href="#contact">联系我们</a>
     </nav>
     <div class="nav-actions">
       <div class="lang"><span>中</span><a href="../" hreflang="en">EN</a></div>
       <a class="btn btn-primary btn-sm" href="#contact">联系我们</a>
     </div>
-    <button class="menu-btn" aria-label="菜单" aria-expanded="false"><span></span></button>
+    <button class="menu-btn" aria-controls="site-nav" aria-label="菜单" aria-expanded="false"><span></span></button>
   </div>
 </header>
 
-<main>
+<main id="main" tabindex="-1">
 
 <!-- 首屏 -->
 <section class="hero">
@@ -40,7 +59,7 @@
     <div>
       <span class="eyebrow">企业级分布式存储</span>
       <h1>可信赖的 <em>PB 级</em><br>纠删码存储系统</h1>
-      <p class="lead">KDSS 以 Reed-Solomon 纠删码和裸盘直写引擎为核心，用更少的硬盘保存更多的数据；任意三块盘或三台节点同时故障，数据依然完整可读，并自动修复。</p>
+      <p class="lead">KDSS 以 Reed-Solomon 纠删码和裸盘直写引擎为核心，用更少的硬盘保存更多的数据；以 29+3 为例，任意三块盘或三台节点同时故障，数据依然完整可读，并自动修复。</p>
       <div class="actions">
         <a class="btn btn-primary" href="#contact">联系我们</a>
         <a class="btn btn-outline" href="../downloads/kdss-whitepaper-zh.pdf">
@@ -50,7 +69,8 @@
       <div class="hero-note"><span>POSIX 与 S3 双接口</span><span>滚动升级不停服</span><span>生产环境长期运行</span></div>
     </div>
     <div class="hero-visual reveal">
-      <img src="../images/hero-stripe-zh.svg" alt="一个 256 MB 数据块经 EC 29+3 编码为 32 个分片，分布到 32 个不同节点" width="560" height="420">
+      <div class="scroll" data-center><img src="../images/hero-stripe-zh.svg" alt="一个 256 MB 数据块经 EC 29+3 编码为 32 个分片，分布到 32 个不同节点" width="560" height="420"></div>
+      <p class="hint">左右滑动查看完整图示</p>
     </div>
   </div>
 </section>
@@ -60,9 +80,9 @@
   <div class="container">
     <div class="metrics reveal">
       <div class="metric"><strong>90.6<small>%</small></strong><span>EC 29+3 得盘率，三副本仅 33%</span></div>
-      <div class="metric"><strong>3</strong><span>块盘或节点同时故障，数据不丢不断</span></div>
-      <div class="metric"><strong>近 190<small>PB</small></strong><span>生产环境累计裸容量</span></div>
-      <div class="metric"><strong>7<small>亿+</small></strong><span>在管条带，1.1 万+ 块数据盘</span></div>
+      <div class="metric"><strong>3</strong><span>块盘或节点同时故障（29+3），数据保持完整可读</span></div>
+      <div class="metric"><strong>近 190<small>PB</small></strong><span>累计部署规模（裸容量）</span></div>
+      <div class="metric"><strong>1.1<small>万+</small></strong><span>块数据盘，300+ 节点，数亿条带</span></div>
     </div>
   </div>
 </section>
@@ -73,9 +93,9 @@
     <div class="section-head">
       <span class="eyebrow">核心能力</span>
       <h2>为海量数据的长期存放而设计</h2>
-      <p class="lead">从编码、落盘、访问到运维，每一层都围绕三件事：省硬盘、不丢数据、好维护。</p>
+      <p class="lead">从编码、落盘、访问到运维，每一层都围绕三件事：省硬盘、多重故障下数据保持完整、好维护。</p>
     </div>
-    <div class="grid grid-4">
+    <div class="grid grid-4 cap-cards">
       <article class="card reveal">
         <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="4" rx="1"/><rect x="3" y="10" width="18" height="4" rx="1"/><rect x="3" y="16" width="11" height="4" rx="1"/><circle cx="18" cy="18" r="2"/></svg></div>
         <h3>纠删码冗余</h3>
@@ -91,7 +111,7 @@
       <article class="card reveal">
         <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16M4 12h16M4 17h10"/><path d="m17 15 3 2-3 2"/></svg></div>
         <h3>POSIX 与 S3 双接口</h3>
-        <p>FUSE 客户端像本地目录一样挂载使用；S3 兼容网关可直接对接 AWS CLI、boto3 等现有工具链。</p>
+        <p>FUSE 客户端像本地目录一样挂载使用；S3 网关兼容核心 S3 API，已验证 AWS CLI、boto3、s3cmd。</p>
         <a class="card-link" href="features.html#access">了解更多 →</a>
       </article>
       <article class="card reveal">
@@ -139,13 +159,15 @@
       <h2>元数据与数据分离，每一层都可横向扩展</h2>
       <p class="lead">多台 Master 通过 MongoDB 副本集选主并管理元数据；存储节点直接管理裸盘；客户端在本地完成编码，把分片并行写到不同节点。</p>
     </div>
-    <div class="figure reveal">
-      <img src="../images/architecture-zh.svg" alt="KDSS 架构：客户端、Master 集群、MongoDB 副本集、存储节点" width="1100" height="460">
-    </div>
+    <figure class="figure scroll-sm reveal">
+      <div class="scroll xl"><img loading="lazy" src="../images/architecture-zh.svg" alt="KDSS 架构：客户端、Master 集群、MongoDB 副本集、存储节点" width="1100" height="460"></div>
+      <p class="hint">左右滑动查看完整架构图</p>
+    </figure>
+    <p class="figure-more"><a class="btn btn-ghost" href="architecture.html">查看技术架构 →</a></p>
     <div class="grid grid-3" style="margin-top:32px">
-      <div class="card card-flat"><h4>Master 集群</h4><p>典型 5 台，自动选主与故障切换；负责元数据、条带分配、修复/均衡/回收调度与放置审计。</p></div>
-      <div class="card card-flat"><h4>存储节点</h4><p>每节点管理多块裸盘，负责分片读写、本地重建与磁盘健康监测，可与 Master 混合部署。</p></div>
-      <div class="card card-flat"><h4>访问层</h4><p>FUSE 客户端 ksfs 与 S3 网关；写请求自动重定向到 Leader，读路径对每个分片做身份与 CRC 校验。</p></div>
+      <div class="card card-flat"><h3 class="h4">Master 集群</h3><p>典型 5 台，自动选主与故障切换；负责元数据、条带分配、修复/均衡/回收调度与放置审计。</p></div>
+      <div class="card card-flat"><h3 class="h4">存储节点</h3><p>每节点管理多块裸盘，负责分片读写、本地重建与磁盘健康监测，可与 Master 混合部署。</p></div>
+      <div class="card card-flat"><h3 class="h4">访问层</h3><p>FUSE 客户端 ksfs 与 S3 网关；写请求自动重定向到 Leader，读路径对每个分片做身份与 CRC 校验。</p></div>
     </div>
   </div>
 </section>
@@ -163,7 +185,7 @@
       <article class="card reveal"><span class="tag amber">媒体</span><h3 style="margin-top:12px">视频与媒体资产</h3><p>大文件顺序写、范围读，S3 接口直接对接转码与分发系统。</p></article>
       <article class="card reveal"><span class="tag">数据保护</span><h3 style="margin-top:12px">备份与容灾</h3><p>作为备份软件的 S3 目标端，回收站加保留窗口防止误删。</p></article>
       <article class="card reveal"><span class="tag teal">AI / 大数据</span><h3 style="margin-top:12px">原始数据湖</h3><p>训练语料、传感器与实验数据集中存放，POSIX 挂载即可被计算任务直接读取。</p></article>
-      <article class="card reveal"><span class="tag amber">私有化</span><h3 style="margin-top:12px">私有云对象存储</h3><p>部署在自有机房与通用服务器上，数据不出域，按需扩容。</p></article>
+      <article class="card reveal"><span class="tag amber">私有化</span><h3 style="margin-top:12px">私有云对象存储</h3><p>部署在自有机房与通用服务器上，按需扩容。</p></article>
     </div>
     <p style="margin-top:28px"><a class="btn btn-ghost" href="solutions.html">查看解决方案详情 →</a></p>
   </div>
@@ -176,16 +198,17 @@
       <span class="eyebrow">可靠性与运维</span>
       <h2>发现问题、隔离问题、修复问题，全部自动完成</h2>
       <div class="steps" style="margin-top:28px">
-        <div class="step"><h4>主动发现</h4><p>SMART 采集、内核日志扫描、读写卡死看门狗、I/O 错误滑动窗口四层监测，坏盘尽早暴露。</p></div>
-        <div class="step"><h4>自动隔离</h4><p>故障盘自动退出读写，不拖慢整个集群；临时性故障恢复后自动回归。</p></div>
-        <div class="step"><h4>就地重建</h4><p>存储节点本地拉取存活分片并解码，按缺失程度最劣先修，数十万条带分钟级入队。</p></div>
-        <div class="step"><h4>平滑升级</h4><p>逐台进入维护模式后替换，升级全程对业务透明，不需要停机窗口。</p></div>
+        <div class="step"><h3 class="h4">主动发现</h3><p>SMART 采集、内核日志扫描、读写卡死看门狗、I/O 错误滑动窗口四层监测，坏盘尽早暴露。</p></div>
+        <div class="step"><h3 class="h4">自动隔离</h3><p>故障盘自动退出读写，不拖慢整个集群；临时性故障恢复后自动回归。</p></div>
+        <div class="step"><h3 class="h4">本地重建</h3><p>存储节点本地拉取存活分片并解码，按缺失程度最劣先修，数十万条带分钟级入队。</p></div>
+        <div class="step"><h3 class="h4">平滑升级</h3><p>默认逐台进入维护模式后替换，同时维护的节点数上限为校验分片数 − 1；升级全程对业务透明，不需要停机窗口。</p></div>
       </div>
     </div>
-    <div class="figure reveal">
-      <img src="../images/console-capacity-zh.svg" alt="控制台容量面板示意：当前最大可写与保守可写" width="560" height="380">
+    <figure class="figure scroll-sm reveal">
+      <div class="scroll"><img loading="lazy" src="../images/console-capacity-zh.svg" alt="控制台容量面板示意：当前最大可写与保守可写" width="560" height="380"></div>
+      <p class="hint">左右滑动查看完整图示</p>
       <figcaption>控制台容量面板：综合拒写线、节点余量与纠删码放置约束，实时给出"当前最大可写 / 保守可写"（图中为示意数值）</figcaption>
-    </div>
+    </figure>
   </div>
 </section>
 
@@ -218,11 +241,11 @@
         <a class="brand" href="./"><img src="../images/logo-light.svg" alt="" width="30" height="30">KDSS<small>分布式存储</small></a>
         <p>面向 PB 级数据的纠删码分布式存储系统，为海量数据的长期保存提供低成本、高可靠的基础设施。</p>
       </div>
-      <div><h4>产品</h4><ul><li><a href="features.html">产品能力</a></li><li><a href="architecture.html">技术架构</a></li><li><a href="solutions.html">解决方案</a></li></ul></div>
-      <div><h4>资源</h4><ul><li><a href="docs.html">文档</a></li><li><a href="../downloads/kdss-whitepaper-zh.pdf">技术白皮书</a></li><li><a href="docs.html#s3">S3 接口</a></li></ul></div>
-      <div><h4>联系</h4><ul><li><a href="mailto:contact@kdss.io">contact@kdss.io</a></li><li><a href="mailto:support@kdss.io">support@kdss.io</a></li><li><a href="about.html">关于我们</a></li></ul></div>
+      <div><p class="footer-title">产品</p><ul><li><a href="features.html">产品能力</a></li><li><a href="architecture.html">技术架构</a></li><li><a href="solutions.html">解决方案</a></li></ul></div>
+      <div><p class="footer-title">资源</p><ul><li><a href="docs.html">文档</a></li><li><a href="../downloads/kdss-whitepaper-zh.pdf">技术白皮书</a></li><li><a href="docs.html#s3">S3 接口</a></li></ul></div>
+      <div><p class="footer-title">联系</p><ul><li><a href="mailto:contact@kdss.io">contact@kdss.io</a></li><li><a href="mailto:support@kdss.io">support@kdss.io</a></li><li><a href="about.html">关于我们</a></li></ul></div>
     </div>
-    <div class="legal"><span>© 2026 KDSS. 保留所有权利。</span><span>当前版本 26.11.1</span></div>
+    <div class="legal"><span>© 2026 KDSS. 保留所有权利。</span><span>当前版本 26.11.2</span></div>
   </div>
 </footer>
 

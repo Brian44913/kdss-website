@@ -7,7 +7,7 @@ from html.parser import HTMLParser
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 PAGES = [p for p in ["index.html", "features.html", "solutions.html", "architecture.html", "docs.html", "about.html"]]
-FILES = PAGES + ["zh/" + p for p in PAGES] + ["whitepaper/zh.html", "whitepaper/en.html"]
+FILES = PAGES + ["zh/" + p for p in PAGES] + ["whitepaper/zh.html", "whitepaper/en.html", "404.html"]
 SENSITIVE = [r"10\.78\.", r"192\.168\.", r"172\.16\.", r"\bkdss-[123u]\b", r"kdss-36-", r"kdss-132-", r"\bf0\d{4,}", r"[Bb]itmain",
              r"seal98", r"post96", r"lianjing", r"47\.243\.", r"210\.245\.", r"2027-forClaude", r"2026-localSafe"]
 VOID = {"area", "base", "br", "col", "embed", "hr", "img", "input", "link", "meta", "source", "track", "wbr", "path", "rect", "circle", "line", "polyline", "polygon", "ellipse", "stop"}
@@ -54,7 +54,8 @@ for f, (p, txt) in parsed.items():
         if target == "":
             tf = f
         else:
-            tf = os.path.normpath(os.path.join(base, target))
+            # Root-absolute paths (used by 404.html) resolve from the site root. / 以 / 开头的路径从站点根目录解析。
+            tf = os.path.normpath(target.lstrip("/") or ".") if target.startswith("/") else os.path.normpath(os.path.join(base, target))
             if tf.endswith("/") or os.path.isdir(os.path.join(ROOT, tf)) or target.endswith("/"): tf = os.path.join(tf, "index.html")
             if tf == ".": tf = "index.html"
         tf = os.path.normpath(tf)
@@ -67,7 +68,8 @@ for f, (p, txt) in parsed.items():
                 print(f"{f}: BROKEN anchor {h} (no id '{frag}' in {tf})"); bad += 1
     for r in p.res:
         if re.match(r"^(https?:)?//|^data:", r): continue
-        rp = os.path.normpath(os.path.join(base, r.split("#")[0].split("?")[0]))
+        rr = r.split("#")[0].split("?")[0]
+        rp = os.path.normpath(rr.lstrip("/")) if rr.startswith("/") else os.path.normpath(os.path.join(base, rr))
         if not os.path.exists(os.path.join(ROOT, rp)): print(f"{f}: MISSING resource {r}"); bad += 1
     for pat in SENSITIVE:
         for m in re.finditer(pat, txt):
@@ -83,5 +85,15 @@ for d in ("images",):
             t = open(os.path.join(ROOT, d, fn), encoding="utf-8").read()
             for pat in SENSITIVE:
                 if re.search(pat, t): print(f"images/{fn}: SENSITIVE {pat}"); bad += 1
+# robots.txt and sitemap.xml: present, and every sitemap URL maps to a page on disk.
+# robots.txt 与 sitemap.xml：文件存在，站点地图中的每个 URL 都对应磁盘上的页面。
+for fn in ("robots.txt", "sitemap.xml", "favicon.ico", "apple-touch-icon.png", "images/og-zh.png", "images/og-en.png"):
+    if not os.path.exists(os.path.join(ROOT, fn)): print(f"MISSING {fn}"); bad += 1
+if os.path.exists(os.path.join(ROOT, "sitemap.xml")):
+    locs = re.findall(r"<loc>https://www\.kdss\.io/([^<]*)</loc>", open(os.path.join(ROOT, "sitemap.xml"), encoding="utf-8").read())
+    if len(locs) != 2 * len(PAGES): print(f"sitemap.xml: expected {2 * len(PAGES)} URLs, found {len(locs)}"); bad += 1
+    for loc in locs:
+        fp = loc + "index.html" if loc == "" or loc.endswith("/") else loc
+        if not os.path.exists(os.path.join(ROOT, fp)): print(f"sitemap.xml: no page for {loc}"); bad += 1
 print("findings:", bad)
 sys.exit(1 if bad else 0)

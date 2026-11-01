@@ -4,35 +4,54 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>关于我们 — KDSS 分布式存储</title>
-<meta name="description" content="KDSS 的产品理念、生产实践、技术栈与版本演进：为海量数据的长期保存解决成本与可靠性问题，省硬盘、不丢数据、好维护。">
+<meta name="description" content="KDSS 的产品理念、生产实践、技术栈与版本演进：为海量数据的长期保存解决成本与可靠性问题，省硬盘、数据完整、好维护。">
+<link rel="icon" href="../favicon.ico" sizes="32x32">
 <link rel="icon" href="../images/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="../apple-touch-icon.png">
+<link rel="canonical" href="https://www.kdss.io/zh/about.html">
 <link rel="alternate" hreflang="en" href="https://www.kdss.io/about.html">
 <link rel="alternate" hreflang="zh-CN" href="https://www.kdss.io/zh/about.html">
+<link rel="alternate" hreflang="x-default" href="https://www.kdss.io/about.html">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="KDSS">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:title" content="关于我们 — KDSS 分布式存储">
+<meta property="og:description" content="KDSS 的产品理念、生产实践、技术栈与版本演进：为海量数据的长期保存解决成本与可靠性问题，省硬盘、数据完整、好维护。">
+<meta property="og:url" content="https://www.kdss.io/zh/about.html">
+<meta property="og:image" content="https://www.kdss.io/images/og-zh.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="关于我们 — KDSS 分布式存储">
+<meta name="twitter:description" content="KDSS 的产品理念、生产实践、技术栈与版本演进：为海量数据的长期保存解决成本与可靠性问题，省硬盘、数据完整、好维护。">
+<meta name="twitter:image" content="https://www.kdss.io/images/og-zh.png">
 <link rel="stylesheet" href="../css/site.css">
 <link rel="stylesheet" href="../css/pages/about.css">
 </head>
 <body>
+<a class="skip-link" href="#main">跳到正文</a>
 
 <header class="site-header">
   <div class="container">
     <a class="brand" href="./"><img src="../images/logo.svg" alt="" width="30" height="30">KDSS<small>分布式存储</small></a>
-    <nav class="nav" aria-label="主导航">
+    <nav class="nav" id="site-nav" aria-label="主导航">
       <a href="./">首页</a>
       <a href="features.html">产品能力</a>
       <a href="solutions.html">解决方案</a>
       <a href="architecture.html">技术架构</a>
       <a href="docs.html">文档</a>
       <a href="about.html" aria-current="page">关于我们</a>
+      <a class="btn btn-primary nav-contact" href="#contact">联系我们</a>
     </nav>
     <div class="nav-actions">
       <div class="lang"><span>中</span><a href="../about.html" hreflang="en">EN</a></div>
       <a class="btn btn-primary btn-sm" href="#contact">联系我们</a>
     </div>
-    <button class="menu-btn" aria-label="菜单" aria-expanded="false"><span></span></button>
+    <button class="menu-btn" aria-controls="site-nav" aria-label="菜单" aria-expanded="false"><span></span></button>
   </div>
 </header>
 
-<main>
+<main id="main" tabindex="-1">
 
 <!-- 页首 -->
 <section class="page-hero">
@@ -61,12 +80,12 @@
       <article class="card principle reveal">
         <span class="num">01</span>
         <h3>省硬盘</h3>
-        <p>29+3 纠删码得盘率 90.6%，三副本只有 33.3%。顺序追加写减少磁头寻道，HDD 寿命更长。</p>
+        <p>29+3 纠删码得盘率 90.6%，三副本只有 33.3%。顺序追加写减少寻道，有利于延长硬盘寿命。</p>
       </article>
       <article class="card principle reveal">
         <span class="num">02</span>
-        <h3>不丢数据</h3>
-        <p>任意 3 个分片同时丢失仍可读、可重建；同一条带的分片绝不落在同一节点；每次读取都做 CRC 校验。</p>
+        <h3>数据完整</h3>
+        <p>多重故障下数据保持完整：以 29+3 为例，任意 3 个分片同时丢失仍可读、可重建；同一条带的分片绝不落在同一节点；每次读取都做 CRC 校验。</p>
       </article>
       <article class="card principle reveal">
         <span class="num">03</span>
@@ -83,15 +102,15 @@
     <div class="section-head">
       <span class="eyebrow">生产实践</span>
       <h2>在真实的大规模集群上长期运行</h2>
-      <p class="lead">KDSS 的每一项能力都在多个生产集群上经过长期验证，下面是累计规模。</p>
+      <p class="lead">KDSS 的每一项能力都在多个生产集群上经过长期验证，下面是累计部署规模。</p>
     </div>
     <div class="metrics reveal">
-      <div class="metric"><strong>近 190<small>PB</small></strong><span>累计裸容量</span></div>
+      <div class="metric"><strong>近 190<small>PB</small></strong><span>累计部署规模（裸容量）</span></div>
       <div class="metric"><strong>300<small>+</small></strong><span>存储节点</span></div>
       <div class="metric"><strong>1.1<small>万+</small></strong><span>块数据盘</span></div>
-      <div class="metric"><strong>7<small>亿+</small></strong><span>在管条带</span></div>
+      <div class="metric"><strong>数亿</strong><span>在管条带</span></div>
     </div>
-    <p class="metrics-note">单集群典型规模：36 节点 × 36 盘，约 16 PB 裸容量。生产中约 99% 的读写经由 FUSE 客户端完成。</p>
+    <p class="metrics-note">单集群典型规模：约 18 PB 裸容量（36 节点 × 36 块 14 TB 盘）。生产中约 99% 的读写经由 FUSE 客户端完成。</p>
   </div>
 </section>
 
@@ -104,15 +123,15 @@
       <p class="lead">核心服务用 Go 编写，依赖经过大规模验证的开源组件，部署简单，便于排查。</p>
     </div>
     <div class="grid grid-3">
-      <div class="card card-flat stack-card"><h4>Go</h4><p>Master、存储节点、FUSE 客户端与 S3 网关的实现语言。</p></div>
-      <div class="card card-flat stack-card"><h4>gRPC + Protocol Buffers</h4><p>组件间通信，可选 mTLS 加密。</p></div>
-      <div class="card card-flat stack-card"><h4>MongoDB</h4><p>副本集保存条带级元数据，多数派写入，并承担 Master 选主。</p></div>
-      <div class="card card-flat stack-card"><h4>klauspost/reedsolomon</h4><p>Reed-Solomon 编解码，SIMD 加速。</p></div>
-      <div class="card card-flat stack-card"><h4>hanwen/go-fuse</h4><p>FUSE 客户端 ksfs 的文件系统层，提供 POSIX 挂载。</p></div>
-      <div class="card card-flat stack-card"><h4>BadgerDB</h4><p>存储节点的本地分片索引。</p></div>
-      <div class="card card-flat stack-card"><h4>Gin</h4><p>Web 控制台与 HTTP 接口的服务框架。</p></div>
-      <div class="card card-flat stack-card"><h4>Zap + Prometheus</h4><p>结构化日志与 kdss_* 全量指标。</p></div>
-      <div class="card card-flat stack-card"><h4>Vue 3 + Element Plus</h4><p>Web 管理控制台前端。</p></div>
+      <div class="card card-flat stack-card"><h3 class="h4">Go</h3><p>Master、存储节点、FUSE 客户端与 S3 网关的实现语言。</p></div>
+      <div class="card card-flat stack-card"><h3 class="h4">gRPC + Protocol Buffers</h3><p>组件间通信，可选 mTLS 加密。</p></div>
+      <div class="card card-flat stack-card"><h3 class="h4">MongoDB</h3><p>副本集保存条带级元数据，多数派写入，并承担 Master 选主。</p></div>
+      <div class="card card-flat stack-card"><h3 class="h4">klauspost/reedsolomon</h3><p>Reed-Solomon 编解码，SIMD 加速。</p></div>
+      <div class="card card-flat stack-card"><h3 class="h4">hanwen/go-fuse</h3><p>FUSE 客户端 ksfs 的文件系统层，提供 POSIX 挂载。</p></div>
+      <div class="card card-flat stack-card"><h3 class="h4">BadgerDB</h3><p>存储节点的本地分片索引。</p></div>
+      <div class="card card-flat stack-card"><h3 class="h4">Gin</h3><p>Web 控制台与 HTTP 接口的服务框架。</p></div>
+      <div class="card card-flat stack-card"><h3 class="h4">Zap + Prometheus</h3><p>结构化日志与 kdss_* 全量指标。</p></div>
+      <div class="card card-flat stack-card"><h3 class="h4">Vue 3 + Element Plus</h3><p>Web 管理控制台前端。</p></div>
     </div>
   </div>
 </section>
@@ -123,16 +142,16 @@
     <div>
       <span class="eyebrow">版本演进</span>
       <h2>持续交付，按日历编号</h2>
-      <p class="lead" style="margin-top:16px">KDSS 采用日历版本号（CalVer），格式为 <code>年.月.修订号</code>。例如 <code>26.11.1</code> 即 2026 年 11 月的发布，从版本号就能看出代码新旧。</p>
-      <p style="margin-top:16px">近期的主要能力演进见时间线。每个版本都可以通过滚动升级逐台替换，不需要停机窗口。</p>
+      <p class="lead" style="margin-top:16px">KDSS 采用日历版本号（CalVer），格式为 <code>年.月.修订号</code>。例如 <code>26.11.2</code> 即 2026 年 11 月的发布，从版本号就能看出代码新旧。</p>
+      <p style="margin-top:16px">近期的主要能力演进见时间线。每个版本都可以通过滚动升级替换（默认逐台），不需要停机窗口。</p>
     </div>
     <ol class="timeline reveal">
-      <li><span class="stage">2026 · 基础</span><h4>纠删码与裸盘引擎生产化</h4><p>Reed-Solomon 纠删码、裸盘顺序追加写、双超级块与盘身份、全链路 CRC 校验，FUSE 与 S3 双接口。</p></li>
-      <li><span class="stage">空间效率</span><h4>填洞复用与碎片整理</h4><p>删除后的空洞按精确尺寸被新写入复用；碎片整理搬移尾部数据后截断回收，崩溃安全、逐片回读校验。</p></li>
-      <li><span class="stage">修复</span><h4>原位修复</h4><p>换盘后把数据写回新盘原位置；读路径增加条带 ID 与分片序号核对。</p></li>
-      <li><span class="stage">可见性</span><h4>可写容量面板与放置审计</h4><p>控制台实时显示"当前最大可写 / 保守可写"；后台全量巡检分片放置，确保同一条带不落同一节点。</p></li>
-      <li><span class="stage">运维</span><h4>内置告警与安全加固</h4><p>P0/P1/P2 分级告警，飞书与邮件推送；许可证在线校验；/metrics 支持令牌认证。</p></li>
-      <li><span class="stage">当前版本</span><h4>26.11.1</h4><p>以上能力全部包含在当前版本中。</p></li>
+      <li><span class="stage">2026 · 基础</span><h3 class="h4">纠删码与裸盘引擎生产化</h3><p>Reed-Solomon 纠删码、裸盘顺序追加写、双超级块与盘身份、全链路 CRC 校验，FUSE 与 S3 双接口。</p></li>
+      <li><span class="stage">空间效率</span><h3 class="h4">填洞复用与碎片整理</h3><p>删除后的空洞按精确尺寸被新写入复用；碎片整理搬移尾部数据后截断回收，崩溃安全、逐片回读校验。</p></li>
+      <li><span class="stage">修复</span><h3 class="h4">原位修复</h3><p>换盘后把数据写回新盘原位置；读路径增加条带 ID 与分片序号核对。</p></li>
+      <li><span class="stage">可见性</span><h3 class="h4">可写容量面板与放置审计</h3><p>控制台实时显示"当前最大可写 / 保守可写"；后台全量巡检分片放置，确保同一条带不落同一节点。</p></li>
+      <li><span class="stage">运维</span><h3 class="h4">内置告警与安全加固</h3><p>P0/P1/P2 分级告警，飞书与邮件推送；/metrics 支持令牌认证。</p></li>
+      <li><span class="stage">当前版本</span><h3 class="h4">26.11.2</h3><p>以上能力全部包含在当前版本中。</p></li>
     </ol>
   </div>
 </section>
@@ -171,11 +190,11 @@
         <a class="brand" href="./"><img src="../images/logo-light.svg" alt="" width="30" height="30">KDSS<small>分布式存储</small></a>
         <p>面向 PB 级数据的纠删码分布式存储系统，为海量数据的长期保存提供低成本、高可靠的基础设施。</p>
       </div>
-      <div><h4>产品</h4><ul><li><a href="features.html">产品能力</a></li><li><a href="architecture.html">技术架构</a></li><li><a href="solutions.html">解决方案</a></li></ul></div>
-      <div><h4>资源</h4><ul><li><a href="docs.html">文档</a></li><li><a href="../downloads/kdss-whitepaper-zh.pdf">技术白皮书</a></li><li><a href="docs.html#s3">S3 接口</a></li></ul></div>
-      <div><h4>联系</h4><ul><li><a href="mailto:contact@kdss.io">contact@kdss.io</a></li><li><a href="mailto:support@kdss.io">support@kdss.io</a></li><li><a href="about.html">关于我们</a></li></ul></div>
+      <div><p class="footer-title">产品</p><ul><li><a href="features.html">产品能力</a></li><li><a href="architecture.html">技术架构</a></li><li><a href="solutions.html">解决方案</a></li></ul></div>
+      <div><p class="footer-title">资源</p><ul><li><a href="docs.html">文档</a></li><li><a href="../downloads/kdss-whitepaper-zh.pdf">技术白皮书</a></li><li><a href="docs.html#s3">S3 接口</a></li></ul></div>
+      <div><p class="footer-title">联系</p><ul><li><a href="mailto:contact@kdss.io">contact@kdss.io</a></li><li><a href="mailto:support@kdss.io">support@kdss.io</a></li><li><a href="about.html">关于我们</a></li></ul></div>
     </div>
-    <div class="legal"><span>© 2026 KDSS. 保留所有权利。</span><span>当前版本 26.11.1</span></div>
+    <div class="legal"><span>© 2026 KDSS. 保留所有权利。</span><span>当前版本 26.11.2</span></div>
   </div>
 </footer>
 

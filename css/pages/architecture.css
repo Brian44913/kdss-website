@@ -10,7 +10,7 @@
 .figure.diagram { padding: 20px; }
 .figure.diagram .scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; }
 .figure.diagram img { width: 100%; }
-.figure .hint { display: none; font-size: .78rem; color: var(--ink-400); margin-top: 8px; text-align: center; }
+.figure .hint { display: none; font-size: .78rem; color: var(--ink-500); margin-top: 8px; text-align: center; }
 @media (max-width: 760px) {
   .figure.diagram { padding: 14px; }
   .figure.diagram img { width: 760px; max-width: none; }

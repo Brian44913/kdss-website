@@ -11,68 +11,68 @@
 <rect x="30" y="222" width="360" height="200" rx="12" fill="#fff" stroke="#d3d9e4"/>
 <text x="48" y="248" font-size="14" fill="#111827" text-anchor="start" font-weight="700">Hybrid nodes (typically 5)</text>
 <rect x="46" y="264" width="58" height="128" rx="8" fill="#f6f8fb" stroke="#d3d9e4"/>
-<rect x="52" y="272" width="46" height="26" rx="5" fill="#0f2b5b"/>
-<text x="75" y="289" font-size="10.5" fill="#fff" text-anchor="middle" font-weight="700">Master</text>
-<rect x="52" y="304" width="46" height="26" rx="5" fill="#dbe7fb"/>
-<text x="75" y="321" font-size="10.5" fill="#0f2b5b" text-anchor="middle" font-weight="700">Storage</text>
+<rect x="49" y="272" width="52" height="26" rx="5" fill="#0f2b5b"/>
+<text x="75" y="289" font-size="12" fill="#fff" text-anchor="middle" font-weight="600">Master</text>
+<rect x="49" y="304" width="52" height="26" rx="5" fill="#dbe7fb"/>
+<text x="75" y="321" font-size="12" fill="#0f2b5b" text-anchor="middle" font-weight="600">Storage</text>
 <rect x="54" y="338" width="8" height="26" rx="1.5" fill="#c8d3e6"/>
 <rect x="65" y="338" width="8" height="26" rx="1.5" fill="#c8d3e6"/>
 <rect x="76" y="338" width="8" height="26" rx="1.5" fill="#c8d3e6"/>
 <rect x="87" y="338" width="8" height="26" rx="1.5" fill="#c8d3e6"/>
 <rect x="112" y="264" width="58" height="128" rx="8" fill="#f6f8fb" stroke="#d3d9e4"/>
-<rect x="118" y="272" width="46" height="26" rx="5" fill="#0f2b5b"/>
-<text x="141" y="289" font-size="10.5" fill="#fff" text-anchor="middle" font-weight="700">Master</text>
-<rect x="118" y="304" width="46" height="26" rx="5" fill="#dbe7fb"/>
-<text x="141" y="321" font-size="10.5" fill="#0f2b5b" text-anchor="middle" font-weight="700">Storage</text>
+<rect x="115" y="272" width="52" height="26" rx="5" fill="#0f2b5b"/>
+<text x="141" y="289" font-size="12" fill="#fff" text-anchor="middle" font-weight="600">Master</text>
+<rect x="115" y="304" width="52" height="26" rx="5" fill="#dbe7fb"/>
+<text x="141" y="321" font-size="12" fill="#0f2b5b" text-anchor="middle" font-weight="600">Storage</text>
 <rect x="120" y="338" width="8" height="26" rx="1.5" fill="#c8d3e6"/>
 <rect x="131" y="338" width="8" height="26" rx="1.5" fill="#c8d3e6"/>
 <rect x="142" y="338" width="8" height="26" rx="1.5" fill="#c8d3e6"/>
 <rect x="153" y="338" width="8" height="26" rx="1.5" fill="#c8d3e6"/>
 <rect x="178" y="264" width="58" height="128" rx="8" fill="#f6f8fb" stroke="#d3d9e4"/>
-<rect x="184" y="272" width="46" height="26" rx="5" fill="#0f2b5b"/>
-<text x="207" y="289" font-size="10.5" fill="#fff" text-anchor="middle" font-weight="700">Master</text>
-<rect x="184" y="304" width="46" height="26" rx="5" fill="#dbe7fb"/>
-<text x="207" y="321" font-size="10.5" fill="#0f2b5b" text-anchor="middle" font-weight="700">Storage</text>
+<rect x="181" y="272" width="52" height="26" rx="5" fill="#0f2b5b"/>
+<text x="207" y="289" font-size="12" fill="#fff" text-anchor="middle" font-weight="600">Master</text>
+<rect x="181" y="304" width="52" height="26" rx="5" fill="#dbe7fb"/>
+<text x="207" y="321" font-size="12" fill="#0f2b5b" text-anchor="middle" font-weight="600">Storage</text>
 <rect x="186" y="338" width="8" height="26" rx="1.5" fill="#c8d3e6"/>
 <rect x="197" y="338" width="8" height="26" rx="1.5" fill="#c8d3e6"/>
 <rect x="208" y="338" width="8" height="26" rx="1.5" fill="#c8d3e6"/>
 <rect x="219" y="338" width="8" height="26" rx="1.5" fill="#c8d3e6"/>
 <rect x="244" y="264" width="58" height="128" rx="8" fill="#f6f8fb" stroke="#d3d9e4"/>
-<rect x="250" y="272" width="46" height="26" rx="5" fill="#0f2b5b"/>
-<text x="273" y="289" font-size="10.5" fill="#fff" text-anchor="middle" font-weight="700">Master</text>
-<rect x="250" y="304" width="46" height="26" rx="5" fill="#dbe7fb"/>
-<text x="273" y="321" font-size="10.5" fill="#0f2b5b" text-anchor="middle" font-weight="700">Storage</text>
+<rect x="247" y="272" width="52" height="26" rx="5" fill="#0f2b5b"/>
+<text x="273" y="289" font-size="12" fill="#fff" text-anchor="middle" font-weight="600">Master</text>
+<rect x="247" y="304" width="52" height="26" rx="5" fill="#dbe7fb"/>
+<text x="273" y="321" font-size="12" fill="#0f2b5b" text-anchor="middle" font-weight="600">Storage</text>
 <rect x="252" y="338" width="8" height="26" rx="1.5" fill="#c8d3e6"/>
 <rect x="263" y="338" width="8" height="26" rx="1.5" fill="#c8d3e6"/>
 <rect x="274" y="338" width="8" height="26" rx="1.5" fill="#c8d3e6"/>
 <rect x="285" y="338" width="8" height="26" rx="1.5" fill="#c8d3e6"/>
 <rect x="310" y="264" width="58" height="128" rx="8" fill="#f6f8fb" stroke="#d3d9e4"/>
-<rect x="316" y="272" width="46" height="26" rx="5" fill="#0f2b5b"/>
-<text x="339" y="289" font-size="10.5" fill="#fff" text-anchor="middle" font-weight="700">Master</text>
-<rect x="316" y="304" width="46" height="26" rx="5" fill="#dbe7fb"/>
-<text x="339" y="321" font-size="10.5" fill="#0f2b5b" text-anchor="middle" font-weight="700">Storage</text>
+<rect x="313" y="272" width="52" height="26" rx="5" fill="#0f2b5b"/>
+<text x="339" y="289" font-size="12" fill="#fff" text-anchor="middle" font-weight="600">Master</text>
+<rect x="313" y="304" width="52" height="26" rx="5" fill="#dbe7fb"/>
+<text x="339" y="321" font-size="12" fill="#0f2b5b" text-anchor="middle" font-weight="600">Storage</text>
 <rect x="318" y="338" width="8" height="26" rx="1.5" fill="#c8d3e6"/>
 <rect x="329" y="338" width="8" height="26" rx="1.5" fill="#c8d3e6"/>
 <rect x="340" y="338" width="8" height="26" rx="1.5" fill="#c8d3e6"/>
 <rect x="351" y="338" width="8" height="26" rx="1.5" fill="#c8d3e6"/>
-<text x="210" y="412" font-size="11.5" fill="#6b7280" text-anchor="middle" font-weight="400">Master + Storage on one host · RAID1 system disk</text>
+<text x="210" y="412" font-size="12" fill="#6b7280" text-anchor="middle" font-weight="400">Master + Storage on one host · RAID1 system disk</text>
 <line x1="210" y1="174" x2="210" y2="222" stroke="#9fb1cf" stroke-width="1.6"/>
 <rect x="410" y="222" width="130" height="200" rx="12" fill="#fff" stroke="#d3d9e4"/>
 <text x="475" y="248" font-size="14" fill="#111827" text-anchor="middle" font-weight="700">MongoDB</text>
-<text x="475" y="268" font-size="11.5" fill="#6b7280" text-anchor="middle" font-weight="400">replica set · SSD</text>
+<text x="475" y="268" font-size="12" fill="#6b7280" text-anchor="middle" font-weight="400">replica set · SSD</text>
 <ellipse cx="475" cy="288" rx="34" ry="6" fill="#e3f4f2" stroke="#0f8a7e"/>
 <path d="M441 288 v16 a34 6 0 0 0 68 0 v-16" fill="#e3f4f2" stroke="#0f8a7e"/>
 <ellipse cx="475" cy="324" rx="34" ry="6" fill="#e3f4f2" stroke="#0f8a7e"/>
 <path d="M441 324 v16 a34 6 0 0 0 68 0 v-16" fill="#e3f4f2" stroke="#0f8a7e"/>
 <ellipse cx="475" cy="360" rx="34" ry="6" fill="#e3f4f2" stroke="#0f8a7e"/>
 <path d="M441 360 v16 a34 6 0 0 0 68 0 v-16" fill="#e3f4f2" stroke="#0f8a7e"/>
-<text x="475" y="408" font-size="11.5" fill="#0f8a7e" text-anchor="middle" font-weight="600">majority writes</text>
+<text x="475" y="408" font-size="12" fill="#0f8a7e" text-anchor="middle" font-weight="600">majority writes</text>
 <line x1="475" y1="174" x2="475" y2="222" stroke="#9fb1cf" stroke-width="1.6"/>
 <rect x="560" y="222" width="290" height="200" rx="12" fill="#fff" stroke="#d3d9e4"/>
 <text x="578" y="248" font-size="14" fill="#111827" text-anchor="start" font-weight="700">Storage-only nodes × N</text>
 <rect x="576" y="264" width="54" height="128" rx="8" fill="#f6f8fb" stroke="#d3d9e4"/>
-<rect x="581" y="272" width="44" height="26" rx="5" fill="#dbe7fb"/>
-<text x="603" y="289" font-size="10" fill="#0f2b5b" text-anchor="middle" font-weight="700">Storage</text>
+<rect x="578" y="272" width="50" height="26" rx="5" fill="#dbe7fb"/>
+<text x="603" y="289" font-size="12" fill="#0f2b5b" text-anchor="middle" font-weight="600">Storage</text>
 <rect x="582" y="306" width="8" height="18" rx="1.5" fill="#c8d3e6"/>
 <rect x="593" y="306" width="8" height="18" rx="1.5" fill="#c8d3e6"/>
 <rect x="604" y="306" width="8" height="18" rx="1.5" fill="#c8d3e6"/>
@@ -86,8 +86,8 @@
 <rect x="604" y="350" width="8" height="18" rx="1.5" fill="#c8d3e6"/>
 <rect x="615" y="350" width="8" height="18" rx="1.5" fill="#c8d3e6"/>
 <rect x="638" y="264" width="54" height="128" rx="8" fill="#f6f8fb" stroke="#d3d9e4"/>
-<rect x="643" y="272" width="44" height="26" rx="5" fill="#dbe7fb"/>
-<text x="665" y="289" font-size="10" fill="#0f2b5b" text-anchor="middle" font-weight="700">Storage</text>
+<rect x="640" y="272" width="50" height="26" rx="5" fill="#dbe7fb"/>
+<text x="665" y="289" font-size="12" fill="#0f2b5b" text-anchor="middle" font-weight="600">Storage</text>
 <rect x="644" y="306" width="8" height="18" rx="1.5" fill="#c8d3e6"/>
 <rect x="655" y="306" width="8" height="18" rx="1.5" fill="#c8d3e6"/>
 <rect x="666" y="306" width="8" height="18" rx="1.5" fill="#c8d3e6"/>
@@ -101,8 +101,8 @@
 <rect x="666" y="350" width="8" height="18" rx="1.5" fill="#c8d3e6"/>
 <rect x="677" y="350" width="8" height="18" rx="1.5" fill="#c8d3e6"/>
 <rect x="700" y="264" width="54" height="128" rx="8" fill="#f6f8fb" stroke="#d3d9e4"/>
-<rect x="705" y="272" width="44" height="26" rx="5" fill="#dbe7fb"/>
-<text x="727" y="289" font-size="10" fill="#0f2b5b" text-anchor="middle" font-weight="700">Storage</text>
+<rect x="702" y="272" width="50" height="26" rx="5" fill="#dbe7fb"/>
+<text x="727" y="289" font-size="12" fill="#0f2b5b" text-anchor="middle" font-weight="600">Storage</text>
 <rect x="706" y="306" width="8" height="18" rx="1.5" fill="#c8d3e6"/>
 <rect x="717" y="306" width="8" height="18" rx="1.5" fill="#c8d3e6"/>
 <rect x="728" y="306" width="8" height="18" rx="1.5" fill="#c8d3e6"/>
@@ -116,8 +116,8 @@
 <rect x="728" y="350" width="8" height="18" rx="1.5" fill="#c8d3e6"/>
 <rect x="739" y="350" width="8" height="18" rx="1.5" fill="#c8d3e6"/>
 <rect x="762" y="264" width="54" height="128" rx="8" fill="#f6f8fb" stroke="#d3d9e4"/>
-<rect x="767" y="272" width="44" height="26" rx="5" fill="#dbe7fb"/>
-<text x="789" y="289" font-size="10" fill="#0f2b5b" text-anchor="middle" font-weight="700">Storage</text>
+<rect x="764" y="272" width="50" height="26" rx="5" fill="#dbe7fb"/>
+<text x="789" y="289" font-size="12" fill="#0f2b5b" text-anchor="middle" font-weight="600">Storage</text>
 <rect x="768" y="306" width="8" height="18" rx="1.5" fill="#c8d3e6"/>
 <rect x="779" y="306" width="8" height="18" rx="1.5" fill="#c8d3e6"/>
 <rect x="790" y="306" width="8" height="18" rx="1.5" fill="#c8d3e6"/>
@@ -131,7 +131,7 @@
 <rect x="790" y="350" width="8" height="18" rx="1.5" fill="#c8d3e6"/>
 <rect x="801" y="350" width="8" height="18" rx="1.5" fill="#c8d3e6"/>
 <text x="836" y="337" font-size="18" fill="#6b7280" text-anchor="end" font-weight="700">…</text>
-<text x="705" y="412" font-size="11.5" fill="#6b7280" text-anchor="middle" font-weight="400">36 × HDD · JBOD pass-through</text>
+<text x="705" y="412" font-size="12" fill="#6b7280" text-anchor="middle" font-weight="400">36 × HDD · JBOD pass-through</text>
 <line x1="705" y1="174" x2="705" y2="222" stroke="#9fb1cf" stroke-width="1.6"/>
-<text x="850" y="454" font-size="11.5" fill="#6b7280" text-anchor="end" font-weight="400">Illustrative: node and disk counts follow capacity planning</text>
+<text x="850" y="454" font-size="12" fill="#6b7280" text-anchor="end" font-weight="400">Illustrative: node and disk counts follow capacity planning</text>
 </svg>

@@ -5,34 +5,53 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>技术架构 — KDSS 分布式存储</title>
 <meta name="description" content="KDSS 技术架构：Master 集群与 MongoDB 副本集管理元数据，存储节点直写裸盘；客户端本地纠删码编码、并行写入，读取逐片校验、缺片实时解码；多 Master 选主与滚动升级。">
+<link rel="icon" href="../favicon.ico" sizes="32x32">
 <link rel="icon" href="../images/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="../apple-touch-icon.png">
+<link rel="canonical" href="https://www.kdss.io/zh/architecture.html">
 <link rel="alternate" hreflang="en" href="https://www.kdss.io/architecture.html">
 <link rel="alternate" hreflang="zh-CN" href="https://www.kdss.io/zh/architecture.html">
+<link rel="alternate" hreflang="x-default" href="https://www.kdss.io/architecture.html">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="KDSS">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:title" content="技术架构 — KDSS 分布式存储">
+<meta property="og:description" content="KDSS 技术架构：Master 集群与 MongoDB 副本集管理元数据，存储节点直写裸盘；客户端本地纠删码编码、并行写入，读取逐片校验、缺片实时解码；多 Master 选主与滚动升级。">
+<meta property="og:url" content="https://www.kdss.io/zh/architecture.html">
+<meta property="og:image" content="https://www.kdss.io/images/og-zh.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="技术架构 — KDSS 分布式存储">
+<meta name="twitter:description" content="KDSS 技术架构：Master 集群与 MongoDB 副本集管理元数据，存储节点直写裸盘；客户端本地纠删码编码、并行写入，读取逐片校验、缺片实时解码；多 Master 选主与滚动升级。">
+<meta name="twitter:image" content="https://www.kdss.io/images/og-zh.png">
 <link rel="stylesheet" href="../css/site.css">
 <link rel="stylesheet" href="../css/pages/architecture.css">
 </head>
 <body>
+<a class="skip-link" href="#main">跳到正文</a>
 
 <header class="site-header">
   <div class="container">
     <a class="brand" href="./"><img src="../images/logo.svg" alt="" width="30" height="30">KDSS<small>分布式存储</small></a>
-    <nav class="nav" aria-label="主导航">
+    <nav class="nav" id="site-nav" aria-label="主导航">
       <a href="./">首页</a>
       <a href="features.html">产品能力</a>
       <a href="solutions.html">解决方案</a>
       <a href="architecture.html" aria-current="page">技术架构</a>
       <a href="docs.html">文档</a>
       <a href="about.html">关于我们</a>
+      <a class="btn btn-primary nav-contact" href="#contact">联系我们</a>
     </nav>
     <div class="nav-actions">
       <div class="lang"><span>中</span><a href="../architecture.html" hreflang="en">EN</a></div>
       <a class="btn btn-primary btn-sm" href="#contact">联系我们</a>
     </div>
-    <button class="menu-btn" aria-label="菜单" aria-expanded="false"><span></span></button>
+    <button class="menu-btn" aria-controls="site-nav" aria-label="菜单" aria-expanded="false"><span></span></button>
   </div>
 </header>
 
-<main>
+<main id="main" tabindex="-1">
 
 <section class="page-hero">
   <div class="container">
@@ -61,14 +80,14 @@
       <p class="lead">访问层提供 POSIX 与 S3 两种入口；控制层负责元数据、选主与后台调度；数据层由存储节点组成，横向扩展到数十台。</p>
     </div>
     <figure class="figure diagram reveal">
-      <div class="scroll xl"><img src="../images/architecture-zh.svg" alt="KDSS 架构：访问层（ksfs、S3 网关、Web 控制台）、Master 集群与 MongoDB 副本集、存储节点" width="1100" height="460"></div>
+      <div class="scroll xl"><img loading="lazy" src="../images/architecture-zh.svg" alt="KDSS 架构：访问层（ksfs、S3 网关、Web 控制台）、Master 集群与 MongoDB 副本集、存储节点" width="1100" height="460"></div>
       <p class="hint">左右滑动查看完整图示</p>
       <figcaption>蓝色虚线为数据路径：分片在客户端与存储节点之间直接传输，不经过 Master。</figcaption>
     </figure>
     <div class="grid grid-3" style="margin-top:32px">
-      <div class="card card-flat"><h4>元数据与数据分离</h4><p>Master 只管理条带级元数据，每 256 MB 数据对应一条记录；数据读写不经过 Master。</p></div>
-      <div class="card card-flat"><h4>编码在客户端完成</h4><p>客户端本地做纠删码编码，分片直接写到各存储节点，写入流量分散到整个集群。</p></div>
-      <div class="card card-flat"><h4>没有单点</h4><p>Master 多副本自动选主，MongoDB 副本集多数派写入，数据分片分散在不同节点。</p></div>
+      <div class="card card-flat"><h3 class="h4">元数据与数据分离</h3><p>Master 按条带记录数据位置（每 256 MB 数据一条记录，另有目录与文件元数据），元数据规模小；数据读写不经过 Master。</p></div>
+      <div class="card card-flat"><h3 class="h4">编码在客户端完成</h3><p>客户端本地做纠删码编码，分片直接写到各存储节点，写入流量分散到整个集群。</p></div>
+      <div class="card card-flat"><h3 class="h4">没有单点</h3><p>Master 多副本自动选主，MongoDB 副本集多数派写入，数据分片分散在不同节点。</p></div>
     </div>
   </div>
 </section>
@@ -104,18 +123,18 @@
     <div class="section-head">
       <span class="eyebrow">写入数据流</span>
       <h2>一次写入：缓冲、编码、并行落盘、提交元数据</h2>
-      <p class="lead">以 FUSE 客户端写入、EC 29+3 为例。元数据在分片全部写完之后才提交。</p>
+      <p class="lead">以 FUSE 客户端写入、EC 29+3 为例。数据分片全部写入且至少一个校验分片成功后提交元数据，缺少的分片由修复补齐。</p>
     </div>
     <figure class="figure diagram reveal">
-      <div class="scroll fit"><img src="../images/arch-write-zh.svg" alt="写入流程：客户端缓冲 256 MB，向 Master 申请条带，本地编码为 32 个分片，并行写入 32 个不同节点，最后提交元数据" width="880" height="430"></div>
+      <div class="scroll fit"><img loading="lazy" src="../images/arch-write-zh.svg" alt="写入流程：客户端缓冲 256 MB，向 Master 申请条带，本地编码为 32 个分片，并行写入 32 个不同节点，数据分片全部写入且至少一个校验分片成功后提交元数据" width="880" height="430"></div>
       <p class="hint">左右滑动查看完整图示</p>
     </figure>
     <div class="steps flow-steps">
-      <div class="step"><h4>缓冲</h4><p>客户端把写入数据缓冲到 256 MB，凑成一个完整的数据块。</p></div>
-      <div class="step"><h4>申请条带</h4><p>向 Master Leader 申请条带，得到条带 ID 和 32 个目标节点。</p></div>
-      <div class="step"><h4>本地编码</h4><p>用 Reed-Solomon（SIMD 加速）编码为 29 个数据分片和 3 个校验分片，每片约 8.8&nbsp;MB。</p></div>
-      <div class="step"><h4>并行写入</h4><p>32 个分片同时写到 32 个不同节点；存储节点顺序追加到裸盘，并按 fsync 策略落盘。</p></div>
-      <div class="step"><h4>提交元数据</h4><p>分片全部写完后，向 Master 提交条带元数据，写入 MongoDB 副本集多数派。</p></div>
+      <div class="step"><h3 class="h4">缓冲</h3><p>客户端把写入数据缓冲到 256 MB，凑成一个完整的数据块。</p></div>
+      <div class="step"><h3 class="h4">申请条带</h3><p>向 Master Leader 申请条带，得到条带 ID 和 32 个目标节点。</p></div>
+      <div class="step"><h3 class="h4">本地编码</h3><p>用 Reed-Solomon（SIMD 加速）编码为 29 个数据分片和 3 个校验分片，每片约 8.8&nbsp;MiB。</p></div>
+      <div class="step"><h3 class="h4">并行写入</h3><p>32 个分片同时写到 32 个不同节点；存储节点顺序追加到裸盘，并按 fsync 策略落盘。</p></div>
+      <div class="step"><h3 class="h4">提交元数据</h3><p>29 个数据分片全部写入、且至少 1 个校验分片写入成功后，向 Master 提交条带元数据，写入 MongoDB 副本集多数派；未写成的校验分片由修复补齐。</p></div>
     </div>
     <div class="callout">写请求始终由 Leader 处理。客户端连到非 Leader 的 Master 时会被自动重定向，Leader 切换对业务透明。</div>
   </div>
@@ -130,14 +149,14 @@
       <p class="lead">每个分片都要通过 CRC32 校验和身份核对才会被使用。少了分片不会导致读取失败，而是用其余分片实时还原。</p>
     </div>
     <figure class="figure diagram reveal">
-      <div class="scroll fit"><img src="../images/arch-read-zh.svg" alt="读取流程：向 Master 查询条带位置，并行读取分片并校验，缺失或校验不符的分片用其余 29 片实时解码，返回数据" width="880" height="430"></div>
+      <div class="scroll fit"><img loading="lazy" src="../images/arch-read-zh.svg" alt="读取流程：向 Master 查询条带位置，并行读取分片并校验，缺失或校验不符的分片用其余 29 片实时解码，返回数据" width="880" height="430"></div>
       <p class="hint">左右滑动查看完整图示</p>
     </figure>
     <div class="steps flow-steps">
-      <div class="step"><h4>查询位置</h4><p>向 Master 获取条带的分片位置，即每个分片位于哪个节点。</p></div>
-      <div class="step"><h4>并行读取</h4><p>同时读取各分片。每片都做 CRC32 校验，并核对条带 ID 与分片序号，防止错误路由读到其他数据；流式读取同样校验。</p></div>
-      <div class="step"><h4>缺片解码</h4><p>分片缺失或校验不符时，用其余分片实时解码。29+3 下只要有任意 29 片可用，数据就能完整读出。</p></div>
-      <div class="step"><h4>返回数据</h4><p>还原后的数据返回给应用；缺失的分片由修复流程在存储节点侧重建。</p></div>
+      <div class="step"><h3 class="h4">查询位置</h3><p>向 Master 获取条带的分片位置，即每个分片位于哪个节点。</p></div>
+      <div class="step"><h3 class="h4">并行读取</h3><p>同时读取各分片。每片都做 CRC32 校验，并核对条带 ID 与分片序号，防止错误路由读到其他数据；流式读取同样校验。</p></div>
+      <div class="step"><h3 class="h4">缺片解码</h3><p>分片缺失或校验不符时，用其余分片实时解码。29+3 下只要有任意 29 片可用，数据就能完整读出。</p></div>
+      <div class="step"><h3 class="h4">返回数据</h3><p>还原后的数据返回给应用；缺失的分片由修复流程在存储节点侧重建。</p></div>
     </div>
   </div>
 </section>
@@ -148,10 +167,10 @@
     <div class="section-head">
       <span class="eyebrow">纠删码</span>
       <h2>条带与放置：一条条带，32 个节点</h2>
-      <p class="lead">一个 256 MB 数据块就是一条条带。条带粒度大，元数据量小，MongoDB 只需记录条带级信息；生产环境在管条带已超过 7 亿。</p>
+      <p class="lead">一个 256 MB 数据块就是一条条带。条带粒度大：按条带记录数据位置（另有目录与文件元数据），元数据规模小；生产环境在管条带已达数亿条。</p>
     </div>
     <figure class="figure diagram reveal">
-      <div class="scroll fit"><img src="../images/arch-stripe-zh.svg" alt="条带放置：一条条带的 32 个分片分别放在 32 个不同节点，每个节点只放一片" width="880" height="494"></div>
+      <div class="scroll fit"><img loading="lazy" src="../images/arch-stripe-zh.svg" alt="条带放置：一条条带的 32 个分片分别放在 32 个不同节点，每个节点只放一片" width="880" height="494"></div>
       <p class="hint">左右滑动查看完整图示</p>
     </figure>
     <div class="grid grid-2" style="margin-top:40px; align-items:start">
@@ -193,20 +212,20 @@
     <div class="section-head">
       <span class="eyebrow">存储引擎</span>
       <h2>裸盘布局：不建文件系统，直接顺序追加</h2>
-      <p class="lead">存储节点绕过本地文件系统直接写块设备。顺序追加、4 KB 对齐，磁头寻道少，硬盘寿命更长、故障率更低。</p>
+      <p class="lead">存储节点绕过本地文件系统直接写块设备。顺序追加、4 KB 对齐，减少寻道，有利于延长硬盘寿命。</p>
     </div>
     <figure class="figure diagram reveal">
-      <div class="scroll fit"><img src="../images/arch-disk-zh.svg" alt="裸盘布局：盘首 4 KB 为主备超级块，其后是按 4 KB 对齐顺序追加的记录（记录头 + 分片数据 + 对齐填充），删除后形成的空洞可被同尺寸写入复用" width="880" height="450"></div>
+      <div class="scroll fit"><img loading="lazy" src="../images/arch-disk-zh.svg" alt="裸盘布局：盘首 4 KB 为主备超级块，其后是按 4 KB 对齐顺序追加的记录（记录头 + 分片数据 + 对齐填充），删除后形成的空洞可被同尺寸写入复用" width="880" height="450"></div>
       <p class="hint">左右滑动查看完整图示</p>
       <figcaption>示意图，各区域不按实际比例绘制。</figcaption>
     </figure>
     <div class="grid grid-3" style="margin-top:32px">
-      <div class="card"><h4>超级块与盘身份</h4><p>主、备两份超级块，CRC 保护。盘自带节点 ID、盘 ID、盘 UUID；换槽位、换盘符后启动自动识别纠正，接错盘拒绝启动。</p></div>
-      <div class="card"><h4>记录与校验</h4><p>本地索引使用 BadgerDB。每次读取都做 CRC32 校验，流式读取同样校验；后台 CRC 巡检可限速（默认 20 MB/s/节点）。</p></div>
-      <div class="card"><h4>崩溃恢复</h4><p>干净关机秒级启动；异常断电从写入前沿向前扫描补齐索引；整理中断可整盘重建索引。所有磁盘并行打开。</p></div>
-      <div class="card"><h4>fsync 策略</h4><p>immediate（默认，每次写入落盘）、batch（组提交）、deferred（适用于带 BBU 阵列卡等场景）三种可选。</p></div>
-      <div class="card"><h4>空间复用与整理</h4><p>删除为软删除，经回收站和冻结期后，空洞按精确尺寸复用；碎片整理把尾部数据搬入空洞后截断回收，逐片回读校验。</p></div>
-      <div class="card"><h4>三级容量保护</h4><p>集群达到拒写线（默认 99%）停止新写入、保留修复；单盘达到上限（默认 99.5%）只接修复；单盘剩余不足 4 GiB 完全只读。</p></div>
+      <div class="card"><h3 class="h4">超级块与盘身份</h3><p>主、备两份超级块，CRC 保护。盘自带节点 ID、盘 ID、盘 UUID；换槽位、换盘符后启动自动识别纠正，接错盘拒绝启动。</p></div>
+      <div class="card"><h3 class="h4">记录与校验</h3><p>本地索引使用 BadgerDB。每次读取都做 CRC32 校验，流式读取同样校验；后台 CRC 巡检可限速（默认 20 MB/s/节点）。</p></div>
+      <div class="card"><h3 class="h4">崩溃恢复</h3><p>干净关机秒级启动；异常断电从写入前沿向前扫描补齐索引；整理中断可整盘重建索引。所有磁盘并行打开。</p></div>
+      <div class="card"><h3 class="h4">fsync 策略</h3><p>immediate（默认，每次写入落盘）、batch（组提交）、deferred（后台每 5 秒落盘，断电可能丢失最近约 5 秒的写入；适合有掉电保护且可接受该窗口的场景）三种可选。</p></div>
+      <div class="card"><h3 class="h4">空间复用与整理</h3><p>删除为软删除，经回收站和冻结期后，空洞按精确尺寸复用；碎片整理把尾部数据搬入空洞后截断回收，逐片回读校验。</p></div>
+      <div class="card"><h3 class="h4">三级容量保护</h3><p>集群达到拒写线（默认 99%）停止新写入、保留修复；单盘达到上限（默认 99.5%）只接修复；单盘剩余不足 4 GiB 完全只读。</p></div>
     </div>
   </div>
 </section>
@@ -217,22 +236,22 @@
     <div class="section-head">
       <span class="eyebrow">高可用</span>
       <h2>多 Master 选主，升级不停服</h2>
-      <p class="lead">控制层没有单点。Master 任何一台故障，Leader 自动切换；存储节点逐台升级，业务读写不中断。</p>
+      <p class="lead">控制层没有单点。Master 任何一台故障，Leader 自动切换；存储节点默认逐台升级，业务读写不中断。</p>
     </div>
     <div class="grid grid-4">
-      <div class="card card-flat"><h4>Master 多副本</h4><p>典型部署 5 台 Master，通过 MongoDB 副本集选出 Leader。</p></div>
-      <div class="card card-flat"><h4>多数派写入</h4><p>元数据写入 MongoDB 副本集的多数成员后才确认。</p></div>
-      <div class="card card-flat"><h4>Leader 自动切换</h4><p>Leader 故障后由其余 Master 自动接任，无需人工干预。</p></div>
-      <div class="card card-flat"><h4>写请求重定向</h4><p>写请求自动重定向到当前 Leader，应用无需感知切换。</p></div>
+      <div class="card card-flat"><h3 class="h4">Master 多副本</h3><p>典型部署 5 台 Master，通过 MongoDB 副本集选出 Leader。</p></div>
+      <div class="card card-flat"><h3 class="h4">多数派写入</h3><p>元数据写入 MongoDB 副本集的多数成员后才确认。</p></div>
+      <div class="card card-flat"><h3 class="h4">Leader 自动切换</h3><p>Leader 故障后由其余 Master 自动接任，无需人工干预。</p></div>
+      <div class="card card-flat"><h3 class="h4">写请求重定向</h3><p>写请求自动重定向到当前 Leader，应用无需感知切换。</p></div>
     </div>
     <h3 style="margin-top:56px">滚动升级流程</h3>
     <div class="steps flow-steps" style="margin-top:20px">
       <div class="step"><h4>进入维护模式</h4><p>节点进入维护模式（cordon），不再接收新写入。</p></div>
       <div class="step"><h4>等待在途写入清零</h4><p>已开始的写入全部完成后再继续。</p></div>
       <div class="step"><h4>替换并验证</h4><p>替换程序并重启，确认节点恢复正常。</p></div>
-      <div class="step"><h4>退出维护，下一台</h4><p>逐台进行，全程对业务透明。</p></div>
+      <div class="step"><h4>退出维护，下一台</h4><p>默认逐台进行，全程对业务透明。</p></div>
     </div>
-    <div class="callout warn">同时离线的节点数不超过"校验分片数 − 1"。以 29+3 为例，同一时间最多 2 台节点离线。</div>
+    <div class="callout warn">同时维护的节点数上限为"校验分片数 − 1"。以 29+3 为例，同一时间最多 2 台节点处于维护。</div>
   </div>
 </section>
 
@@ -245,7 +264,7 @@
       <p class="lead">Master 与 Storage 可以混合部署在系统盘为 RAID1 的节点上，其余节点只运行 Storage。容量不够时，加存储节点即可。</p>
     </div>
     <figure class="figure diagram reveal">
-      <div class="scroll fit"><img src="../images/arch-deploy-zh.svg" alt="部署拓扑：访问层经数据交换网络连接混合节点（Master + Storage）、MongoDB 副本集与纯存储节点" width="880" height="470"></div>
+      <div class="scroll fit"><img loading="lazy" src="../images/arch-deploy-zh.svg" alt="部署拓扑：访问层经数据交换网络连接混合节点（Master + Storage）、MongoDB 副本集与纯存储节点" width="880" height="470"></div>
       <p class="hint">左右滑动查看完整图示</p>
     </figure>
     <div class="table-wrap wide reveal" style="margin-top:32px">
@@ -290,11 +309,11 @@
         <a class="brand" href="./"><img src="../images/logo-light.svg" alt="" width="30" height="30">KDSS<small>分布式存储</small></a>
         <p>面向 PB 级数据的纠删码分布式存储系统，为海量数据的长期保存提供低成本、高可靠的基础设施。</p>
       </div>
-      <div><h4>产品</h4><ul><li><a href="features.html">产品能力</a></li><li><a href="architecture.html">技术架构</a></li><li><a href="solutions.html">解决方案</a></li></ul></div>
-      <div><h4>资源</h4><ul><li><a href="docs.html">文档</a></li><li><a href="../downloads/kdss-whitepaper-zh.pdf">技术白皮书</a></li><li><a href="docs.html#s3">S3 接口</a></li></ul></div>
-      <div><h4>联系</h4><ul><li><a href="mailto:contact@kdss.io">contact@kdss.io</a></li><li><a href="mailto:support@kdss.io">support@kdss.io</a></li><li><a href="about.html">关于我们</a></li></ul></div>
+      <div><p class="footer-title">产品</p><ul><li><a href="features.html">产品能力</a></li><li><a href="architecture.html">技术架构</a></li><li><a href="solutions.html">解决方案</a></li></ul></div>
+      <div><p class="footer-title">资源</p><ul><li><a href="docs.html">文档</a></li><li><a href="../downloads/kdss-whitepaper-zh.pdf">技术白皮书</a></li><li><a href="docs.html#s3">S3 接口</a></li></ul></div>
+      <div><p class="footer-title">联系</p><ul><li><a href="mailto:contact@kdss.io">contact@kdss.io</a></li><li><a href="mailto:support@kdss.io">support@kdss.io</a></li><li><a href="about.html">关于我们</a></li></ul></div>
     </div>
-    <div class="legal"><span>© 2026 KDSS. 保留所有权利。</span><span>当前版本 26.11.1</span></div>
+    <div class="legal"><span>© 2026 KDSS. 保留所有权利。</span><span>当前版本 26.11.2</span></div>
   </div>
 </footer>
 

@@ -5,34 +5,53 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>About — KDSS Distributed Storage</title>
 <meta name="description" content="The thinking behind KDSS, its production track record, technology stack and release history: lower cost and higher reliability for long-term retention of petabyte-scale data.">
+<link rel="icon" href="favicon.ico" sizes="32x32">
 <link rel="icon" href="images/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="canonical" href="https://www.kdss.io/about.html">
 <link rel="alternate" hreflang="en" href="https://www.kdss.io/about.html">
 <link rel="alternate" hreflang="zh-CN" href="https://www.kdss.io/zh/about.html">
+<link rel="alternate" hreflang="x-default" href="https://www.kdss.io/about.html">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="KDSS">
+<meta property="og:locale" content="en_US">
+<meta property="og:title" content="About — KDSS Distributed Storage">
+<meta property="og:description" content="The thinking behind KDSS, its production track record, technology stack and release history: lower cost and higher reliability for long-term retention of petabyte-scale data.">
+<meta property="og:url" content="https://www.kdss.io/about.html">
+<meta property="og:image" content="https://www.kdss.io/images/og-en.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="About — KDSS Distributed Storage">
+<meta name="twitter:description" content="The thinking behind KDSS, its production track record, technology stack and release history: lower cost and higher reliability for long-term retention of petabyte-scale data.">
+<meta name="twitter:image" content="https://www.kdss.io/images/og-en.png">
 <link rel="stylesheet" href="css/site.css">
 <link rel="stylesheet" href="css/pages/about.css">
 </head>
 <body>
+<a class="skip-link" href="#main">Skip to content</a>
 
 <header class="site-header">
   <div class="container">
     <a class="brand" href="./"><img src="images/logo.svg" alt="" width="30" height="30">KDSS<small>Distributed Storage</small></a>
-    <nav class="nav" aria-label="Main navigation">
+    <nav class="nav" id="site-nav" aria-label="Main navigation">
       <a href="./">Home</a>
       <a href="features.html">Product</a>
       <a href="solutions.html">Solutions</a>
       <a href="architecture.html">Architecture</a>
       <a href="docs.html">Docs</a>
       <a href="about.html" aria-current="page">About</a>
+      <a class="btn btn-primary nav-contact" href="#contact">Contact us</a>
     </nav>
     <div class="nav-actions">
       <div class="lang"><a href="zh/about.html" hreflang="zh-CN">中</a><span>EN</span></div>
       <a class="btn btn-primary btn-sm" href="#contact">Contact us</a>
     </div>
-    <button class="menu-btn" aria-label="Menu" aria-expanded="false"><span></span></button>
+    <button class="menu-btn" aria-controls="site-nav" aria-label="Menu" aria-expanded="false"><span></span></button>
   </div>
 </header>
 
-<main>
+<main id="main" tabindex="-1">
 
 <!-- Page hero / 页首 -->
 <section class="page-hero">
@@ -61,12 +80,12 @@
       <article class="card principle reveal">
         <span class="num">01</span>
         <h3>Fewer drives</h3>
-        <p>29+3 erasure coding delivers 90.6% usable capacity, vs. 33.3% for 3-way replication. Sequential appends minimize seeks and extend HDD life.</p>
+        <p>29+3 erasure coding delivers 90.6% usable capacity, vs. 33.3% for 3-way replication. Sequential appends minimize seeks and help extend drive life.</p>
       </article>
       <article class="card principle reveal">
         <span class="num">02</span>
-        <h3>Zero data loss</h3>
-        <p>Data stays readable and rebuildable with any 3 shards lost at once. Shards of a stripe never share a node, and every read is CRC-verified.</p>
+        <h3>Data that stays intact</h3>
+        <p>Data stays intact through multiple failures: with 29+3, it remains readable and rebuildable with any 3 shards lost at once. Shards of a stripe never share a node, and every read is CRC-verified.</p>
       </article>
       <article class="card principle reveal">
         <span class="num">03</span>
@@ -83,15 +102,15 @@
     <div class="section-head">
       <span class="eyebrow">In production</span>
       <h2>Proven in production, at scale</h2>
-      <p class="lead">Every KDSS capability has been validated over time across multiple production clusters. Here is the combined footprint.</p>
+      <p class="lead">Every KDSS capability has been validated over time across multiple production clusters. Here is the deployed footprint.</p>
     </div>
     <div class="metrics reveal">
-      <div class="metric"><strong>~190<small>PB</small></strong><span>Raw capacity</span></div>
+      <div class="metric"><strong>~190<small>PB</small></strong><span>Deployed footprint (raw)</span></div>
       <div class="metric"><strong>300<small>+</small></strong><span>Storage nodes</span></div>
       <div class="metric"><strong>11,000<small>+</small></strong><span>Data drives</span></div>
-      <div class="metric"><strong>700<small>M+</small></strong><span>Stripes under management</span></div>
+      <div class="metric"><strong>100<small>M+</small></strong><span>Stripes under management (hundreds of millions)</span></div>
     </div>
-    <p class="metrics-note">Typical single cluster: 36 nodes × 36 drives, about 16 PB raw. Around 99% of production reads and writes go through the FUSE client.</p>
+    <p class="metrics-note">Typical single cluster: about 18 PB raw (36 nodes × 36 × 14 TB drives). Around 99% of production reads and writes go through the FUSE client.</p>
   </div>
 </section>
 
@@ -104,15 +123,15 @@
       <p class="lead">Core services are written in Go on top of open-source building blocks proven at scale — simple to deploy and straightforward to troubleshoot.</p>
     </div>
     <div class="grid grid-3">
-      <div class="card card-flat stack-card"><h4>Go</h4><p>Implementation language for the Master, storage nodes, FUSE client and S3 gateway.</p></div>
-      <div class="card card-flat stack-card"><h4>gRPC + Protocol Buffers</h4><p>Inter-component communication, with optional mTLS.</p></div>
-      <div class="card card-flat stack-card"><h4>MongoDB</h4><p>A replica set holds stripe-level metadata with majority writes and backs Master leader election.</p></div>
-      <div class="card card-flat stack-card"><h4>klauspost/reedsolomon</h4><p>SIMD-accelerated Reed-Solomon encoding and decoding.</p></div>
-      <div class="card card-flat stack-card"><h4>hanwen/go-fuse</h4><p>File system layer of the ksfs FUSE client for POSIX mounts.</p></div>
-      <div class="card card-flat stack-card"><h4>BadgerDB</h4><p>Local shard index on each storage node.</p></div>
-      <div class="card card-flat stack-card"><h4>Gin</h4><p>HTTP framework for the web console and its APIs.</p></div>
-      <div class="card card-flat stack-card"><h4>Zap + Prometheus</h4><p>Structured logging and a full set of kdss_* metrics.</p></div>
-      <div class="card card-flat stack-card"><h4>Vue 3 + Element Plus</h4><p>Front end of the web management console.</p></div>
+      <div class="card card-flat stack-card"><h3 class="h4">Go</h3><p>Implementation language for the Master, storage nodes, FUSE client and S3 gateway.</p></div>
+      <div class="card card-flat stack-card"><h3 class="h4">gRPC + Protocol Buffers</h3><p>Inter-component communication, with optional mTLS.</p></div>
+      <div class="card card-flat stack-card"><h3 class="h4">MongoDB</h3><p>A replica set holds stripe-level metadata with majority writes and backs Master leader election.</p></div>
+      <div class="card card-flat stack-card"><h3 class="h4">klauspost/reedsolomon</h3><p>SIMD-accelerated Reed-Solomon encoding and decoding.</p></div>
+      <div class="card card-flat stack-card"><h3 class="h4">hanwen/go-fuse</h3><p>File system layer of the ksfs FUSE client for POSIX mounts.</p></div>
+      <div class="card card-flat stack-card"><h3 class="h4">BadgerDB</h3><p>Local shard index on each storage node.</p></div>
+      <div class="card card-flat stack-card"><h3 class="h4">Gin</h3><p>HTTP framework for the web console and its APIs.</p></div>
+      <div class="card card-flat stack-card"><h3 class="h4">Zap + Prometheus</h3><p>Structured logging and a full set of kdss_* metrics.</p></div>
+      <div class="card card-flat stack-card"><h3 class="h4">Vue 3 + Element Plus</h3><p>Front end of the web management console.</p></div>
     </div>
   </div>
 </section>
@@ -123,16 +142,16 @@
     <div>
       <span class="eyebrow">Release history</span>
       <h2>Continuous delivery, calendar versioning</h2>
-      <p class="lead" style="margin-top:16px">KDSS uses calendar versioning (CalVer): <code>YY.MM.PATCH</code>. For example, <code>26.11.1</code> is a November 2026 release, so you can tell at a glance how current a build is.</p>
-      <p style="margin-top:16px">Recent milestones are shown here. Every release can be rolled out node by node, with no maintenance window.</p>
+      <p class="lead" style="margin-top:16px">KDSS uses calendar versioning (CalVer): <code>YY.MM.PATCH</code>. For example, <code>26.11.2</code> is a November 2026 release, so you can tell at a glance how current a build is.</p>
+      <p style="margin-top:16px">Recent milestones are shown here. Every release can be rolled out as a rolling upgrade (one node at a time by default), with no maintenance window.</p>
     </div>
     <ol class="timeline reveal">
-      <li><span class="stage">2026 · Foundation</span><h4>Erasure coding and raw-disk engine in production</h4><p>Reed-Solomon erasure coding, sequential appends to raw disks, dual superblocks with on-disk identity, end-to-end CRC checks, and both FUSE and S3 access.</p></li>
-      <li><span class="stage">Space efficiency</span><h4>Hole reuse and compaction</h4><p>Freed space is reused by new writes of the exact same size; compaction moves tail data into holes and truncates, crash-safe and verified shard by shard.</p></li>
-      <li><span class="stage">Repair</span><h4>In-place repair</h4><p>After a drive replacement, data is written back to its original location on the new drive. Reads now verify stripe ID and shard index.</p></li>
-      <li><span class="stage">Visibility</span><h4>Writable capacity panel and placement audit</h4><p>The console shows live max and conservative writable capacity, and a background audit continuously confirms no two shards of a stripe share a node.</p></li>
-      <li><span class="stage">Operations</span><h4>Built-in alerting and hardening</h4><p>P0/P1/P2 alerts delivered via Lark and email, online license validation, and bearer-token authentication for /metrics.</p></li>
-      <li><span class="stage">Current release</span><h4>26.11.1</h4><p>Includes every capability listed above.</p></li>
+      <li><span class="stage">2026 · Foundation</span><h3 class="h4">Erasure coding and raw-disk engine in production</h3><p>Reed-Solomon erasure coding, sequential appends to raw disks, dual superblocks with on-disk identity, end-to-end CRC checks, and both FUSE and S3 access.</p></li>
+      <li><span class="stage">Space efficiency</span><h3 class="h4">Hole reuse and compaction</h3><p>Freed space is reused by new writes of the exact same size; compaction moves tail data into holes and truncates, crash-safe and verified shard by shard.</p></li>
+      <li><span class="stage">Repair</span><h3 class="h4">In-place repair</h3><p>After a drive replacement, data is written back to its original location on the new drive. Reads now verify stripe ID and shard index.</p></li>
+      <li><span class="stage">Visibility</span><h3 class="h4">Writable capacity panel and placement audit</h3><p>The console shows live max and conservative writable capacity, and a background audit continuously confirms no two shards of a stripe share a node.</p></li>
+      <li><span class="stage">Operations</span><h3 class="h4">Built-in alerting and hardening</h3><p>P0/P1/P2 alerts delivered via Lark and email, and bearer-token authentication for /metrics.</p></li>
+      <li><span class="stage">Current release</span><h3 class="h4">26.11.2</h3><p>Includes every capability listed above.</p></li>
     </ol>
   </div>
 </section>
@@ -171,11 +190,11 @@
         <a class="brand" href="./"><img src="images/logo-light.svg" alt="" width="30" height="30">KDSS<small>Distributed Storage</small></a>
         <p>Erasure-coded distributed storage for petabyte-scale data — low-cost, highly reliable infrastructure for long-term retention.</p>
       </div>
-      <div><h4>Product</h4><ul><li><a href="features.html">Features</a></li><li><a href="architecture.html">Architecture</a></li><li><a href="solutions.html">Solutions</a></li></ul></div>
-      <div><h4>Resources</h4><ul><li><a href="docs.html">Docs</a></li><li><a href="downloads/kdss-whitepaper-en.pdf">Whitepaper</a></li><li><a href="docs.html#s3">S3 API</a></li></ul></div>
-      <div><h4>Contact</h4><ul><li><a href="mailto:contact@kdss.io">contact@kdss.io</a></li><li><a href="mailto:support@kdss.io">support@kdss.io</a></li><li><a href="about.html">About</a></li></ul></div>
+      <div><p class="footer-title">Product</p><ul><li><a href="features.html">Features</a></li><li><a href="architecture.html">Architecture</a></li><li><a href="solutions.html">Solutions</a></li></ul></div>
+      <div><p class="footer-title">Resources</p><ul><li><a href="docs.html">Docs</a></li><li><a href="downloads/kdss-whitepaper-en.pdf">Whitepaper</a></li><li><a href="docs.html#s3">S3 API</a></li></ul></div>
+      <div><p class="footer-title">Contact</p><ul><li><a href="mailto:contact@kdss.io">contact@kdss.io</a></li><li><a href="mailto:support@kdss.io">support@kdss.io</a></li><li><a href="about.html">About</a></li></ul></div>
     </div>
-    <div class="legal"><span>© 2026 KDSS. All rights reserved.</span><span>Version 26.11.1</span></div>
+    <div class="legal"><span>© 2026 KDSS. All rights reserved.</span><span>Version 26.11.2</span></div>
   </div>
 </footer>
 

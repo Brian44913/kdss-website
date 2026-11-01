@@ -3,7 +3,7 @@
 <text x="50" y="58" font-size="15" fill="#111827" text-anchor="start" font-weight="700">客户端（ksfs）</text>
 <rect x="50" y="72" width="310" height="50" rx="10" fill="#f6f8fb" stroke="#f6f8fb"/><text x="205.0" y="102.0" font-size="14" font-weight="700" fill="#111827" text-anchor="middle">写缓冲攒满 256 MB</text>
 <circle cx="50" cy="72" r="11" fill="#1d5fd1"/><text x="50" y="76.5" font-size="12.5" font-weight="700" fill="#fff" text-anchor="middle">1</text>
-<rect x="50" y="140" width="310" height="62" rx="10" fill="#f6f8fb" stroke="#f6f8fb"/><text x="205.0" y="168.0" font-size="14" font-weight="700" fill="#111827" text-anchor="middle">本地 EC 编码（29+3）</text><text x="205.0" y="188.0" font-size="12.5" fill="#6b7280" text-anchor="middle">29 个数据分片 + 3 个校验分片，每片约 8.8 MB</text>
+<rect x="50" y="140" width="310" height="62" rx="10" fill="#f6f8fb" stroke="#f6f8fb"/><text x="205.0" y="168.0" font-size="14" font-weight="700" fill="#111827" text-anchor="middle">本地 EC 编码（29+3）</text><text x="205.0" y="188.0" font-size="12.5" fill="#6b7280" text-anchor="middle">29 个数据分片 + 3 个校验分片，每片约 8.8 MiB</text>
 <circle cx="50" cy="140" r="11" fill="#1d5fd1"/><text x="50" y="144.5" font-size="12.5" font-weight="700" fill="#fff" text-anchor="middle">3</text>
 <rect x="550" y="30" width="180" height="70" rx="10" fill="#0f2b5b" stroke="#0f2b5b"/><text x="640.0" y="62.0" font-size="15" font-weight="700" fill="#fff" text-anchor="middle">Master（Leader）</text><text x="640.0" y="82.0" font-size="12.5" fill="#c9d8f5" text-anchor="middle">分配条带与目标节点</text>
 <rect x="760" y="30" width="100" height="70" rx="10" fill="#fff" stroke="#d3d9e4"/><text x="810.0" y="62.0" font-size="14" font-weight="700" fill="#111827" text-anchor="middle">MongoDB</text><text x="810.0" y="82.0" font-size="12.5" fill="#6b7280" text-anchor="middle">多数派写入</text>
@@ -15,7 +15,10 @@
 <text x="392" y="100" font-size="12" fill="#6b7280" text-anchor="start" font-weight="400">返回条带 ID 与 32 个节点</text>
 <path d="M380 190 H640 V102" stroke="#9fb1cf" stroke-width="1.6" fill="none" marker-end="url(#ah)"/>
 <circle cx="470" cy="190" r="11" fill="#1d5fd1"/><text x="470" y="194.5" font-size="12.5" font-weight="700" fill="#fff" text-anchor="middle">5</text>
-<text x="488" y="182" font-size="12.5" fill="#6b7280" text-anchor="start" font-weight="400">全部分片写完后提交元数据</text>
+<text x="652" y="124" font-size="12.5" fill="#111827" text-anchor="start" font-weight="600">提交元数据：</text>
+<text x="652" y="142" font-size="12.5" fill="#6b7280" text-anchor="start" font-weight="400">数据分片全部写入，</text>
+<text x="652" y="160" font-size="12.5" fill="#6b7280" text-anchor="start" font-weight="400">且至少 1 个校验分片成功；</text>
+<text x="652" y="178" font-size="12.5" fill="#6b7280" text-anchor="start" font-weight="400">缺少的分片由修复补齐</text>
 <rect x="30.0" y="300" width="21.6" height="46" rx="4" fill="#1d5fd1" opacity="0.9"/>
 <rect x="55.6" y="300" width="21.6" height="46" rx="4" fill="#1d5fd1" opacity="0.9"/>
 <rect x="81.2" y="300" width="21.6" height="46" rx="4" fill="#1d5fd1" opacity="0.9"/>
@@ -60,5 +63,5 @@
 <text x="399.5625" y="376" font-size="12.5" fill="#6b7280" text-anchor="middle" font-weight="400">29 个数据分片</text>
 <path d="M773.125 352 v6 H850 v-6" stroke="#d3d9e4" stroke-width="1.4" fill="none"/>
 <text x="811.5625" y="376" font-size="12.5" fill="#6b7280" text-anchor="middle" font-weight="400">3 个校验分片</text>
-<text x="850" y="410" font-size="11.5" fill="#6b7280" text-anchor="end" font-weight="400">示意：以 EC 29+3 为例</text>
+<text x="850" y="410" font-size="12" fill="#6b7280" text-anchor="end" font-weight="400">示意：以 EC 29+3 为例</text>
 </svg>

@@ -5,34 +5,53 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Architecture — KDSS Distributed Storage</title>
 <meta name="description" content="KDSS architecture: a Master cluster and MongoDB replica set manage metadata while storage nodes write raw disks directly. Clients erasure-code locally and write in parallel; reads verify every shard and decode missing ones on the fly.">
+<link rel="icon" href="favicon.ico" sizes="32x32">
 <link rel="icon" href="images/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="canonical" href="https://www.kdss.io/architecture.html">
 <link rel="alternate" hreflang="en" href="https://www.kdss.io/architecture.html">
 <link rel="alternate" hreflang="zh-CN" href="https://www.kdss.io/zh/architecture.html">
+<link rel="alternate" hreflang="x-default" href="https://www.kdss.io/architecture.html">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="KDSS">
+<meta property="og:locale" content="en_US">
+<meta property="og:title" content="Architecture — KDSS Distributed Storage">
+<meta property="og:description" content="KDSS architecture: a Master cluster and MongoDB replica set manage metadata while storage nodes write raw disks directly. Clients erasure-code locally and write in parallel; reads verify every shard and decode missing ones on the fly.">
+<meta property="og:url" content="https://www.kdss.io/architecture.html">
+<meta property="og:image" content="https://www.kdss.io/images/og-en.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Architecture — KDSS Distributed Storage">
+<meta name="twitter:description" content="KDSS architecture: a Master cluster and MongoDB replica set manage metadata while storage nodes write raw disks directly. Clients erasure-code locally and write in parallel; reads verify every shard and decode missing ones on the fly.">
+<meta name="twitter:image" content="https://www.kdss.io/images/og-en.png">
 <link rel="stylesheet" href="css/site.css">
 <link rel="stylesheet" href="css/pages/architecture.css">
 </head>
 <body>
+<a class="skip-link" href="#main">Skip to content</a>
 
 <header class="site-header">
   <div class="container">
     <a class="brand" href="./"><img src="images/logo.svg" alt="" width="30" height="30">KDSS<small>Distributed Storage</small></a>
-    <nav class="nav" aria-label="Main navigation">
+    <nav class="nav" id="site-nav" aria-label="Main navigation">
       <a href="./">Home</a>
       <a href="features.html">Product</a>
       <a href="solutions.html">Solutions</a>
       <a href="architecture.html" aria-current="page">Architecture</a>
       <a href="docs.html">Docs</a>
       <a href="about.html">About</a>
+      <a class="btn btn-primary nav-contact" href="#contact">Contact us</a>
     </nav>
     <div class="nav-actions">
       <div class="lang"><a href="zh/architecture.html" hreflang="zh-CN">中</a><span>EN</span></div>
       <a class="btn btn-primary btn-sm" href="#contact">Contact us</a>
     </div>
-    <button class="menu-btn" aria-label="Menu" aria-expanded="false"><span></span></button>
+    <button class="menu-btn" aria-controls="site-nav" aria-label="Menu" aria-expanded="false"><span></span></button>
   </div>
 </header>
 
-<main>
+<main id="main" tabindex="-1">
 
 <section class="page-hero">
   <div class="container">
@@ -61,14 +80,14 @@
       <p class="lead">The access tier offers both POSIX and S3 entry points. The control tier handles metadata, leader election and background scheduling. The data tier is a pool of storage nodes that scales out to dozens of servers.</p>
     </div>
     <figure class="figure diagram reveal">
-      <div class="scroll xl"><img src="images/architecture-en.svg" alt="KDSS architecture: access tier (ksfs, S3 gateway, web console), Master cluster with MongoDB replica set, and storage nodes" width="1100" height="460"></div>
+      <div class="scroll xl"><img loading="lazy" src="images/architecture-en.svg" alt="KDSS architecture: access tier (ksfs, S3 gateway, web console), Master cluster with MongoDB replica set, and storage nodes" width="1100" height="460"></div>
       <p class="hint">Swipe to see the full diagram</p>
       <figcaption>Dashed blue lines are the data path: shards move directly between clients and storage nodes, never through the Master.</figcaption>
     </figure>
     <div class="grid grid-3" style="margin-top:32px">
-      <div class="card card-flat"><h4>Metadata separate from data</h4><p>The Master tracks stripe-level metadata only — one record per 256 MB of data — and never sits in the data path.</p></div>
-      <div class="card card-flat"><h4>Encoding at the client</h4><p>Clients erasure-code locally and write shards straight to storage nodes, spreading write traffic across the whole cluster.</p></div>
-      <div class="card card-flat"><h4>No single point of failure</h4><p>Multiple Masters with automatic leader election, majority writes to MongoDB, and shards spread across different nodes.</p></div>
+      <div class="card card-flat"><h3 class="h4">Metadata separate from data</h3><p>The Master records data locations per stripe — one record per 256 MB of data, plus directory and file metadata — so metadata stays small, and it never sits in the data path.</p></div>
+      <div class="card card-flat"><h3 class="h4">Encoding at the client</h3><p>Clients erasure-code locally and write shards straight to storage nodes, spreading write traffic across the whole cluster.</p></div>
+      <div class="card card-flat"><h3 class="h4">No single point of failure</h3><p>Multiple Masters with automatic leader election, majority writes to MongoDB, and shards spread across different nodes.</p></div>
     </div>
   </div>
 </section>
@@ -104,18 +123,18 @@
     <div class="section-head">
       <span class="eyebrow">Write path</span>
       <h2>Buffer, encode, write in parallel, commit</h2>
-      <p class="lead">Shown for a FUSE client with EC 29+3. Metadata is committed only after every shard has landed.</p>
+      <p class="lead">Shown for a FUSE client with EC 29+3. Metadata is committed once all data shards and at least one parity shard are written; repair fills in any missing shards.</p>
     </div>
     <figure class="figure diagram reveal">
-      <div class="scroll fit"><img src="images/arch-write-en.svg" alt="Write path: the client buffers 256 MB, requests a stripe from the Master, encodes 32 shards locally, writes them to 32 different nodes in parallel, then commits metadata" width="880" height="430"></div>
+      <div class="scroll fit"><img loading="lazy" src="images/arch-write-en.svg" alt="Write path: the client buffers 256 MB, requests a stripe from the Master, encodes 32 shards locally, writes them to 32 different nodes in parallel, and commits metadata once all data shards and at least one parity shard are written" width="880" height="430"></div>
       <p class="hint">Swipe to see the full diagram</p>
     </figure>
     <div class="steps flow-steps">
-      <div class="step"><h4>Buffer</h4><p>The client buffers incoming writes until it has a full 256 MB block.</p></div>
-      <div class="step"><h4>Request a stripe</h4><p>It asks the Master leader for a stripe and receives a stripe ID and 32 target nodes.</p></div>
-      <div class="step"><h4>Encode locally</h4><p>Reed-Solomon (SIMD-accelerated) produces 29 data shards and 3 parity shards of about 8.8&nbsp;MB each.</p></div>
-      <div class="step"><h4>Write in parallel</h4><p>All 32 shards go to 32 different nodes at once. Each storage node appends to its raw disk and persists according to the fsync policy.</p></div>
-      <div class="step"><h4>Commit metadata</h4><p>Once every shard is written, the client commits the stripe metadata to the Master, which writes it to a MongoDB majority.</p></div>
+      <div class="step"><h3 class="h4">Buffer</h3><p>The client buffers incoming writes until it has a full 256 MB block.</p></div>
+      <div class="step"><h3 class="h4">Request a stripe</h3><p>It asks the Master leader for a stripe and receives a stripe ID and 32 target nodes.</p></div>
+      <div class="step"><h3 class="h4">Encode locally</h3><p>Reed-Solomon (SIMD-accelerated) produces 29 data shards and 3 parity shards of about 8.8&nbsp;MiB each.</p></div>
+      <div class="step"><h3 class="h4">Write in parallel</h3><p>All 32 shards go to 32 different nodes at once. Each storage node appends to its raw disk and persists according to the fsync policy.</p></div>
+      <div class="step"><h3 class="h4">Commit metadata</h3><p>Once all 29 data shards and at least one parity shard are written, the client commits the stripe metadata to the Master, which writes it to a MongoDB majority. Repair fills in any parity shards that did not land.</p></div>
     </div>
     <div class="callout">Writes are always served by the leader. A client that reaches a non-leader Master is redirected automatically, so leader changes are invisible to applications.</div>
   </div>
@@ -130,14 +149,14 @@
       <p class="lead">A shard is used only after it passes a CRC32 check and an identity check. A missing shard does not fail the read — the data is reconstructed from the others in real time.</p>
     </div>
     <figure class="figure diagram reveal">
-      <div class="scroll fit"><img src="images/arch-read-en.svg" alt="Read path: look up stripe locations from the Master, read shards in parallel with verification, rebuild missing or corrupt shards from any 29 survivors, return data" width="880" height="430"></div>
+      <div class="scroll fit"><img loading="lazy" src="images/arch-read-en.svg" alt="Read path: look up stripe locations from the Master, read shards in parallel with verification, rebuild missing or corrupt shards from any 29 survivors, return data" width="880" height="430"></div>
       <p class="hint">Swipe to see the full diagram</p>
     </figure>
     <div class="steps flow-steps">
-      <div class="step"><h4>Look up locations</h4><p>The client asks the Master which node holds each shard of the stripe.</p></div>
-      <div class="step"><h4>Read in parallel</h4><p>All shards are read at once. Each is CRC32-checked and its stripe ID and shard index are verified, so a misrouted read can never return someone else's data. Streaming reads are verified the same way.</p></div>
-      <div class="step"><h4>Decode what is missing</h4><p>If shards are missing or fail verification, the rest are decoded in real time. With EC 29+3, any 29 shards are enough to return complete data.</p></div>
-      <div class="step"><h4>Return data</h4><p>The reconstructed data goes back to the application; the repair process rebuilds the missing shards on the storage side.</p></div>
+      <div class="step"><h3 class="h4">Look up locations</h3><p>The client asks the Master which node holds each shard of the stripe.</p></div>
+      <div class="step"><h3 class="h4">Read in parallel</h3><p>All shards are read at once. Each is CRC32-checked and its stripe ID and shard index are verified, so a misrouted read can never return someone else's data. Streaming reads are verified the same way.</p></div>
+      <div class="step"><h3 class="h4">Decode what is missing</h3><p>If shards are missing or fail verification, the rest are decoded in real time. With EC 29+3, any 29 shards are enough to return complete data.</p></div>
+      <div class="step"><h3 class="h4">Return data</h3><p>The reconstructed data goes back to the application; the repair process rebuilds the missing shards on the storage side.</p></div>
     </div>
   </div>
 </section>
@@ -148,10 +167,10 @@
     <div class="section-head">
       <span class="eyebrow">Erasure coding</span>
       <h2>Stripes and placement: one stripe, 32 nodes</h2>
-      <p class="lead">Each 256 MB block is one stripe. Large stripes keep metadata small — MongoDB stores stripe-level records only — and production clusters already manage more than 700 million stripes.</p>
+      <p class="lead">Each 256 MB block is one stripe. Large stripes keep metadata small — data locations are recorded per stripe, plus directory and file metadata — and production clusters manage hundreds of millions of stripes.</p>
     </div>
     <figure class="figure diagram reveal">
-      <div class="scroll fit"><img src="images/arch-stripe-en.svg" alt="Stripe placement: the 32 shards of a stripe are placed on 32 different nodes, one shard per node" width="880" height="494"></div>
+      <div class="scroll fit"><img loading="lazy" src="images/arch-stripe-en.svg" alt="Stripe placement: the 32 shards of a stripe are placed on 32 different nodes, one shard per node" width="880" height="494"></div>
       <p class="hint">Swipe to see the full diagram</p>
     </figure>
     <div class="grid grid-2" style="margin-top:40px; align-items:start">
@@ -193,20 +212,20 @@
     <div class="section-head">
       <span class="eyebrow">Storage engine</span>
       <h2>Raw-disk layout: no file system, append-only</h2>
-      <p class="lead">Storage nodes bypass the local file system and write the block device directly. Sequential, 4 KB-aligned appends mean less head seeking, longer drive life and fewer failures.</p>
+      <p class="lead">Storage nodes bypass the local file system and write the block device directly. Sequential, 4 KB-aligned appends mean less head seeking, which helps extend drive life.</p>
     </div>
     <figure class="figure diagram reveal">
-      <div class="scroll fit"><img src="images/arch-disk-en.svg" alt="Raw-disk layout: primary and backup superblocks in the first 4 KB, then 4 KB-aligned records (header, shard data, padding) appended sequentially; holes left by deletes are reused by writes of the same size" width="880" height="450"></div>
+      <div class="scroll fit"><img loading="lazy" src="images/arch-disk-en.svg" alt="Raw-disk layout: primary and backup superblocks in the first 4 KB, then 4 KB-aligned records (header, shard data, padding) appended sequentially; holes left by deletes are reused by writes of the same size" width="880" height="450"></div>
       <p class="hint">Swipe to see the full diagram</p>
       <figcaption>Schematic; regions are not drawn to scale.</figcaption>
     </figure>
     <div class="grid grid-3" style="margin-top:32px">
-      <div class="card"><h4>Superblocks and disk identity</h4><p>Primary and backup superblocks, CRC-protected. Each disk carries its node ID, disk ID and UUID, so moved slots or renamed devices are corrected at startup and a wrong disk is refused.</p></div>
-      <div class="card"><h4>Records and verification</h4><p>The local index is BadgerDB. Every read is CRC32-checked, streaming reads included; a background CRC scrub can be rate-limited (20 MB/s per node by default).</p></div>
-      <div class="card"><h4>Crash recovery</h4><p>Clean shutdowns restart in seconds. After a power loss, the index is completed by scanning forward from the write head; an interrupted compaction can rebuild the index from the whole disk. All disks open in parallel.</p></div>
-      <div class="card"><h4>fsync policy</h4><p>Choose immediate (default, every write persisted), batch (group commit) or deferred (for setups such as RAID controllers with BBU).</p></div>
-      <div class="card"><h4>Space reuse and defragmentation</h4><p>Deletes are soft: after the recycle bin and a freeze period, holes are reused by writes of exactly the same size. Defragmentation moves tail data into holes, verifies it, then truncates.</p></div>
-      <div class="card"><h4>Three-level capacity protection</h4><p>At the cluster reject line (99% by default) new writes stop but repair continues; a disk at its limit (99.5% by default) takes repairs only; a disk with under 4 GiB left becomes read-only.</p></div>
+      <div class="card"><h3 class="h4">Superblocks and disk identity</h3><p>Primary and backup superblocks, CRC-protected. Each disk carries its node ID, disk ID and UUID, so moved slots or renamed devices are corrected at startup and a wrong disk is refused.</p></div>
+      <div class="card"><h3 class="h4">Records and verification</h3><p>The local index is BadgerDB. Every read is CRC32-checked, streaming reads included; a background CRC scrub can be rate-limited (20 MB/s per node by default).</p></div>
+      <div class="card"><h3 class="h4">Crash recovery</h3><p>Clean shutdowns restart in seconds. After a power loss, the index is completed by scanning forward from the write head; an interrupted compaction can rebuild the index from the whole disk. All disks open in parallel.</p></div>
+      <div class="card"><h3 class="h4">fsync policy</h3><p>Choose immediate (default, every write persisted), batch (group commit) or deferred (flushed in the background every 5 seconds; a power loss can lose up to the last ~5 seconds of writes — for hardware with power-loss protection where that window is acceptable).</p></div>
+      <div class="card"><h3 class="h4">Space reuse and defragmentation</h3><p>Deletes are soft: after the recycle bin and a freeze period, holes are reused by writes of exactly the same size. Defragmentation moves tail data into holes, verifies it, then truncates.</p></div>
+      <div class="card"><h3 class="h4">Three-level capacity protection</h3><p>At the cluster reject line (99% by default) new writes stop but repair continues; a disk at its limit (99.5% by default) takes repairs only; a disk with under 4 GiB left becomes read-only.</p></div>
     </div>
   </div>
 </section>
@@ -217,22 +236,22 @@
     <div class="section-head">
       <span class="eyebrow">High availability</span>
       <h2>Multiple Masters, upgrades without downtime</h2>
-      <p class="lead">The control tier has no single point of failure: if any Master fails, leadership moves automatically. Storage nodes are upgraded one at a time while reads and writes continue.</p>
+      <p class="lead">The control tier has no single point of failure: if any Master fails, leadership moves automatically. By default, storage nodes are upgraded one at a time while reads and writes continue.</p>
     </div>
     <div class="grid grid-4">
-      <div class="card card-flat"><h4>Replicated Masters</h4><p>A typical deployment runs 5 Masters, which elect a leader through the MongoDB replica set.</p></div>
-      <div class="card card-flat"><h4>Majority writes</h4><p>Metadata is acknowledged only after a majority of the MongoDB replica set has it.</p></div>
-      <div class="card card-flat"><h4>Automatic failover</h4><p>If the leader fails, another Master takes over without operator action.</p></div>
-      <div class="card card-flat"><h4>Write redirection</h4><p>Writes are redirected to the current leader automatically; applications never notice the switch.</p></div>
+      <div class="card card-flat"><h3 class="h4">Replicated Masters</h3><p>A typical deployment runs 5 Masters, which elect a leader through the MongoDB replica set.</p></div>
+      <div class="card card-flat"><h3 class="h4">Majority writes</h3><p>Metadata is acknowledged only after a majority of the MongoDB replica set has it.</p></div>
+      <div class="card card-flat"><h3 class="h4">Automatic failover</h3><p>If the leader fails, another Master takes over without operator action.</p></div>
+      <div class="card card-flat"><h3 class="h4">Write redirection</h3><p>Writes are redirected to the current leader automatically; applications never notice the switch.</p></div>
     </div>
     <h3 style="margin-top:56px">Rolling upgrade</h3>
     <div class="steps flow-steps" style="margin-top:20px">
       <div class="step"><h4>Enter maintenance</h4><p>The node is cordoned and stops accepting new writes.</p></div>
       <div class="step"><h4>Drain in-flight writes</h4><p>Writes already in progress are allowed to finish.</p></div>
       <div class="step"><h4>Replace and verify</h4><p>Swap the binary, restart and confirm the node is healthy.</p></div>
-      <div class="step"><h4>Exit maintenance, move on</h4><p>One node at a time, fully transparent to applications.</p></div>
+      <div class="step"><h4>Exit maintenance, move on</h4><p>One node at a time by default, fully transparent to applications.</p></div>
     </div>
-    <div class="callout warn">Never take more nodes offline at once than the number of parity shards minus one. With EC 29+3, that means at most 2 nodes at a time.</div>
+    <div class="callout warn">The number of nodes in maintenance at the same time is capped at parity shards − 1. With EC 29+3, that means at most 2 nodes at a time.</div>
   </div>
 </section>
 
@@ -245,7 +264,7 @@
       <p class="lead">Masters can share hosts with Storage on nodes whose system disk is RAID1; all other nodes run Storage only. Need more capacity? Add storage nodes.</p>
     </div>
     <figure class="figure diagram reveal">
-      <div class="scroll fit"><img src="images/arch-deploy-en.svg" alt="Deployment topology: the access tier connects over the data network to hybrid nodes (Master + Storage), the MongoDB replica set and storage-only nodes" width="880" height="470"></div>
+      <div class="scroll fit"><img loading="lazy" src="images/arch-deploy-en.svg" alt="Deployment topology: the access tier connects over the data network to hybrid nodes (Master + Storage), the MongoDB replica set and storage-only nodes" width="880" height="470"></div>
       <p class="hint">Swipe to see the full diagram</p>
     </figure>
     <div class="table-wrap wide reveal" style="margin-top:32px">
@@ -290,11 +309,11 @@
         <a class="brand" href="./"><img src="images/logo-light.svg" alt="" width="30" height="30">KDSS<small>Distributed Storage</small></a>
         <p>Erasure-coded distributed storage for petabyte-scale data — low-cost, highly reliable infrastructure for long-term retention.</p>
       </div>
-      <div><h4>Product</h4><ul><li><a href="features.html">Features</a></li><li><a href="architecture.html">Architecture</a></li><li><a href="solutions.html">Solutions</a></li></ul></div>
-      <div><h4>Resources</h4><ul><li><a href="docs.html">Docs</a></li><li><a href="downloads/kdss-whitepaper-en.pdf">Whitepaper</a></li><li><a href="docs.html#s3">S3 API</a></li></ul></div>
-      <div><h4>Contact</h4><ul><li><a href="mailto:contact@kdss.io">contact@kdss.io</a></li><li><a href="mailto:support@kdss.io">support@kdss.io</a></li><li><a href="about.html">About</a></li></ul></div>
+      <div><p class="footer-title">Product</p><ul><li><a href="features.html">Features</a></li><li><a href="architecture.html">Architecture</a></li><li><a href="solutions.html">Solutions</a></li></ul></div>
+      <div><p class="footer-title">Resources</p><ul><li><a href="docs.html">Docs</a></li><li><a href="downloads/kdss-whitepaper-en.pdf">Whitepaper</a></li><li><a href="docs.html#s3">S3 API</a></li></ul></div>
+      <div><p class="footer-title">Contact</p><ul><li><a href="mailto:contact@kdss.io">contact@kdss.io</a></li><li><a href="mailto:support@kdss.io">support@kdss.io</a></li><li><a href="about.html">About</a></li></ul></div>
     </div>
-    <div class="legal"><span>© 2026 KDSS. All rights reserved.</span><span>Version 26.11.1</span></div>
+    <div class="legal"><span>© 2026 KDSS. All rights reserved.</span><span>Version 26.11.2</span></div>
   </div>
 </footer>
 

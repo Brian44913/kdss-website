@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>KDSS 分布式存储技术白皮书</title>
-<meta name="description" content="KDSS 分布式存储技术白皮书（版本 26.11.1）：架构、纠删码、裸盘存储引擎、可靠性与自愈、访问接口、运维、安全与容量规划。">
+<meta name="description" content="KDSS 分布式存储技术白皮书（版本 26.11.2）：架构、纠删码、裸盘存储引擎、可靠性与自愈、访问接口、运维、安全与容量规划。">
 <link rel="icon" href="../images/favicon.svg" type="image/svg+xml">
 <link rel="stylesheet" href="whitepaper.css">
 </head>
@@ -21,13 +21,13 @@
   </div>
   <ul class="points">
     <li><b>低成本</b>29+3 纠删码得盘率 90.6%，裸盘顺序追加写</li>
-    <li><b>高可靠</b>任意 3 个分片同时丢失仍可读、可重建</li>
+    <li><b>高可靠</b>以 29+3 为例，任意 3 个分片同时丢失仍可读、可重建</li>
     <li><b>易运维</b>滚动升级不停服，内置控制台与告警</li>
   </ul>
   <div class="visual"><img src="../images/hero-stripe-zh.svg" alt="EC 29+3 条带分布示意"></div>
   <div class="band"></div>
   <div class="meta">
-    <div class="ver"><small>版本</small>26.11.1<small style="margin-top:3mm">2026 年 11 月</small></div>
+    <div class="ver"><small>版本</small>26.11.2<small style="margin-top:3mm">2026 年 11 月</small></div>
     <div class="contact">www.kdss.io<br>contact@kdss.io</div>
   </div>
 </section>
@@ -48,22 +48,22 @@
   <div class="metrics">
     <div class="metric"><strong>90.6<small>%</small></strong><span>得盘率（EC 29+3）</span></div>
     <div class="metric"><strong>3</strong><span>可同时丢失的分片数（盘或节点）</span></div>
-    <div class="metric"><strong>≈16<small>PB</small></strong><span>单集群裸容量（36 节点 × 36 盘）</span></div>
-    <div class="metric"><strong>近 190<small>PB</small></strong><span>生产集群累计裸容量</span></div>
+    <div class="metric"><strong>约 18<small>PB</small></strong><span>单集群裸容量（36 节点 × 36 块 14 TB 盘）</span></div>
+    <div class="metric"><strong>近 190<small>PB</small></strong><span>累计部署规模（裸容量）</span></div>
   </div>
 
   <p>KDSS 的设计围绕三个目标：</p>
   <ul class="ticks">
-    <li><strong>低成本。</strong>纠删码得盘率最高可达 91.2%（31+3）；按集群规模自动选型的 29+3 档位得盘率 90.6%，同等可用容量所需的裸容量约为三副本的 37%。存储引擎直接顺序追加写入块设备，磁头寻道少，有利于延长 HDD 寿命、降低故障率。</li>
+    <li><strong>低成本。</strong>纠删码得盘率最高可达 91.2%（31+3）；按集群规模自动选型的 29+3 档位得盘率 90.6%，同等可用容量所需的裸容量约为三副本的 37%。存储引擎直接顺序追加写入块设备，减少寻道，有利于延长硬盘寿命。</li>
     <li><strong>高可靠。</strong>同一条带的分片绝不落在同一节点；29+3 下任意 3 个分片同时丢失，数据仍可读、可重建。每次读取都做 CRC32 校验，后台持续巡检与放置审计；磁盘健康四层监测，发现故障自动隔离，修复由存储节点在本地完成。</li>
-    <li><strong>易运维。</strong>逐台滚动升级不停服；Web 控制台提供集群、节点、磁盘与容量视图，实时给出“当前最大可写 / 保守可写”；内置 P0/P1/P2 分级告警，可推送飞书（Lark）与邮件，并提供 Prometheus 全量指标。</li>
+    <li><strong>易运维。</strong>滚动升级不停服（默认逐台）；Web 控制台提供集群、节点、磁盘与容量视图，实时给出“当前最大可写 / 保守可写”；内置 P0/P1/P2 分级告警，可推送飞书（Lark）与邮件，并提供 Prometheus 全量指标。</li>
   </ul>
 
   <h3>生产验证</h3>
-  <p>KDSS 已在多个生产集群长期运行：累计裸容量近 190 PB，300 余个存储节点、1.1 万余块数据盘，管理的条带超过 7 亿条。生产环境中约 99% 的读写通过 FUSE 挂载完成。</p>
+  <p>KDSS 已在多个生产集群长期运行：累计部署规模近 190 PB，300 余个存储节点、1.1 万余块数据盘，管理数亿条带。生产环境中约 99% 的读写通过 FUSE 挂载完成。</p>
 
   <h3>关于本文</h3>
-  <p>本文面向需要评估或部署 KDSS 的架构师、运维工程师与技术决策者，介绍系统架构、纠删码与数据布局、存储引擎、可靠性机制、访问接口、运维与安全能力，并给出容量规划方法与推荐硬件配置。文中所述能力与参数对应版本 26.11.1。</p>
+  <p>本文面向需要评估或部署 KDSS 的架构师、运维工程师与技术决策者，介绍系统架构、纠删码与数据布局、存储引擎、可靠性机制、访问接口、运维与安全能力，并给出容量规划方法与推荐硬件配置。文中所述能力与参数对应版本 26.11.2。</p>
 </section>
 
 <!-- ============ 2 ============ -->
@@ -107,19 +107,19 @@
   <p class="intro">KDSS 把冗余、落盘、访问与运维四个层面做成一个整体：纠删码决定成本与容错，裸盘引擎决定磁盘效率与数据校验，FUSE 与 S3 决定接入方式，控制台与告警决定能否长期稳定运营。</p>
 
   <h3 id="s3-1"><span class="no">3.1</span>产品定位</h3>
-  <p>KDSS 适合容量大、以大文件为主、需要长期保存的数据：去中心化存储的封装数据、冷数据归档、视频与媒体素材、备份副本、AI 与大数据的原始数据等。它以 256 MB 的数据块为单位组织条带，元数据只记录到条带级别，因此在 PB 级规模下元数据量依然很小。</p>
+  <p>KDSS 适合容量大、以大文件为主、需要长期保存的数据：去中心化存储的封装数据、冷数据归档、视频与媒体素材、备份副本、AI 与大数据的原始数据等。它以 256 MB 的数据块为单位组织条带，按条带记录数据位置（另有目录与文件元数据），因此在 PB 级规模下元数据规模依然很小。</p>
 
   <h3 id="s3-2"><span class="no">3.2</span>核心指标</h3>
   <table class="table">
-    <caption>表 3-1 KDSS 核心指标（版本 26.11.1）</caption>
+    <caption>表 3-1 KDSS 核心指标（版本 26.11.2）</caption>
     <thead><tr><th style="width:30%">项目</th><th>指标</th></tr></thead>
     <tbody>
       <tr><td>冗余方式</td><td>Reed-Solomon 纠删码（klauspost/reedsolomon，SIMD 加速）</td></tr>
       <tr><td>纠删码档位</td><td>自动：5+2、9+2、18+3、29+3；手动高密度：19+3、21+3、22+3、31+3、31+2</td></tr>
       <tr><td>得盘率</td><td>5+2 为 71.4%，29+3 为 90.6%，31+3 为 91.2%</td></tr>
       <tr><td>容错能力</td><td>3 校验档位：任意 3 个分片（盘或节点）同时丢失仍可读、可重建</td></tr>
-      <tr><td>条带粒度</td><td>256 MB 数据块 = 1 条条带；29+3 下每个分片约 8.8 MB</td></tr>
-      <tr><td>集群规模</td><td>最小 8 节点（5+2）；单集群 36 节点 × 36 盘，约 16 PB 裸容量</td></tr>
+      <tr><td>条带粒度</td><td>256 MB 数据块 = 1 条条带；29+3 下每个分片约 8.8 MiB</td></tr>
+      <tr><td>集群规模</td><td>最小 8 节点（5+2）；单集群约 18 PB 裸容量（36 节点 × 36 块 14 TB 盘）</td></tr>
       <tr><td>存储引擎</td><td>裸盘直写，顺序追加，4 KB 对齐；双超级块；BadgerDB 本地索引</td></tr>
       <tr><td>数据校验</td><td>每次读取 CRC32 校验（含流式读取）；后台 CRC 巡检，默认 20 MB/s/节点</td></tr>
       <tr><td>访问接口</td><td>FUSE 客户端 ksfs（POSIX 挂载）；S3 兼容网关</td></tr>
@@ -129,14 +129,14 @@
 
   <h3 id="s3-3"><span class="no">3.3</span>设计原则</h3>
   <div class="cards four">
-    <div class="card flat"><h4>大条带、少元数据</h4><p>以 256 MB 为条带粒度，MongoDB 只保存条带级元数据，元数据量随数据量缓慢增长。</p></div>
+    <div class="card flat"><h4>大条带、少元数据</h4><p>以 256 MB 为条带粒度，按条带记录数据位置（另有目录与文件元数据），元数据规模小、随数据量缓慢增长。</p></div>
     <div class="card flat"><h4>数据不经过 Master</h4><p>客户端本地编码，直接与存储节点并行读写分片；Master 只负责元数据、选主与调度。</p></div>
     <div class="card flat"><h4>故障是常态</h4><p>检测、隔离、修复、巡检全部自动化；修复在集群写满拒写后仍可进行。</p></div>
     <div class="card flat"><h4>保守的默认值</h4><p>纠删码按节点数自动选择保守安全的档位；fsync 默认每次写入都落盘。</p></div>
   </div>
 
   <h3 id="s3-4"><span class="no">3.4</span>版本与技术栈</h3>
-  <p>KDSS 的版本号采用 CalVer（YY.MM.PATCH），本文对应 26.11.1。技术栈：Go、gRPC + Protocol Buffers、MongoDB、klauspost/reedsolomon、hanwen/go-fuse、BadgerDB、Gin、Vue 3 + Element Plus、Zap、Prometheus client。</p>
+  <p>KDSS 的版本号采用 CalVer（YY.MM.PATCH），本文对应 26.11.2。技术栈：Go、gRPC + Protocol Buffers、MongoDB、klauspost/reedsolomon、hanwen/go-fuse、BadgerDB、Gin、Vue 3 + Element Plus、Zap、Prometheus client。</p>
 </section>
 
 <!-- ============ 4 ============ -->
@@ -177,7 +177,7 @@
     <li><b>申请条带：</b>向 Master 申请一条新条带及其分片位置。</li>
     <li><b>本地编码：</b>在客户端完成 EC 编码，例如 29+3 生成 29 个数据分片和 3 个校验分片。</li>
     <li><b>并行写入：</b>32 个分片并行写到 32 个不同的存储节点。</li>
-    <li><b>提交元数据：</b>分片全部落盘后，向 Master 提交条带元数据。</li>
+    <li><b>提交元数据：</b>数据分片全部写入且至少一个校验分片成功后，向 Master 提交条带元数据；缺少的分片由修复补齐。</li>
   </ol>
   <h4>读取</h4>
   <ol class="steps">
@@ -205,10 +205,11 @@
       <tr><td>9+2</td><td class="num">81.8%</td><td class="c">2</td><td class="num">12</td><td><span class="tag teal">自动</span></td></tr>
       <tr><td>18+3</td><td class="num">85.7%</td><td class="c">3</td><td class="num">22</td><td><span class="tag teal">自动</span></td></tr>
       <tr class="hl"><td>29+3</td><td class="num">90.6%</td><td class="c">3</td><td class="num">33</td><td><span class="tag teal">自动</span> 大规模推荐</td></tr>
-      <tr><td>19+3 / 21+3</td><td class="num">86.4% / 87.5%</td><td class="c">3</td><td class="num">—</td><td><span class="tag">手动</span> 高密度</td></tr>
+      <tr><td>19+3</td><td class="num">86.4%</td><td class="c">3</td><td class="num">23</td><td><span class="tag">手动</span> 高密度</td></tr>
+      <tr><td>21+3</td><td class="num">87.5%</td><td class="c">3</td><td class="num">25</td><td><span class="tag">手动</span> 高密度</td></tr>
       <tr><td>22+3</td><td class="num">88.0%</td><td class="c">3</td><td class="num">26</td><td><span class="tag">手动</span> 高密度</td></tr>
-      <tr><td>31+3</td><td class="num">91.2%</td><td class="c">3</td><td class="num">—</td><td><span class="tag">手动</span> 高密度</td></tr>
-      <tr><td>31+2</td><td class="num">93.9%</td><td class="c">2</td><td class="num">—</td><td><span class="tag amber">手动</span> 容错下降，谨慎使用</td></tr>
+      <tr><td>31+3</td><td class="num">91.2%</td><td class="c">3</td><td class="num">35</td><td><span class="tag">手动</span> 高密度</td></tr>
+      <tr><td>31+2</td><td class="num">93.9%</td><td class="c">2</td><td class="num">34</td><td><span class="tag amber">手动</span> 容错下降，谨慎使用</td></tr>
     </tbody>
   </table>
   <p class="muted" style="font-size:8.5pt">注：19+3、21+3、31+2 的得盘率按 k/(k+m) 计算。表中最少节点数均为条带宽度 k+m 再加 1。</p>
@@ -221,7 +222,7 @@
   </figure>
 
   <h3 id="s5-3"><span class="no">5.3</span>条带布局</h3>
-  <p>一个 256 MB 的数据块构成一条条带。以 29+3 为例，数据块被切成 29 个约 8.8 MB 的数据分片，再计算出 3 个校验分片，共 32 个分片写到 32 个不同节点上。大粒度条带让每次磁盘 I/O 都足够大，也让元数据只需记录到条带级别。</p>
+  <p>一个 256 MB 的数据块构成一条条带。以 29+3 为例，数据块被切成 29 个约 8.8 MiB 的数据分片，再计算出 3 个校验分片，共 32 个分片写到 32 个不同节点上。大粒度条带让每次磁盘 I/O 都足够大，也让数据位置只需按条带记录，元数据规模小。</p>
   <figure class="figure narrow">
     <img src="../images/hero-stripe-zh.svg" alt="EC 29+3 条带分布">
     <figcaption>图 5-2 EC 29+3 条带在节点间的分布</figcaption>
@@ -241,7 +242,7 @@
   <p class="intro">存储节点直接读写块设备，绕过本地文件系统。分片以顺序追加的方式写入磁盘，配合本地索引定位，每次读取都做校验。</p>
 
   <h3 id="s6-1"><span class="no">6.1</span>顺序追加写</h3>
-  <p>分片按 4 KB 对齐，从写入前沿顺序追加。相比在文件系统上维护大量文件，这种方式省去了文件系统元数据的随机更新，磁头寻道更少：吞吐更稳定，HDD 寿命更长、故障率更低。</p>
+  <p>分片按 4 KB 对齐，从写入前沿顺序追加。相比在文件系统上维护大量文件，这种方式省去了文件系统元数据的随机更新，磁头寻道更少：吞吐更稳定，有利于延长硬盘寿命。</p>
   <figure class="figure">
     <img src="../images/wp-disk-zh.svg" alt="裸盘布局示意">
     <figcaption>图 6-1 裸盘布局（示意，未按比例）</figcaption>
@@ -272,7 +273,7 @@
     <tbody>
       <tr><td>immediate（默认）</td><td>每次写入都落盘后再确认</td></tr>
       <tr><td>batch</td><td>组提交，多次写入合并一次落盘</td></tr>
-      <tr><td>deferred</td><td>适用于带 BBU（电池保护缓存）阵列卡等由硬件保证掉电安全的场景</td></tr>
+      <tr><td>deferred</td><td>后台每 5 秒落盘，断电可能丢失最近约 5 秒的写入；适合有掉电保护（如带 BBU 的阵列卡）且可接受该窗口的场景</td></tr>
     </tbody>
   </table>
 
@@ -353,12 +354,12 @@
   </ul>
 
   <h3 id="s8-2"><span class="no">8.2</span>S3 兼容网关</h3>
-  <p>S3 网关支持以下 API（已与代码核对）。大对象采用流式读写：64 MB 以内缓冲处理，超过则分段流式传输，内存占用可控。可直接使用 AWS CLI、s3cmd、boto3、Go SDK 等通用工具访问。</p>
+  <p>S3 网关兼容核心 S3 API（见下表）；已验证客户端：AWS CLI、boto3、s3cmd（按文档配置）。请求使用 AWS SigV4 签名，客户端使用路径风格（path-style）访问，region 填 us-east-1。大对象采用流式读写：64 MB 以内缓冲处理，超过则按 64 MB 分段流式传输，内存占用可控。</p>
   <table class="table">
     <caption>表 8-1 支持的 S3 API</caption>
     <thead><tr><th style="width:22%">类别</th><th>API</th></tr></thead>
     <tbody>
-      <tr><td>Bucket</td><td>ListBuckets、CreateBucket、DeleteBucket、HeadBucket、ListObjects</td></tr>
+      <tr><td>Bucket</td><td>ListBuckets、CreateBucket、DeleteBucket、HeadBucket、ListObjectsV2</td></tr>
       <tr><td>对象</td><td>PutObject、GetObject（含 Range）、HeadObject、DeleteObject、CopyObject</td></tr>
       <tr><td>分段上传</td><td>CreateMultipartUpload、UploadPart、CompleteMultipartUpload、AbortMultipartUpload、ListParts、ListMultipartUploads</td></tr>
     </tbody>
@@ -372,9 +373,11 @@ aws --endpoint-url http://&lt;gateway&gt;:9000 s3 ls s3://archive/2026/</pre>
 
   <div class="code-title">Python (boto3)</div>
 <pre>import boto3
+from botocore.config import Config
 
 s3 = boto3.client("s3", endpoint_url="http://&lt;gateway&gt;:9000",
-                  aws_access_key_id="&lt;ACCESS_KEY&gt;", aws_secret_access_key="&lt;SECRET_KEY&gt;")
+                  aws_access_key_id="&lt;ACCESS_KEY&gt;", aws_secret_access_key="&lt;SECRET_KEY&gt;",
+                  region_name="us-east-1", config=Config(s3={"addressing_style": "path"}))
 s3.upload_file("dataset.tar", "archive", "2026/dataset.tar")   <span class="c"># 大文件自动走分段上传</span>
 obj = s3.get_object(Bucket="archive", Key="2026/dataset.tar", Range="bytes=0-1048575")</pre>
 
@@ -399,7 +402,7 @@ obj = s3.get_object(Bucket="archive", Key="2026/dataset.tar", Range="bytes=0-104
   </div>
 
   <h3 id="s9-2"><span class="no">9.2</span>可写容量</h3>
-  <p>在纠删码集群中，“剩余空间之和”并不等于“还能写多少”：一条 29+3 条带需要 32 个不同节点同时有空间，部分盘写满或退出写入环后，实际可写容量会低于剩余空间。控制台因此直接给出两个值：<strong>当前最大可写</strong>与<strong>当前保守可写</strong>，作为扩容与调度决策的依据，并在可写节点不足时告警。</p>
+  <p>在纠删码集群中，“剩余空间之和”并不等于“还能写多少”：一条 29+3 条带需要 32 个不同节点同时有空间，部分盘写满或退出写入环后，实际可写容量会低于剩余空间。控制台因此直接给出两个值：<strong>当前最大可写</strong>与<strong>保守可写</strong>，作为扩容与调度决策的依据，并在可写节点不足时告警。</p>
   <figure class="figure narrow">
     <img src="../images/console-capacity-zh.svg" alt="控制台容量面板示意">
     <figcaption>图 9-1 控制台容量面板（示意）</figcaption>
@@ -407,13 +410,13 @@ obj = s3.get_object(Bucket="archive", Key="2026/dataset.tar", Range="bytes=0-104
 
   <h3 id="s9-3"><span class="no">9.3</span>指标与告警</h3>
   <ul class="ticks">
-    <li><strong>Prometheus 指标：</strong>全量指标位于 <code>kdss_*</code> 命名空间，<code>/metrics</code> 支持 Bearer 令牌认证；随版本提供 62 条告警规则模板。</li>
+    <li><strong>Prometheus 指标：</strong>全量指标位于 <code>kdss_*</code> 命名空间，<code>/metrics</code> 支持 Bearer 令牌认证；随版本提供 63 条告警规则模板。</li>
     <li><strong>内置告警系统：</strong>P0 / P1 / P2 分级，支持去抖与提醒间隔，推送到飞书（Lark）与邮件，保留告警历史。</li>
-    <li><strong>内置规则：</strong>覆盖可写节点不足、容量、磁盘故障、MongoDB 存活、许可证校验失败等。</li>
+    <li><strong>内置规则：</strong>覆盖可写节点不足、容量、磁盘故障、MongoDB 存活等。</li>
   </ul>
 
   <h3 id="s9-4"><span class="no">9.4</span>滚动升级不停服</h3>
-  <p>升级逐台进行，每台节点经过以下步骤：</p>
+  <p>升级默认逐台进行，每台节点经过以下步骤：</p>
   <ol class="steps">
     <li><b>进入维护模式（cordon）：</b>该节点不再接收新的写入。</li>
     <li><b>等待在途写入清零：</b>已开始的写入全部完成。</li>
@@ -421,7 +424,7 @@ obj = s3.get_object(Bucket="archive", Key="2026/dataset.tar", Range="bytes=0-104
     <li><b>验证：</b>确认节点状态正常。</li>
     <li><b>退出维护：</b>节点恢复接收写入，继续下一台。</li>
   </ol>
-  <div class="callout"><b>约束：</b>同时离线的节点数不超过校验分片数 − 1。例如 29+3 集群最多同时离线 2 个节点，保证升级期间仍有冗余余量。</div>
+  <div class="callout"><b>约束：</b>同时维护的节点数上限为校验分片数 − 1。例如 29+3 集群最多同时维护 2 个节点，保证升级期间仍有冗余余量。</div>
 
   <h3 id="s9-5"><span class="no">9.5</span>高可用</h3>
   <p>Master 多副本部署（典型 5 台），与 MongoDB 副本集（多数派写入）共同完成选主；Leader 切换自动进行，客户端写请求自动重定向到 Leader。存储节点故障由纠删码冗余覆盖，并触发自动修复。</p>
@@ -430,7 +433,7 @@ obj = s3.get_object(Bucket="archive", Key="2026/dataset.tar", Range="bytes=0-104
 <!-- ============ 10 ============ -->
 <section class="chapter" id="s10">
   <h2><span class="no">10</span>安全</h2>
-  <p class="intro">KDSS 默认部署在内网，安全机制覆盖管理面的身份与权限、指标接口的访问控制、组件间通信加密与许可证校验。</p>
+  <p class="intro">KDSS 默认部署在内网，安全机制覆盖管理面的身份与权限、指标接口的访问控制与组件间通信加密。</p>
 
   <table class="table">
     <caption>表 10-1 安全机制</caption>
@@ -440,10 +443,9 @@ obj = s3.get_object(Bucket="archive", Key="2026/dataset.tar", Range="bytes=0-104
       <tr><td>登录认证</td><td>JWT 登录；口令以 bcrypt 存储；登录限速与验证码</td></tr>
       <tr><td>Web 防护</td><td>CSRF 防护</td></tr>
       <tr><td>审计</td><td>控制台操作审计日志</td></tr>
-      <tr><td>S3 访问</td><td>Bucket 与访问密钥在控制台创建和管理</td></tr>
+      <tr><td>S3 访问</td><td>AWS SigV4 签名；Bucket 与访问密钥在控制台创建和管理</td></tr>
       <tr><td>指标接口</td><td><code>/metrics</code> 支持 Bearer 令牌认证</td></tr>
       <tr><td>组件间通信</td><td>可选 gRPC mTLS；默认内网部署可关闭</td></tr>
-      <tr><td>许可证</td><td>在线校验；校验失败触发内置告警</td></tr>
     </tbody>
   </table>
 
@@ -462,26 +464,26 @@ obj = s3.get_object(Bucket="archive", Key="2026/dataset.tar", Range="bytes=0-104
 
   <h3 id="s11-1"><span class="no">11.1</span>估算公式</h3>
   <div class="formula">可用容量 ≈ 节点数 × 每节点盘数 × 单盘容量 × k/(k+m) × 拒写线水位
-    <small>拒写线默认 99%；单盘写入上限默认 99.5%。实际可写容量以控制台“当前保守可写”为准。</small></div>
+    <small>拒写线默认 99%；单盘写入上限默认 99.5%。实际可写容量以控制台“保守可写”为准。</small></div>
 
   <h3 id="s11-2"><span class="no">11.2</span>算例</h3>
   <table class="table">
     <caption>表 11-1 容量估算算例（示意，单盘 16 TB，按十进制 TB 计）</caption>
-    <thead><tr><th>配置</th><th class="num">裸容量</th><th>档位</th><th class="num">× 得盘率</th><th class="num">× 99% 水位</th><th class="c">容错</th></tr></thead>
+    <thead><tr><th>配置</th><th class="num">裸容量</th><th>档位</th><th class="num">得盘率</th><th class="num">可用容量（× 99% 水位）</th><th class="c">容错</th></tr></thead>
     <tbody>
-      <tr><td>8 节点 × 36 盘</td><td class="num">4,608 TB</td><td>5+2</td><td class="num">3,291 TB</td><td class="num">≈ 3.3 PB</td><td class="c">2</td></tr>
-      <tr><td>12 节点 × 36 盘</td><td class="num">6,912 TB</td><td>9+2</td><td class="num">5,655 TB</td><td class="num">≈ 5.6 PB</td><td class="c">2</td></tr>
-      <tr><td>22 节点 × 36 盘</td><td class="num">12,672 TB</td><td>18+3</td><td class="num">10,862 TB</td><td class="num">≈ 10.8 PB</td><td class="c">3</td></tr>
-      <tr class="hl"><td>33 节点 × 36 盘</td><td class="num">19,008 TB</td><td>29+3</td><td class="num">17,226 TB</td><td class="num">≈ 17.1 PB</td><td class="c">3</td></tr>
+      <tr><td>8 节点 × 36 盘</td><td class="num">4,608 TB</td><td>5+2</td><td class="num">71.4%</td><td class="num">≈ 3,259 TB</td><td class="c">2</td></tr>
+      <tr><td>12 节点 × 36 盘</td><td class="num">6,912 TB</td><td>9+2</td><td class="num">81.8%</td><td class="num">≈ 5,599 TB</td><td class="c">2</td></tr>
+      <tr><td>22 节点 × 36 盘</td><td class="num">12,672 TB</td><td>18+3</td><td class="num">85.7%</td><td class="num">≈ 10,753 TB</td><td class="c">3</td></tr>
+      <tr class="hl"><td>33 节点 × 36 盘</td><td class="num">19,008 TB</td><td>29+3</td><td class="num">90.6%</td><td class="num">≈ 17,054 TB</td><td class="c">3</td></tr>
     </tbody>
   </table>
-  <p class="muted" style="font-size:8.5pt">注：得盘率按 k/(k+m) 精确值计算；未计入系统盘、预留空间与磁盘标称容量和可用容量之间的差异。</p>
+  <p class="muted" style="font-size:8.5pt">注：可用容量 = 裸容量 × k/(k+m) × 99%，得盘率按精确值计算（例如 19,008 TB × 29/32 × 99% ≈ 17,054 TB）；未计入系统盘、预留空间与磁盘标称容量和可用容量之间的差异。</p>
 
   <h3 id="s11-3"><span class="no">11.3</span>规划要点</h3>
   <ul class="ticks">
     <li><strong>节点数比条带宽度多一台。</strong>各档位的最少节点数为 k+m+1，例如 29+3 需要至少 33 个节点。</li>
     <li><strong>按容错需求选档位。</strong>需要容忍 3 个分片同时故障时，选择 18+3 及以上档位；31+2 只适合明确接受容错下降的场景。</li>
-    <li><strong>为维护留余量。</strong>滚动升级时同时离线节点数不超过 m − 1。</li>
+    <li><strong>为维护留余量。</strong>滚动升级默认逐台进行，同时维护的节点数上限为 m − 1。</li>
     <li><strong>关注可写节点数。</strong>写入一条条带需要 k+m 个节点同时可写；节点陆续写满时，应在可写节点不足告警之前扩容。</li>
   </ul>
 
@@ -508,7 +510,7 @@ obj = s3.get_object(Bucket="archive", Key="2026/dataset.tar", Range="bytes=0-104
     <div class="body">
       <div><h5>痛点</h5><p>封装后的数据量大、需长期保存，存储成本直接决定收益；数据丢失有经济损失。</p></div>
       <div><h5>方案</h5><p>封装结果经 FUSE 挂载顺序落盘；高密度纠删码保存；自动修复与巡检保障长期可用。</p></div>
-      <div><h5>收益</h5><p>得盘率最高 90% 以上；多盘同时故障不丢数据；POSIX 挂载，现有程序直接使用。</p></div>
+      <div><h5>收益</h5><p>得盘率可达 90% 以上（29+3 为 90.6%）；多重故障下数据保持完整；POSIX 挂载，现有程序直接使用。</p></div>
     </div>
   </div>
   <div class="case">
@@ -523,7 +525,7 @@ obj = s3.get_object(Bucket="archive", Key="2026/dataset.tar", Range="bytes=0-104
     <div class="label"><h4>视频与媒体</h4><span class="tag">媒体</span></div>
     <div class="body">
       <div><h5>痛点</h5><p>素材文件大、总量增长快，需要高吞吐顺序读写和随机定位读取。</p></div>
-      <div><h5>方案</h5><p>256 MB 大条带并行读写；S3 GetObject 支持 Range 读取；横向扩展节点。</p></div>
+      <div><h5>方案</h5><p>大条带并行读写（FUSE 按 256 MB 条带，S3 大对象按 64 MB 分段）；S3 GetObject 支持 Range 读取；横向扩展节点。</p></div>
       <div><h5>收益</h5><p>大文件吞吐稳定；文件与对象两种方式访问同一集群。</p></div>
     </div>
   </div>
@@ -531,8 +533,8 @@ obj = s3.get_object(Bucket="archive", Key="2026/dataset.tar", Range="bytes=0-104
     <div class="label"><h4>备份与容灾</h4><span class="tag teal">备份</span></div>
     <div class="body">
       <div><h5>痛点</h5><p>备份副本占用大量容量；备份系统本身也要可靠、易管理。</p></div>
-      <div><h5>方案</h5><p>S3 接口对接现有备份工具，大对象分段上传；告警推送到飞书与邮件。</p></div>
-      <div><h5>收益</h5><p>以纠删码代替多副本存放备份；无需改造即可接入 S3 工具链。</p></div>
+      <div><h5>方案</h5><p>S3 接口对接支持 S3 的备份软件（上线前建议做兼容性验证），大对象分段上传；告警推送到飞书与邮件。</p></div>
+      <div><h5>收益</h5><p>以纠删码代替多副本存放备份；误删先进回收站，多一层恢复机会。</p></div>
     </div>
   </div>
   <div class="case">
@@ -540,7 +542,15 @@ obj = s3.get_object(Bucket="archive", Key="2026/dataset.tar", Range="bytes=0-104
     <div class="body">
       <div><h5>痛点</h5><p>原始数据集持续增长，既有按文件读取的训练程序，也有按对象访问的数据管道。</p></div>
       <div><h5>方案</h5><p>FUSE 挂载供计算节点直接读取；S3 接口供数据管道写入与分发。</p></div>
-      <div><h5>收益</h5><p>一套存储同时服务两类访问；容量随节点线性扩展。</p></div>
+      <div><h5>收益</h5><p>一套存储同时服务两类访问；容量按节点横向扩展。</p></div>
+    </div>
+  </div>
+  <div class="case">
+    <div class="label"><h4>私有云对象存储</h4><span class="tag teal">私有化</span></div>
+    <div class="body">
+      <div><h5>痛点</h5><p>希望用通用服务器搭建自有对象存储，并具备完整的管理界面、权限与监控。</p></div>
+      <div><h5>方案</h5><p>部署在自有机房与通用服务器上（JBOD 硬盘）；控制台管理 Bucket、访问密钥与用户，三种角色 RBAC；Prometheus 指标与内置告警。</p></div>
+      <div><h5>收益</h5><p>部署与扩容自主可控；接入现有监控体系；滚动升级，日常维护不打扰业务。</p></div>
     </div>
   </div>
 </section>
@@ -556,7 +566,7 @@ obj = s3.get_object(Bucket="archive", Key="2026/dataset.tar", Range="bytes=0-104
   <p style="margin-top:14pt">官网：<a href="https://www.kdss.io/zh/">www.kdss.io</a></p>
 
   <div class="legal">
-    <p>本文档描述的功能与参数对应 KDSS 版本 26.11.1。标注“示意”的图表与算例仅用于说明原理，不代表特定部署的实测结果。产品功能可能随版本更新而变化，以实际发布版本为准。</p>
+    <p>本文档描述的功能与参数对应 KDSS 版本 26.11.2。标注“示意”的图表与算例仅用于说明原理，不代表特定部署的实测结果。产品功能可能随版本更新而变化，以实际发布版本为准。</p>
     <p>文中提及的第三方名称与商标归各自所有者所有。</p>
     <p>© 2026 KDSS. 保留所有权利。</p>
   </div>

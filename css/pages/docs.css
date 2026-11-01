@@ -13,7 +13,7 @@
 
 /* Numbered deployment stages / 部署阶段 */
 .prose .steps { margin-top: 20px; }
-.prose .step h4 { font-size: 1.02rem; }
+.prose .step h4, .prose .step .h4 { font-size: 1.02rem; }
 .prose .step p + p { margin-top: 6px; }
 
 .prose .contact-cards { margin-top: 20px; }
@@ -38,4 +38,16 @@
   .prose .table.compact th, .prose .table.compact td { padding: 10px 6px; }
   .prose .table.compact th:first-child, .prose .table.compact td:first-child { padding-left: 12px; }
   .prose .table.compact td:first-child { white-space: nowrap; }
+}
+/* Steps inside prose: heading is an h3 styled as h4, keep it tight. / 正文中的步骤标题（h3 按 h4 样式）保持紧凑。 */
+.prose .step h3.h4 { margin: 0 0 4px; }
+
+/* Collapsible table of contents on narrow screens (the sticky side nav is hidden there).
+   窄屏可折叠目录（侧边目录在窄屏隐藏）。 */
+.docs-toc { display: none; }
+@media (max-width: 900px) {
+  .docs-toc { display: block; border: 1px solid var(--line); border-radius: var(--radius); background: var(--surface); }
+  .docs-toc summary { cursor: pointer; padding: 12px 16px; font-weight: 600; color: var(--navy-900); font-size: .95rem; }
+  .docs-toc nav { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 2px 16px; padding: 0 16px 14px; }
+  .docs-toc a { padding: 6px 0; font-size: .92rem; color: var(--ink-700); }
 }

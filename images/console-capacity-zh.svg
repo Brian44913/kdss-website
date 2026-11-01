@@ -3,31 +3,32 @@
 <rect x="0" y="0" width="560" height="46" rx="12" fill="#f6f8fb"/><rect x="0" y="34" width="560" height="12" fill="#f6f8fb"/>
 <circle cx="22" cy="23" r="5" fill="#e5e8ef"/><circle cx="38" cy="23" r="5" fill="#e5e8ef"/><circle cx="54" cy="23" r="5" fill="#e5e8ef"/>
 <text x="80" y="28" font-size="13" font-weight="700" fill="#111827">容量概览</text>
-<rect x="450" y="13" width="88" height="20" rx="10" fill="#e3f4f2"/><text x="494" y="27" font-size="11" fill="#0f8a7e" text-anchor="middle" font-weight="700">● 正常</text>
+<rect x="450" y="13" width="88" height="20" rx="10" fill="#e3f4f2"/><text x="494" y="27" font-size="12" fill="#0b6b62" text-anchor="middle" font-weight="700">● 正常</text>
+<rect x="150" y="13" width="44" height="20" rx="10" fill="#fbf1df"/><text x="172.0" y="27" font-size="12" fill="#8a5a12" text-anchor="middle" font-weight="700">示意</text>
 <rect x="22" y="64" width="164" height="80" rx="9" fill="#fff" stroke="#d3d9e4"/>
-<text x="36" y="90" font-size="11.5" fill="#6b7280">总容量</text>
-<text x="36" y="124" font-size="26" font-weight="800" fill="#0f2b5b">16.0<tspan font-size="13" font-weight="700" dx="4">PB</tspan></text>
+<text x="36" y="90" font-size="12" fill="#6b7280">总容量</text>
+<text x="36" y="124" font-size="26" font-weight="800" fill="#0f2b5b">10<tspan font-size="13" font-weight="700" dx="4">PB</tspan></text>
 <rect x="198" y="64" width="164" height="80" rx="9" fill="#fff" stroke="#d3d9e4"/>
-<text x="212" y="90" font-size="11.5" fill="#6b7280">已使用</text>
-<text x="212" y="124" font-size="26" font-weight="800" fill="#0f2b5b">15.4<tspan font-size="13" font-weight="700" dx="4">PB</tspan></text>
+<text x="212" y="90" font-size="12" fill="#6b7280">已使用</text>
+<text x="212" y="124" font-size="26" font-weight="800" fill="#0f2b5b">9<tspan font-size="13" font-weight="700" dx="4">PB</tspan></text>
 <rect x="374" y="64" width="164" height="80" rx="9" fill="#fff" stroke="#d3d9e4"/>
-<text x="388" y="90" font-size="11.5" fill="#6b7280">回收站</text>
+<text x="388" y="90" font-size="12" fill="#6b7280">回收站</text>
 <text x="388" y="124" font-size="26" font-weight="800" fill="#0f2b5b">0.2<tspan font-size="13" font-weight="700" dx="4">PB</tspan></text>
 <rect x="22" y="156" width="164" height="80" rx="9" fill="#f3f7fe" stroke="#bcd2f7"/>
-<text x="36" y="182" font-size="11.5" fill="#6b7280">当前最大可写</text>
-<text x="36" y="216" font-size="26" font-weight="800" fill="#1d5fd1">120<tspan font-size="13" font-weight="700" dx="4">TB</tspan></text>
+<text x="36" y="182" font-size="12" fill="#6b7280">当前最大可写</text>
+<text x="36" y="216" font-size="26" font-weight="800" fill="#1d5fd1">500<tspan font-size="13" font-weight="700" dx="4">TB</tspan></text>
 <rect x="198" y="156" width="164" height="80" rx="9" fill="#f3f7fe" stroke="#bcd2f7"/>
-<text x="212" y="182" font-size="11.5" fill="#6b7280">当前保守可写</text>
-<text x="212" y="216" font-size="26" font-weight="800" fill="#1d5fd1">108<tspan font-size="13" font-weight="700" dx="4">TB</tspan></text>
+<text x="212" y="182" font-size="12" fill="#6b7280">保守可写</text>
+<text x="212" y="216" font-size="26" font-weight="800" fill="#1d5fd1">400<tspan font-size="13" font-weight="700" dx="4">TB</tspan></text>
 <rect x="374" y="156" width="164" height="80" rx="9" fill="#fff" stroke="#d3d9e4"/>
-<text x="388" y="182" font-size="11.5" fill="#6b7280">可用空间</text>
-<text x="388" y="216" font-size="26" font-weight="800" fill="#0f2b5b">600<tspan font-size="13" font-weight="700" dx="4">TB</tspan></text>
-<text x="22" y="266" font-size="11.5" fill="#6b7280">集群水位</text>
+<text x="388" y="182" font-size="12" fill="#6b7280">可用空间</text>
+<text x="388" y="216" font-size="26" font-weight="800" fill="#0f2b5b">800<tspan font-size="13" font-weight="700" dx="4">TB</tspan></text>
+<text x="22" y="266" font-size="12" fill="#6b7280">集群水位</text>
 <rect x="22" y="276" width="516" height="12" rx="6" fill="#eef2f7"/>
-<rect x="22" y="276" width="498" height="12" rx="6" fill="#163a78"/>
+<rect x="22" y="276" width="464" height="12" rx="6" fill="#163a78"/>
 <line x1="533" y1="270" x2="533" y2="294" stroke="#b7791f" stroke-width="2"/>
-<text x="533" y="310" font-size="10.5" fill="#b7791f" text-anchor="end">拒写线 99%</text>
-<text x="22" y="342" font-size="11.5" fill="#6b7280">可写节点</text>
+<text x="533" y="310" font-size="12" fill="#8a5a12" text-anchor="end">拒写线 99%</text>
+<text x="22" y="342" font-size="12" fill="#6b7280">可写节点</text>
 <text x="22" y="366" font-size="20" font-weight="800" fill="#0f2b5b">36 <tspan font-size="12" fill="#6b7280" font-weight="500">/ 36 · 需要 ≥ 32</tspan></text>
 <rect x="230.0" y="352" width="6" height="16" rx="1.5" fill="#0f8a7e"/>
 <rect x="238.6" y="352" width="6" height="16" rx="1.5" fill="#0f8a7e"/>

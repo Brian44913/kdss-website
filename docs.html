@@ -5,34 +5,53 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Docs — KDSS Distributed Storage</title>
 <meta name="description" content="KDSS documentation: deployment workflow, recommended hardware, capacity planning and erasure-coding schemes, S3-compatible API examples (AWS CLI, boto3, s3cmd), ksfs mounting and day-to-day operations.">
+<link rel="icon" href="favicon.ico" sizes="32x32">
 <link rel="icon" href="images/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="canonical" href="https://www.kdss.io/docs.html">
 <link rel="alternate" hreflang="en" href="https://www.kdss.io/docs.html">
 <link rel="alternate" hreflang="zh-CN" href="https://www.kdss.io/zh/docs.html">
+<link rel="alternate" hreflang="x-default" href="https://www.kdss.io/docs.html">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="KDSS">
+<meta property="og:locale" content="en_US">
+<meta property="og:title" content="Docs — KDSS Distributed Storage">
+<meta property="og:description" content="KDSS documentation: deployment workflow, recommended hardware, capacity planning and erasure-coding schemes, S3-compatible API examples (AWS CLI, boto3, s3cmd), ksfs mounting and day-to-day operations.">
+<meta property="og:url" content="https://www.kdss.io/docs.html">
+<meta property="og:image" content="https://www.kdss.io/images/og-en.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Docs — KDSS Distributed Storage">
+<meta name="twitter:description" content="KDSS documentation: deployment workflow, recommended hardware, capacity planning and erasure-coding schemes, S3-compatible API examples (AWS CLI, boto3, s3cmd), ksfs mounting and day-to-day operations.">
+<meta name="twitter:image" content="https://www.kdss.io/images/og-en.png">
 <link rel="stylesheet" href="css/site.css">
 <link rel="stylesheet" href="css/pages/docs.css">
 </head>
 <body>
+<a class="skip-link" href="#main">Skip to content</a>
 
 <header class="site-header">
   <div class="container">
     <a class="brand" href="./"><img src="images/logo.svg" alt="" width="30" height="30">KDSS<small>Distributed Storage</small></a>
-    <nav class="nav" aria-label="Main navigation">
+    <nav class="nav" id="site-nav" aria-label="Main navigation">
       <a href="./">Home</a>
       <a href="features.html">Product</a>
       <a href="solutions.html">Solutions</a>
       <a href="architecture.html">Architecture</a>
       <a href="docs.html" aria-current="page">Docs</a>
       <a href="about.html">About</a>
+      <a class="btn btn-primary nav-contact" href="#support">Contact us</a>
     </nav>
     <div class="nav-actions">
       <div class="lang"><a href="zh/docs.html" hreflang="zh-CN">中</a><span>EN</span></div>
       <a class="btn btn-primary btn-sm" href="#support">Contact us</a>
     </div>
-    <button class="menu-btn" aria-label="Menu" aria-expanded="false"><span></span></button>
+    <button class="menu-btn" aria-controls="site-nav" aria-label="Menu" aria-expanded="false"><span></span></button>
   </div>
 </header>
 
-<main>
+<main id="main" tabindex="-1">
 
 <section class="page-hero">
   <div class="container">
@@ -44,6 +63,18 @@
 
 <div class="container docs-wrap">
   <div class="docs">
+    <details class="docs-toc">
+      <summary>On this page</summary>
+      <nav aria-label="On this page">
+        <a href="#quickstart">Deployment</a>
+        <a href="#hardware">Hardware</a>
+        <a href="#capacity">Capacity planning</a>
+        <a href="#s3">S3-compatible API</a>
+        <a href="#fuse">Mounting ksfs</a>
+        <a href="#operations">Day-to-day operations</a>
+        <a href="#support">Support</a>
+      </nav>
+    </details>
     <nav class="docs-nav" aria-label="Documentation">
       <div class="group">Get started</div>
       <a href="#quickstart" class="active">Deployment</a>
@@ -65,24 +96,24 @@
         <p>A KDSS cluster is deployed in five stages. Finish and verify each stage before moving on to the next.</p>
         <div class="steps">
           <div class="step">
-            <h4>Prepare the MongoDB replica set</h4>
+            <h3 class="h4">Prepare the MongoDB replica set</h3>
             <p>Metadata and Master leader election both rely on the MongoDB replica set, which acknowledges writes by majority. Run the replica-set members on SSD.</p>
           </div>
           <div class="step">
-            <h4>Deploy the Masters</h4>
+            <h3 class="h4">Deploy the Masters</h3>
             <p>A typical deployment runs 5 Masters, which can share hosts with Storage on nodes whose system disk is RAID1. All Masters connect to the same replica set and elect a leader automatically. Default ports: gRPC 6700, metrics 6701.</p>
           </div>
           <div class="step">
-            <h4>Format and start Storage</h4>
+            <h3 class="h4">Format and start Storage</h3>
             <p>Data disks are handed to KDSS as JBOD pass-through. Formatting writes the primary and backup superblocks and the disk identity (node ID, disk ID, disk UUID) at the start of each disk, so later slot moves or device renames are recognized automatically.</p>
             <p>Start the storage service (default ports: gRPC 6800, metrics 6801); the node and its disks then appear in the console.</p>
           </div>
           <div class="step">
-            <h4>Initialize the administrator</h4>
+            <h3 class="h4">Initialize the administrator</h3>
             <p>Open the web console (default port 8081) and create the administrator account. Add storage_admin or readonly users as needed and configure alert channels (Lark or email).</p>
           </div>
           <div class="step">
-            <h4>Mount ksfs or configure S3</h4>
+            <h3 class="h4">Mount ksfs or configure S3</h3>
             <p>For file workloads, mount ksfs on the application hosts. For object workloads, create a bucket and access keys in the console and connect through the S3 gateway (default port 9000).</p>
           </div>
         </div>
@@ -91,6 +122,7 @@
 
       <!-- Hardware -->
       <section id="hardware">
+        <span id="requirements" class="anchor-alias" aria-hidden="true"></span>
         <h2>Recommended hardware</h2>
         <p>The configuration below comes from production. Redundancy is provided across nodes by erasure coding, so data disks do not need RAID.</p>
         <div class="table-wrap">
@@ -127,13 +159,14 @@
           <table class="table compact">
             <thead><tr><th>Nodes × disks × size</th><th>Scheme</th><th class="num">Raw (TB)</th><th class="num">Usable (TB)</th></tr></thead>
             <tbody>
-              <tr><td>8 × 12 × 16 TB</td><td>5+2</td><td class="num">1,536</td><td class="num">≈ 1,086</td></tr>
+              <tr><td>8 × 36 × 16 TB</td><td>5+2</td><td class="num">4,608</td><td class="num">≈ 3,259</td></tr>
               <tr><td>12 × 36 × 16 TB</td><td>9+2</td><td class="num">6,912</td><td class="num">≈ 5,599</td></tr>
-              <tr><td>33 × 24 × 16 TB</td><td>29+3</td><td class="num">12,672</td><td class="num">≈ 11,369</td></tr>
+              <tr><td>22 × 36 × 16 TB</td><td>18+3</td><td class="num">12,672</td><td class="num">≈ 10,753</td></tr>
+              <tr><td>33 × 36 × 16 TB</td><td>29+3</td><td class="num">19,008</td><td class="num">≈ 17,054</td></tr>
             </tbody>
           </table>
         </div>
-        <p class="small muted">Third row: 12,672 TB × 29/32 × 99% ≈ 11,369 TB.</p>
+        <p class="small muted">Last row: 19,008 TB × 29/32 × 99% ≈ 17,054 TB.</p>
         <div class="callout">Disk sizes use the vendor's decimal TB. Operating systems and <code>df</code> usually report binary units (TiB), which read about 9% lower. The console's "max writable now / conservative writable" figures combine the reject line, per-node headroom and placement constraints into a live writable estimate.</div>
 
         <h3 id="ec-table">Erasure-coding schemes</h3>
@@ -145,27 +178,30 @@
               <tr><td>9+2</td><td>Auto</td><td class="num">12</td><td class="num">81.8%</td><td class="num">2</td></tr>
               <tr><td>18+3</td><td>Auto</td><td class="num">22</td><td class="num">85.7%</td><td class="num">3</td></tr>
               <tr class="highlight"><td><strong>29+3</strong></td><td>Auto</td><td class="num">33</td><td class="num">90.6%</td><td class="num">3</td></tr>
+              <tr><td>19+3</td><td>Manual</td><td class="num">23</td><td class="num">86.4%</td><td class="num">3</td></tr>
+              <tr><td>21+3</td><td>Manual</td><td class="num">25</td><td class="num">87.5%</td><td class="num">3</td></tr>
               <tr><td>22+3</td><td>Manual</td><td class="num">26</td><td class="num">88.0%</td><td class="num">3</td></tr>
-              <tr><td>31+3</td><td>Manual</td><td class="num">—</td><td class="num">91.2%</td><td class="num">3</td></tr>
-              <tr><td>31+2</td><td>Manual</td><td class="num">—</td><td class="num">93.9%</td><td class="num">2</td></tr>
+              <tr><td>31+3</td><td>Manual</td><td class="num">35</td><td class="num">91.2%</td><td class="num">3</td></tr>
+              <tr><td>31+2</td><td>Manual</td><td class="num">34</td><td class="num">93.9%</td><td class="num">2</td></tr>
             </tbody>
           </table>
         </div>
-        <p class="small muted">"Tolerates" is the number of shards (disks or nodes) a stripe can lose at the same time. Automatic schemes follow the node count and are conservative defaults. For other manual schemes such as 19+3 and 21+3, and for minimum node counts not listed here, please check with support.</p>
+        <p class="small muted">"Tolerates" is the number of shards (disks or nodes) a stripe can lose at the same time. Automatic schemes follow the node count and are conservative defaults. For manual schemes, the minimum node count is the total number of shards plus one.</p>
         <div class="callout warn"><strong>31+2 has only 2 parity shards.</strong> It tolerates fewer failures than the 3-parity schemes, so any delay in replacing a failed disk adds risk directly. Use it with care.</div>
       </section>
 
       <!-- S3 -->
       <section id="s3">
+        <span id="s3api" class="anchor-alias" aria-hidden="true"></span>
         <h2>S3-compatible API</h2>
-        <p>The S3 gateway listens on port <code>9000</code> by default and works with AWS CLI, boto3, s3cmd, the Go SDK and similar tools. Create access keys under "Buckets &amp; access keys" in the web console. Replace <code>&lt;gateway&gt;</code> in the examples with your gateway address.</p>
+        <p>The S3 gateway listens on port <code>9000</code> by default and supports the core S3 API. Verified clients: AWS CLI, boto3 and s3cmd (configured as shown in this section). Requests are signed with AWS SigV4; clients use path-style addressing with region <code>us-east-1</code>. Create access keys under "Buckets &amp; access keys" in the web console. Replace <code>&lt;gateway&gt;</code> in the examples with your gateway address.</p>
 
         <h3>Supported operations</h3>
         <div class="table-wrap">
           <table class="table kv">
             <thead><tr><th>Category</th><th>Operations</th></tr></thead>
             <tbody>
-              <tr><td>Bucket</td><td>ListBuckets, CreateBucket, DeleteBucket, HeadBucket, ListObjects</td></tr>
+              <tr><td>Bucket</td><td>ListBuckets, CreateBucket, DeleteBucket, HeadBucket, ListObjectsV2</td></tr>
               <tr><td>Object</td><td>PutObject, GetObject (including Range), HeadObject, DeleteObject, CopyObject</td></tr>
               <tr><td>Multipart upload</td><td>CreateMultipartUpload, UploadPart, CompleteMultipartUpload, AbortMultipartUpload, ListParts, ListMultipartUploads</td></tr>
             </tbody>
@@ -257,7 +293,7 @@ s3cmd del s3://my-bucket/backup/backup.tar.gz</pre>
         </ul>
 <pre><span class="c"># Check cluster capacity from the mount point / 在挂载点查看集群真实容量</span>
 df -h /mnt/kdss</pre>
-        <h3>Tunable settings</h3>
+        <h3 id="config">Tunable settings</h3>
         <div class="table-wrap">
           <table class="table kv">
             <thead><tr><th>Setting</th><th>Purpose</th></tr></thead>
@@ -281,9 +317,9 @@ df -h /mnt/kdss</pre>
           <li>Put the node into maintenance mode (cordon) so it stops accepting new writes.</li>
           <li>Wait for in-flight writes to drain.</li>
           <li>Replace the binary, restart and confirm the node is healthy.</li>
-          <li>Exit maintenance mode and move on to the next node.</li>
+          <li>Exit maintenance mode and move on to the next node (one node at a time by default).</li>
         </ol>
-        <div class="callout warn">Never take more nodes offline at once than the number of parity shards minus one (at most 2 with EC 29+3). Applications keep running throughout the upgrade.</div>
+        <div class="callout warn">The number of nodes in maintenance at the same time is capped at parity shards − 1 (at most 2 with EC 29+3). Applications keep running throughout the upgrade.</div>
 
         <h3>Handling failed disks</h3>
         <ul>
@@ -332,7 +368,7 @@ df -h /mnt/kdss</pre>
         </div>
         <h3>Please include</h3>
         <ul>
-          <li>Your KDSS version (CalVer, for example 26.11.1)</li>
+          <li>Your KDSS version (CalVer, for example 26.11.2)</li>
           <li>Node count, disks per node and erasure-coding scheme</li>
           <li>What happened and when, with screenshots of related alerts</li>
           <li>Relevant log excerpts from the affected components</li>
@@ -354,11 +390,11 @@ df -h /mnt/kdss</pre>
         <a class="brand" href="./"><img src="images/logo-light.svg" alt="" width="30" height="30">KDSS<small>Distributed Storage</small></a>
         <p>Erasure-coded distributed storage for petabyte-scale data — low-cost, highly reliable infrastructure for long-term retention.</p>
       </div>
-      <div><h4>Product</h4><ul><li><a href="features.html">Features</a></li><li><a href="architecture.html">Architecture</a></li><li><a href="solutions.html">Solutions</a></li></ul></div>
-      <div><h4>Resources</h4><ul><li><a href="docs.html">Docs</a></li><li><a href="downloads/kdss-whitepaper-en.pdf">Whitepaper</a></li><li><a href="docs.html#s3">S3 API</a></li></ul></div>
-      <div><h4>Contact</h4><ul><li><a href="mailto:contact@kdss.io">contact@kdss.io</a></li><li><a href="mailto:support@kdss.io">support@kdss.io</a></li><li><a href="about.html">About</a></li></ul></div>
+      <div><p class="footer-title">Product</p><ul><li><a href="features.html">Features</a></li><li><a href="architecture.html">Architecture</a></li><li><a href="solutions.html">Solutions</a></li></ul></div>
+      <div><p class="footer-title">Resources</p><ul><li><a href="docs.html">Docs</a></li><li><a href="downloads/kdss-whitepaper-en.pdf">Whitepaper</a></li><li><a href="docs.html#s3">S3 API</a></li></ul></div>
+      <div><p class="footer-title">Contact</p><ul><li><a href="mailto:contact@kdss.io">contact@kdss.io</a></li><li><a href="mailto:support@kdss.io">support@kdss.io</a></li><li><a href="about.html">About</a></li></ul></div>
     </div>
-    <div class="legal"><span>© 2026 KDSS. All rights reserved.</span><span>Version 26.11.1</span></div>
+    <div class="legal"><span>© 2026 KDSS. All rights reserved.</span><span>Version 26.11.2</span></div>
   </div>
 </footer>
 

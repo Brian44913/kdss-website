@@ -14,7 +14,7 @@
 - `<link rel="alternate" hreflang>` 指向 `https://www.kdss.io/<页>` 与 `https://www.kdss.io/zh/<页>`。
 - 白皮书下载链接：`downloads/kdss-whitepaper-zh.pdf` / `downloads/kdss-whitepaper-en.pdf`（中文页用 `../downloads/...`）。
 - 联系：`contact@kdss.io`（商务与合作）、`support@kdss.io`（技术支持）。
-- 页脚右下角版本 `26.11.1`（英文 `Version 26.11.1`）。
+- 页脚右下角版本 `26.11.2`（英文 `Version 26.11.2`）。
 
 ## 英文页头页脚文字
 - 导航：Home / Product / Solutions / Architecture / Docs / About；按钮 Contact us；品牌副标题 `Distributed Storage`。
