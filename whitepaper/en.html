@@ -1,0 +1,593 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>KDSS Distributed Storage — Technical Whitepaper</title>
+<meta name="description" content="KDSS technical whitepaper (version 26.11.1): architecture, erasure coding, raw-disk storage engine, reliability and self-healing, access interfaces, operations, security and capacity planning.">
+<link rel="icon" href="../images/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="whitepaper.css">
+</head>
+<body>
+
+<!-- ============ Cover / 封面 ============ -->
+<section class="cover">
+  <div class="grid"></div>
+  <div class="brand"><img src="../images/logo.svg" alt="KDSS"><b>KDSS</b><span>Distributed Storage</span></div>
+  <div class="title">
+    <div class="eyebrow">Technical Whitepaper</div>
+    <h1>KDSS Distributed Storage<br>Technical Whitepaper</h1>
+    <p class="sub">Erasure-coded distributed storage for petabyte-scale data: high storage efficiency for long-term retention, end-to-end verification and automatic repair for durability, and rolling upgrades with built-in alerting for simpler operations.</p>
+  </div>
+  <ul class="points">
+    <li><b>Low cost</b>90.6% storage efficiency with EC 29+3; sequential raw-disk writes</li>
+    <li><b>Highly reliable</b>Data stays readable and rebuildable with any 3 shards lost</li>
+    <li><b>Easy to operate</b>Non-disruptive rolling upgrades, built-in console and alerts</li>
+  </ul>
+  <div class="visual"><img src="../images/hero-stripe-en.svg" alt="EC 29+3 stripe placement"></div>
+  <div class="band"></div>
+  <div class="meta">
+    <div class="ver"><small>Version</small>26.11.1<small style="margin-top:3mm">November 2026</small></div>
+    <div class="contact">www.kdss.io<br>contact@kdss.io</div>
+  </div>
+</section>
+
+<!-- ============ TOC / 目录 ============ -->
+<nav class="toc sheet" aria-label="Contents">
+  <h2>Contents</h2>
+  <ol id="toc"></ol>
+</nav>
+
+<main class="sheet">
+
+<!-- ============ 1 ============ -->
+<section class="chapter" id="s1">
+  <h2><span class="no">1</span>Executive summary</h2>
+  <p class="intro">KDSS is a distributed storage system built for petabyte-scale data. It protects data with Reed-Solomon erasure coding instead of replication, manages disks with a raw-disk engine instead of a local file system, and serves the same cluster through a POSIX mount (the ksfs FUSE client) and an S3-compatible API. A web console and an alerting system are built in.</p>
+
+  <div class="metrics">
+    <div class="metric"><strong>90.6<small>%</small></strong><span>Storage efficiency (EC 29+3)</span></div>
+    <div class="metric"><strong>3</strong><span>Shards (disks or nodes) that can fail at once</span></div>
+    <div class="metric"><strong>≈16<small>PB</small></strong><span>Raw capacity per cluster (36 nodes × 36 disks)</span></div>
+    <div class="metric"><strong>~50<small>PB</small></strong><span>Raw capacity in production</span></div>
+  </div>
+
+  <p>KDSS is designed around three goals:</p>
+  <ul class="ticks">
+    <li><strong>Low cost.</strong> Storage efficiency reaches up to 91.2% (31+3). The 29+3 profile, selected automatically for large clusters, delivers 90.6% — about 37% of the raw capacity that triple replication needs for the same usable capacity. The engine appends sequentially to the block device, which keeps head seeks low and helps extend HDD service life.</li>
+    <li><strong>High reliability.</strong> Shards of a stripe never share a node; with 29+3, data remains readable and rebuildable even when any 3 shards are lost at once. Every read is CRC32-verified, background scrubbing and placement audits run continuously, four layers of disk-health monitoring isolate failing disks automatically, and repair runs locally on the storage nodes.</li>
+    <li><strong>Simple operations.</strong> Upgrades roll through the cluster one node at a time without downtime. The web console shows cluster, node, disk and capacity views — including real-time “max writable now” and “conservative writable” figures. Built-in P0/P1/P2 alerts are pushed to Lark and email, and a full set of Prometheus metrics is exposed.</li>
+  </ul>
+
+  <h3>Proven in production</h3>
+  <p>KDSS runs in multiple long-lived production clusters with close to 50 PB of raw capacity in total, more than 100 storage nodes and over 3,600 data disks, managing more than 180 million stripes. About 99% of production reads and writes go through the FUSE mount.</p>
+
+  <h3>About this paper</h3>
+  <p>This paper is written for architects, operations engineers and technical decision-makers evaluating or deploying KDSS. It covers the architecture, erasure coding and data layout, the storage engine, reliability mechanisms, access interfaces, operations and security, and closes with a capacity-planning method and recommended hardware. Everything described applies to version 26.11.1.</p>
+</section>
+
+<!-- ============ 2 ============ -->
+<section class="chapter" id="s2">
+  <h2><span class="no">2</span>Challenges of storing data at scale</h2>
+  <p class="intro">At petabyte scale, the question is no longer whether the data fits, but whether it can be kept for years — affordably, reliably, and with a team that can still manage it.</p>
+
+  <h3 id="s2-1"><span class="no">2.1</span>The cost of redundancy</h3>
+  <p>Replication is the simplest form of redundancy, but triple replication yields only about 33% storage efficiency: every petabyte of data needs three petabytes of disk, along with the racks, power and operations that come with it. For data kept for many years, that overhead keeps compounding.</p>
+
+  <h3 id="s2-2"><span class="no">2.2</span>Failures become routine</h3>
+  <p>With thousands of disks, failed disks, slow disks and offline nodes are everyday events. The system must tolerate several simultaneous disk or node failures and detect, isolate and repair them without human intervention. It must also guard against silent corruption that raises no error, and against misrouted reads that return someone else’s data.</p>
+
+  <h3 id="s2-3"><span class="no">2.3</span>Disk and file-system overhead</h3>
+  <p>Storing huge numbers of large files on a local file system adds metadata updates, random writes and fragmentation. On high-capacity HDDs, seek count drives both throughput and long-term disk health.</p>
+
+  <h3 id="s2-4"><span class="no">2.4</span>Operations and capacity management</h3>
+  <p>Does an upgrade need downtime? How much can still be written? Which disk is about to fail, and who gets the alert? A small cluster can answer these by hand; at dozens of nodes and thousands of disks the system must answer them. Capacity is especially easy to misjudge: the sum of free space is not the capacity that can actually be written.</p>
+
+  <h3 id="s2-5"><span class="no">2.5</span>Access methods</h3>
+  <p>Some applications work with files and need POSIX semantics; others are built for object storage and need an S3 API. Ideally, one system serves both.</p>
+
+  <table class="table">
+    <caption>Table 2-1 Challenges and how KDSS addresses them</caption>
+    <thead><tr><th style="width:30%">Challenge</th><th>KDSS approach</th><th style="width:13%">See</th></tr></thead>
+    <tbody>
+      <tr><td>High redundancy cost</td><td>Reed-Solomon erasure coding with 71.4%–91.2% efficiency, profile chosen by node count</td><td>Ch. 5</td></tr>
+      <tr><td>Concurrent disk / node failures</td><td>Shards placed on distinct nodes; 3-parity profiles survive any 3 lost shards</td><td>Ch. 5, 7</td></tr>
+      <tr><td>Silent corruption, misrouting</td><td>CRC32 on every read; stripe ID and shard index checked on the read path; background scrubbing</td><td>Ch. 6, 7</td></tr>
+      <tr><td>File-system overhead, disk wear</td><td>Raw-disk writes, sequential append, 4 KB alignment; hole reuse and compaction</td><td>Ch. 6</td></tr>
+      <tr><td>Manual failure handling</td><td>Four-layer health monitoring, automatic isolation and recovery, local rebuild, in-place repair</td><td>Ch. 7</td></tr>
+      <tr><td>Upgrade downtime, opaque capacity</td><td>Non-disruptive rolling upgrades; real-time max / conservative writable capacity</td><td>Ch. 9</td></tr>
+      <tr><td>File and object access</td><td>ksfs FUSE client for POSIX mounts; S3-compatible gateway</td><td>Ch. 8</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- ============ 3 ============ -->
+<section class="chapter" id="s3">
+  <h2><span class="no">3</span>KDSS at a glance</h2>
+  <p class="intro">KDSS treats redundancy, on-disk layout, access and operations as one design: erasure coding sets cost and fault tolerance, the raw-disk engine sets disk efficiency and data verification, FUSE and S3 set how applications connect, and the console and alerts determine whether the system can be run reliably for years.</p>
+
+  <h3 id="s3-1"><span class="no">3.1</span>Positioning</h3>
+  <p>KDSS is built for large, mostly large-file data that must be retained for a long time: sealed data for decentralized storage networks, cold archives, video and media assets, backup copies, and raw data for AI and analytics. It organizes data into 256 MB stripes and keeps metadata at stripe level only, so metadata stays small even at petabyte scale.</p>
+
+  <h3 id="s3-2"><span class="no">3.2</span>Key specifications</h3>
+  <table class="table">
+    <caption>Table 3-1 Key specifications (version 26.11.1)</caption>
+    <thead><tr><th style="width:28%">Item</th><th>Specification</th></tr></thead>
+    <tbody>
+      <tr><td>Redundancy</td><td>Reed-Solomon erasure coding (klauspost/reedsolomon, SIMD-accelerated)</td></tr>
+      <tr><td>EC profiles</td><td>Automatic: 5+2, 9+2, 18+3, 29+3. Manual high-density: 19+3, 21+3, 22+3, 31+3, 31+2</td></tr>
+      <tr><td>Storage efficiency</td><td>71.4% (5+2), 90.6% (29+3), 91.2% (31+3)</td></tr>
+      <tr><td>Fault tolerance</td><td>3-parity profiles: any 3 shards (disks or nodes) can be lost at once</td></tr>
+      <tr><td>Stripe size</td><td>One 256 MB block = one stripe; about 8.8 MB per shard with 29+3</td></tr>
+      <tr><td>Cluster size</td><td>From 8 nodes (5+2); 36 nodes × 36 disks, about 16 PB raw, per cluster</td></tr>
+      <tr><td>Storage engine</td><td>Raw-disk, sequential append, 4 KB aligned; dual superblocks; BadgerDB local index</td></tr>
+      <tr><td>Data verification</td><td>CRC32 on every read, including streaming reads; background CRC scrub, 20 MB/s per node by default</td></tr>
+      <tr><td>Access</td><td>ksfs FUSE client (POSIX mount); S3-compatible gateway</td></tr>
+      <tr><td>Operations and HA</td><td>Rolling upgrades; replicated Masters with a MongoDB replica set; built-in alerts and Prometheus metrics</td></tr>
+    </tbody>
+  </table>
+
+  <h3 id="s3-3"><span class="no">3.3</span>Design principles</h3>
+  <div class="cards four">
+    <div class="card flat"><h4>Large stripes, little metadata</h4><p>256 MB stripes; MongoDB stores stripe-level metadata only, so metadata grows slowly.</p></div>
+    <div class="card flat"><h4>Data bypasses the Master</h4><p>Clients encode locally and talk to storage nodes in parallel; the Master handles metadata, election and scheduling.</p></div>
+    <div class="card flat"><h4>Failure is normal</h4><p>Detection, isolation, repair and scrubbing are automatic; repair continues after the cluster stops accepting writes.</p></div>
+    <div class="card flat"><h4>Conservative defaults</h4><p>EC profiles are chosen conservatively from the node count; fsync defaults to every write.</p></div>
+  </div>
+
+  <h3 id="s3-4"><span class="no">3.4</span>Versioning and technology</h3>
+  <p>KDSS uses calendar versioning (YY.MM.PATCH); this paper covers 26.11.1. Technology stack: Go, gRPC + Protocol Buffers, MongoDB, klauspost/reedsolomon, hanwen/go-fuse, BadgerDB, Gin, Vue 3 + Element Plus, Zap and the Prometheus client.</p>
+</section>
+
+<!-- ============ 4 ============ -->
+<section class="chapter" id="s4">
+  <h2><span class="no">4</span>System architecture</h2>
+  <p class="intro">KDSS has an access tier (ksfs, the S3 gateway and the web console), a control tier (the Master cluster and a MongoDB replica set) and a data tier (storage nodes). Data flows directly between clients and storage nodes; the Master handles only metadata and scheduling.</p>
+
+  <figure class="figure">
+    <img src="../images/architecture-en.svg" alt="KDSS system architecture">
+    <figcaption>Figure 4-1 KDSS system architecture</figcaption>
+  </figure>
+
+  <h3 id="s4-1"><span class="no">4.1</span>Components</h3>
+  <table class="table">
+    <caption>Table 4-1 Components and responsibilities</caption>
+    <thead><tr><th style="width:20%">Component</th><th>Responsibilities</th><th style="width:24%">Ports</th></tr></thead>
+    <tbody>
+      <tr><td>Master</td><td>Metadata, leader election; schedules repair, balancing, GC and placement audits</td><td>gRPC 6700, metrics 6701</td></tr>
+      <tr><td>Storage</td><td>Raw-disk I/O, local rebuild, disk-health monitoring</td><td>gRPC 6800, metrics 6801</td></tr>
+      <tr><td>MongoDB replica set</td><td>Collections such as inodes, dentries, stripes, nodes and buckets; zstd compression, majority writes</td><td>—</td></tr>
+      <tr><td>ksfs</td><td>FUSE client for POSIX mounts; client-side EC encoding and decoding</td><td>—</td></tr>
+      <tr><td>S3 gateway</td><td>S3-compatible API for object-storage applications</td><td>9000</td></tr>
+      <tr><td>Web console</td><td>Cluster management, monitoring, alerting, users and permissions</td><td>8081</td></tr>
+    </tbody>
+  </table>
+
+  <h3 id="s4-2"><span class="no">4.2</span>Metadata</h3>
+  <p>The file-system namespace (inodes, dentries), stripe locations (stripes), node information (nodes) and buckets (buckets) live in a MongoDB replica set with zstd compression and majority write concern. Because each stripe holds 256 MB, one petabyte of data maps to only about four million stripe records — metadata is several orders of magnitude smaller than the data it describes.</p>
+
+  <h3 id="s4-3"><span class="no">4.3</span>Write and read paths</h3>
+  <figure class="figure">
+    <img src="../images/wp-dataflow-en.svg" alt="Write and read data flow">
+    <figcaption>Figure 4-2 Write and read paths through FUSE (EC 29+3)</figcaption>
+  </figure>
+  <h4>Write</h4>
+  <ol class="steps">
+    <li><b>Buffer:</b> ksfs buffers incoming data on the client up to 256 MB.</li>
+    <li><b>Allocate:</b> it asks the Master for a new stripe and its shard locations.</li>
+    <li><b>Encode locally:</b> the client performs EC encoding — with 29+3, 29 data shards and 3 parity shards.</li>
+    <li><b>Write in parallel:</b> all 32 shards are written in parallel to 32 different storage nodes.</li>
+    <li><b>Commit:</b> once every shard is on disk, the stripe metadata is committed to the Master.</li>
+  </ol>
+  <h4>Read</h4>
+  <ol class="steps">
+    <li><b>Locate:</b> the client gets the stripe’s shard locations from the Master.</li>
+    <li><b>Read in parallel:</b> shards are read from storage nodes in parallel, each verified with CRC32.</li>
+    <li><b>Reconstruct on the fly:</b> if shards are missing, the remaining shards are decoded in real time.</li>
+  </ol>
+
+  <h3 id="s4-4"><span class="no">4.4</span>Control-plane availability</h3>
+  <p>The Master runs as several replicas (typically five) and elects a leader through the MongoDB replica set. Leader failover is automatic, and client write requests are redirected to the current leader.</p>
+</section>
+
+<!-- ============ 5 ============ -->
+<section class="chapter" id="s5">
+  <h2><span class="no">5</span>Erasure coding and data layout</h2>
+  <p class="intro">Erasure coding turns k data shards into m additional parity shards; any k of the k+m shards are enough to recover the original data. KDSS uses Reed-Solomon coding, implemented with klauspost/reedsolomon and SIMD acceleration.</p>
+
+  <h3 id="s5-1"><span class="no">5.1</span>Profiles and storage efficiency</h3>
+  <p>KDSS picks a profile automatically from the number of nodes, erring on the side of safety. Higher-density profiles can be selected manually once fault-tolerance requirements are understood. Storage efficiency = k / (k+m).</p>
+  <table class="table">
+    <caption>Table 5-1 Erasure-coding profiles</caption>
+    <thead><tr><th>Profile (k+m)</th><th class="num">Efficiency</th><th class="c">Shards that can be lost</th><th class="num">Minimum nodes</th><th>Selection</th></tr></thead>
+    <tbody>
+      <tr><td>5+2</td><td class="num">71.4%</td><td class="c">2</td><td class="num">8</td><td><span class="tag teal">Auto</span> Entry size</td></tr>
+      <tr><td>9+2</td><td class="num">81.8%</td><td class="c">2</td><td class="num">12</td><td><span class="tag teal">Auto</span></td></tr>
+      <tr><td>18+3</td><td class="num">85.7%</td><td class="c">3</td><td class="num">22</td><td><span class="tag teal">Auto</span></td></tr>
+      <tr class="hl"><td>29+3</td><td class="num">90.6%</td><td class="c">3</td><td class="num">33</td><td><span class="tag teal">Auto</span> Recommended at scale</td></tr>
+      <tr><td>19+3 / 21+3</td><td class="num">86.4% / 87.5%</td><td class="c">3</td><td class="num">—</td><td><span class="tag">Manual</span> High density</td></tr>
+      <tr><td>22+3</td><td class="num">88.0%</td><td class="c">3</td><td class="num">26</td><td><span class="tag">Manual</span> High density</td></tr>
+      <tr><td>31+3</td><td class="num">91.2%</td><td class="c">3</td><td class="num">—</td><td><span class="tag">Manual</span> High density</td></tr>
+      <tr><td>31+2</td><td class="num">93.9%</td><td class="c">2</td><td class="num">—</td><td><span class="tag amber">Manual</span> Lower tolerance; use with care</td></tr>
+    </tbody>
+  </table>
+  <p class="muted" style="font-size:8.5pt">Note: efficiency for 19+3, 21+3 and 31+2 is computed as k/(k+m). Each minimum node count equals the stripe width k+m plus one.</p>
+
+  <h3 id="s5-2"><span class="no">5.2</span>Cost compared with replication</h3>
+  <p>For the same usable capacity, 29+3 needs about 37% of the raw capacity of triple replication — while raising fault tolerance from 2 to 3.</p>
+  <figure class="figure">
+    <img src="../images/wp-cost-en.svg" alt="Raw capacity per 1 PB usable">
+    <figcaption>Figure 5-1 Raw capacity required by replication and EC profiles (illustrative)</figcaption>
+  </figure>
+
+  <h3 id="s5-3"><span class="no">5.3</span>Stripe layout</h3>
+  <p>Each 256 MB block forms one stripe. With 29+3, the block is split into 29 data shards of about 8.8 MB, 3 parity shards are computed, and all 32 shards are written to 32 different nodes. Large stripes keep every disk I/O large and let metadata stay at stripe level.</p>
+  <figure class="figure narrow">
+    <img src="../images/hero-stripe-en.svg" alt="EC 29+3 stripe placement">
+    <figcaption>Figure 5-2 Placement of an EC 29+3 stripe across nodes</figcaption>
+  </figure>
+
+  <h3 id="s5-4"><span class="no">5.4</span>Placement constraints and audit</h3>
+  <p>Fault tolerance only holds if no two shards of a stripe share a node — otherwise one node failure could take out several shards. KDSS enforces this as a hard rule:</p>
+  <ul class="ticks">
+    <li><strong>Enforced on three paths.</strong> Writes, repairs and balancing — every path that creates shards — check the constraint when choosing target nodes.</li>
+    <li><strong>Continuous placement audit.</strong> The Master continuously audits the placement of every stripe in the background, independently verifying the three checks above.</li>
+  </ul>
+</section>
+
+<!-- ============ 6 ============ -->
+<section class="chapter" id="s6">
+  <h2><span class="no">6</span>Raw-disk storage engine</h2>
+  <p class="intro">Storage nodes read and write block devices directly, bypassing the local file system. Shards are appended sequentially, located through a local index, and verified on every read.</p>
+
+  <h3 id="s6-1"><span class="no">6.1</span>Sequential append</h3>
+  <p>Shards are 4 KB aligned and appended at the write frontier. Compared with keeping many files on a file system, this avoids random file-system metadata updates and reduces head seeks: throughput is steadier, HDDs last longer and fail less often.</p>
+  <figure class="figure">
+    <img src="../images/wp-disk-en.svg" alt="Raw-disk layout">
+    <figcaption>Figure 6-1 Raw-disk layout (illustrative, not to scale)</figcaption>
+  </figure>
+
+  <h3 id="s6-2"><span class="no">6.2</span>Superblocks and disk identity</h3>
+  <p>Each disk carries a primary and a backup superblock, both CRC-protected. The superblock records the disk’s identity — node ID, disk ID and disk UUID. At startup the storage node uses it to identify every disk: if a disk has moved to another slot or its device name has changed, this is detected and corrected automatically; if a disk that does not belong to the node is attached, the node refuses to start rather than write data to the wrong disk.</p>
+
+  <h3 id="s6-3"><span class="no">6.3</span>Local index and verification</h3>
+  <p>Shard locations on disk are tracked in a local BadgerDB index. Every read is CRC32-verified, streaming reads included. If shards are missing at read time, the client reconstructs the data from the remaining shards in real time.</p>
+
+  <h3 id="s6-4"><span class="no">6.4</span>Crash recovery</h3>
+  <table class="table">
+    <caption>Table 6-1 Startup and recovery behavior</caption>
+    <thead><tr><th style="width:30%">Situation</th><th>Behavior</th></tr></thead>
+    <tbody>
+      <tr><td>Clean shutdown</td><td>Starts in seconds</td></tr>
+      <tr><td>Power loss</td><td>Scans forward from the write frontier to restore index entries written before the outage</td></tr>
+      <tr><td>Interrupted compaction</td><td>The local index can be rebuilt from the whole disk</td></tr>
+      <tr><td>Many disks per node</td><td>All disks are opened in parallel</td></tr>
+    </tbody>
+  </table>
+
+  <h3 id="s6-5"><span class="no">6.5</span>fsync policies</h3>
+  <table class="table">
+    <caption>Table 6-2 fsync policies</caption>
+    <thead><tr><th style="width:30%">Policy</th><th>Description</th></tr></thead>
+    <tbody>
+      <tr><td>immediate (default)</td><td>Every write is flushed to disk before it is acknowledged</td></tr>
+      <tr><td>batch</td><td>Group commit: several writes share one flush</td></tr>
+      <tr><td>deferred</td><td>For hardware that guarantees power-loss safety, such as RAID controllers with a BBU</td></tr>
+    </tbody>
+  </table>
+
+  <h3 id="s6-6"><span class="no">6.6</span>Hole reuse and compaction</h3>
+  <p>Deletes are soft. Data first goes to the recycle bin; only after a configurable freeze period does its space become a reusable hole. New shards can be written straight into a hole of exactly the same size — holes are never split, so no fragments are created.</p>
+  <p>Compaction moves data from the end of the disk into holes and then truncates the freed tail. The process is crash-safe, every moved shard is read back and verified, and metadata is not changed at all — the layers above never notice.</p>
+
+  <h3 id="s6-7"><span class="no">6.7</span>Three levels of capacity protection</h3>
+  <p>As disks fill up, writes are restricted in three steps, so that repair always has room and existing data is never put at risk:</p>
+  <figure class="figure">
+    <img src="../images/wp-capacity-en.svg" alt="Three levels of capacity protection">
+    <figcaption>Figure 6-2 Capacity protection levels (default thresholds)</figcaption>
+  </figure>
+</section>
+
+<!-- ============ 7 ============ -->
+<section class="chapter" id="s7">
+  <h2><span class="no">7</span>Reliability and self-healing</h2>
+  <p class="intro">KDSS breaks reliability into three jobs: find problems early, stop them from spreading, and restore redundancy quickly. Every step runs automatically by default.</p>
+
+  <figure class="figure">
+    <img src="../images/wp-heal-en.svg" alt="Self-healing flow">
+    <figcaption>Figure 7-1 Self-healing, from detection to repair</figcaption>
+  </figure>
+
+  <h3 id="s7-1"><span class="no">7.1</span>Four layers of disk-health monitoring</h3>
+  <table class="table">
+    <caption>Table 7-1 Disk-health monitoring</caption>
+    <thead><tr><th style="width:28%">Layer</th><th>Purpose</th></tr></thead>
+    <tbody>
+      <tr><td>Periodic SMART collection</td><td>Reads SMART data on a schedule to track long-term health trends</td></tr>
+      <tr><td>Fast kernel-log scan</td><td>Catches disk errors reported by the kernel quickly; debounced to avoid acting on one-off messages</td></tr>
+      <tr><td>I/O hang watchdog</td><td>Declares a hang when a read has not returned in 120 s or a write in 300 s</td></tr>
+      <tr><td>Sliding I/O-error window</td><td>Counts I/O errors over a time window; isolates the disk above the threshold and restores it automatically once healthy</td></tr>
+    </tbody>
+  </table>
+
+  <h3 id="s7-2"><span class="no">7.2</span>Local rebuild on storage nodes</h3>
+  <p>When shards are missing, the storage node rebuilds them itself: it fetches the surviving shards of the stripe, decodes locally and writes the result straight to disk, cutting out extra network hops. Repair work is organized as follows:</p>
+  <ul class="ticks">
+    <li><strong>Worst first.</strong> Stripes are ordered by the number of missing shards, so those closest to data loss are repaired first.</li>
+    <li><strong>Bulk queuing.</strong> Repair tasks are created in batches — hundreds of thousands of stripes can be queued within minutes.</li>
+    <li><strong>Distributed dispatch.</strong> Multiple Masters claim repair tasks in parallel.</li>
+    <li><strong>Repair when full.</strong> When the cluster reaches its reject line, new writes stop but repair continues.</li>
+  </ul>
+
+  <h3 id="s7-3"><span class="no">7.3</span>In-place repair</h3>
+  <p>After a failed disk is replaced, KDSS can rebuild the data it held and write it back to the same positions on the new disk.</p>
+
+  <h3 id="s7-4"><span class="no">7.4</span>Identity checks on the read path</h3>
+  <p>Every read carries the stripe ID and shard index and is checked against them, so a misrouted request can never return another stripe’s data. This complements CRC: CRC proves the data is intact, the identity check proves it is the right data.</p>
+
+  <h3 id="s7-5"><span class="no">7.5</span>Background CRC scrubbing</h3>
+  <p>A background scrubber periodically reads and verifies shards on disk, finding silent corruption in data that has not been accessed for a long time. Scrubbing is rate-limited (20 MB/s per node by default) and its period is configurable, so it does not interfere with production I/O.</p>
+
+  <h3 id="s7-6"><span class="no">7.6</span>Recycle bin and two-phase GC</h3>
+  <p>Accidentally deleted data can be restored from the recycle bin. Garbage collection runs in two phases with a configurable retention window. A read-only orphan-shard reconciliation tool compares shards on disk with metadata without modifying anything.</p>
+
+  <h3 id="s7-7"><span class="no">7.7</span>Balancing</h3>
+  <ul class="ticks">
+    <li><strong>Cross-node balancing (explicitly triggered).</strong> Source nodes are chosen by deviation from the mean, and targets are the emptiest nodes in each stripe’s free-node set. Moves are double-checked for duplicates and metadata is updated with versioned compare-and-swap, preventing conflicts and repeated moves. Balancing is also subject to the placement checks.</li>
+    <li><strong>Intra-node balancing.</strong> Evens out usage across the disks within a node.</li>
+  </ul>
+</section>
+
+<!-- ============ 8 ============ -->
+<section class="chapter" id="s8">
+  <h2><span class="no">8</span>Access interfaces</h2>
+  <p class="intro">KDSS offers two ways in: the ksfs FUSE client for POSIX file access, and an S3-compatible gateway for object-storage applications. About 99% of production reads and writes go through FUSE.</p>
+
+  <h3 id="s8-1"><span class="no">8.1</span>ksfs FUSE client</h3>
+  <ul class="ticks">
+    <li>Mounts as a POSIX file system — existing applications read and write without changes.</li>
+    <li><code>df -h</code> reports the cluster’s real capacity.</li>
+    <li>fsync is honored for durability.</li>
+    <li>Read/write buffering, concurrency and rate limits are tunable.</li>
+    <li>EC encoding runs on the client, and EC verification can run in parallel with writes.</li>
+  </ul>
+
+  <h3 id="s8-2"><span class="no">8.2</span>S3-compatible gateway</h3>
+  <p>The S3 gateway supports the APIs below (verified against the code). Large objects are streamed: up to 64 MB is buffered, anything larger is streamed in segments, keeping memory use bounded. Standard tools such as the AWS CLI, s3cmd, boto3 and the Go SDK work directly.</p>
+  <table class="table">
+    <caption>Table 8-1 Supported S3 APIs</caption>
+    <thead><tr><th style="width:22%">Category</th><th>APIs</th></tr></thead>
+    <tbody>
+      <tr><td>Bucket</td><td>ListBuckets, CreateBucket, DeleteBucket, HeadBucket, ListObjects</td></tr>
+      <tr><td>Object</td><td>PutObject, GetObject (incl. Range), HeadObject, DeleteObject, CopyObject</td></tr>
+      <tr><td>Multipart upload</td><td>CreateMultipartUpload, UploadPart, CompleteMultipartUpload, AbortMultipartUpload, ListParts, ListMultipartUploads</td></tr>
+    </tbody>
+  </table>
+
+  <div class="code-title">AWS CLI</div>
+<pre><span class="c"># Access keys are created in the web console; &lt;gateway&gt; is the S3 gateway address</span>
+aws --endpoint-url http://&lt;gateway&gt;:9000 s3 mb s3://archive
+aws --endpoint-url http://&lt;gateway&gt;:9000 s3 cp ./dataset.tar s3://archive/2026/dataset.tar
+aws --endpoint-url http://&lt;gateway&gt;:9000 s3 ls s3://archive/2026/</pre>
+
+  <div class="code-title">Python (boto3)</div>
+<pre>import boto3
+
+s3 = boto3.client("s3", endpoint_url="http://&lt;gateway&gt;:9000",
+                  aws_access_key_id="&lt;ACCESS_KEY&gt;", aws_secret_access_key="&lt;SECRET_KEY&gt;")
+s3.upload_file("dataset.tar", "archive", "2026/dataset.tar")   <span class="c"># large files use multipart upload automatically</span>
+obj = s3.get_object(Bucket="archive", Key="2026/dataset.tar", Range="bytes=0-1048575")</pre>
+
+  <h3 id="s8-3"><span class="no">8.3</span>Choosing an interface</h3>
+  <p>Use FUSE (ksfs) for applications that work with file paths, need POSIX semantics and fsync, or write and read large files sequentially in bulk. Use the S3 gateway for applications built on object storage, uploads and downloads across networks, and backup or archive workflows that already rely on S3 tooling.</p>
+</section>
+
+<!-- ============ 9 ============ -->
+<section class="chapter" id="s9">
+  <h2><span class="no">9</span>Operations and observability</h2>
+  <p class="intro">The tools needed to run KDSS are built in: a management console, a capacity panel, metrics and alerting, and a rolling-upgrade procedure that avoids downtime.</p>
+
+  <h3 id="s9-1"><span class="no">9.1</span>Web management console</h3>
+  <p>The console, built with Vue 3 and Element Plus, provides:</p>
+  <div class="cards">
+    <div class="card flat"><h4>Cluster views</h4><p>Status and usage of clusters, nodes and disks</p></div>
+    <div class="card flat"><h4>Capacity panel</h4><p>Max writable now, conservative writable, recycle bin</p></div>
+    <div class="card flat"><h4>Data management</h4><p>Buckets, access keys, file browser</p></div>
+    <div class="card flat"><h4>Alerts</h4><p>Alert rules, notification channels, alert history</p></div>
+    <div class="card flat"><h4>Audit</h4><p>Audit log of operations</p></div>
+    <div class="card flat"><h4>Users</h4><p>Multiple users with role-based permissions</p></div>
+  </div>
+
+  <h3 id="s9-2"><span class="no">9.2</span>Writable capacity</h3>
+  <p>In an erasure-coded cluster, total free space is not the same as what can still be written: a 29+3 stripe needs space on 32 different nodes at once, so as some disks fill up or leave the write ring, real writable capacity drops below free space. The console therefore reports two figures directly — <strong>max writable now</strong> and <strong>conservative writable</strong> — as the basis for expansion and scheduling decisions, and raises an alert when too few nodes can accept writes.</p>
+  <figure class="figure narrow">
+    <img src="../images/console-capacity-en.svg" alt="Console capacity panel">
+    <figcaption>Figure 9-1 Console capacity panel (illustrative)</figcaption>
+  </figure>
+
+  <h3 id="s9-3"><span class="no">9.3</span>Metrics and alerting</h3>
+  <ul class="ticks">
+    <li><strong>Prometheus metrics:</strong> a complete set under the <code>kdss_*</code> namespace; <code>/metrics</code> supports Bearer-token authentication; 62 alert-rule templates ship with each release.</li>
+    <li><strong>Built-in alerting:</strong> P0 / P1 / P2 severities, debouncing and reminder intervals, delivery to Lark and email, and alert history.</li>
+    <li><strong>Built-in rules:</strong> cover too few writable nodes, capacity, disk failures, MongoDB liveness, license-check failures and more.</li>
+  </ul>
+
+  <h3 id="s9-4"><span class="no">9.4</span>Non-disruptive rolling upgrades</h3>
+  <p>Upgrades proceed one node at a time. Each node goes through:</p>
+  <ol class="steps">
+    <li><b>Cordon:</b> the node enters maintenance mode and stops accepting new writes.</li>
+    <li><b>Drain:</b> wait until in-flight writes reach zero.</li>
+    <li><b>Replace:</b> install the new binaries and restart.</li>
+    <li><b>Verify:</b> confirm the node is healthy.</li>
+    <li><b>Uncordon:</b> the node accepts writes again; move on to the next one.</li>
+  </ol>
+  <div class="callout"><b>Constraint:</b> the number of nodes offline at the same time never exceeds the number of parity shards minus one. A 29+3 cluster, for example, takes at most 2 nodes offline at once, keeping redundancy in reserve during the upgrade.</div>
+
+  <h3 id="s9-5"><span class="no">9.5</span>High availability</h3>
+  <p>The Master runs as several replicas (typically five) and elects a leader together with the MongoDB replica set (majority writes). Failover is automatic, and client writes are redirected to the leader. Storage-node failures are covered by erasure-coded redundancy and trigger automatic repair.</p>
+</section>
+
+<!-- ============ 10 ============ -->
+<section class="chapter" id="s10">
+  <h2><span class="no">10</span>Security</h2>
+  <p class="intro">KDSS is deployed on internal networks by default. Its security controls cover identity and permissions on the management plane, access to the metrics endpoint, encryption between components, and license verification.</p>
+
+  <table class="table">
+    <caption>Table 10-1 Security controls</caption>
+    <thead><tr><th style="width:26%">Area</th><th>Control</th></tr></thead>
+    <tbody>
+      <tr><td>Role-based access (RBAC)</td><td>Multiple users with three roles: admin, storage_admin and readonly</td></tr>
+      <tr><td>Authentication</td><td>JWT sessions; passwords stored with bcrypt; login rate limiting and CAPTCHA</td></tr>
+      <tr><td>Web protection</td><td>CSRF protection</td></tr>
+      <tr><td>Audit</td><td>Audit log of console operations</td></tr>
+      <tr><td>S3 access</td><td>Buckets and access keys created and managed in the console</td></tr>
+      <tr><td>Metrics endpoint</td><td><code>/metrics</code> supports Bearer-token authentication</td></tr>
+      <tr><td>Inter-component traffic</td><td>Optional gRPC mTLS; can be left off for internal-only deployments</td></tr>
+      <tr><td>License</td><td>Online verification; failures raise a built-in alert</td></tr>
+    </tbody>
+  </table>
+
+  <h3 id="s10-1"><span class="no">10.1</span>Deployment recommendations</h3>
+  <ul class="ticks">
+    <li>Place Masters, storage nodes and MongoDB on an isolated internal network; enable gRPC mTLS whenever traffic crosses an untrusted network.</li>
+    <li>Assign roles by least privilege: readonly for day-to-day viewing, storage_admin for storage operations, and admin only for user and system administration.</li>
+    <li>Configure a Bearer token for <code>/metrics</code> so that only your monitoring system can scrape it.</li>
+  </ul>
+</section>
+
+<!-- ============ 11 ============ -->
+<section class="chapter" id="s11">
+  <h2><span class="no">11</span>Capacity planning and configuration</h2>
+  <p class="intro">Capacity planning starts from three questions: how much usable capacity is needed, how many simultaneous shard failures must be tolerated, and how many nodes are available. The node count determines which EC profiles are possible; the profile determines storage efficiency.</p>
+
+  <h3 id="s11-1"><span class="no">11.1</span>Sizing formula</h3>
+  <div class="formula">Usable capacity ≈ nodes × disks per node × disk size × k/(k+m) × reject-line watermark
+    <small>The reject line defaults to 99%; the per-disk write cap defaults to 99.5%. Actual writable capacity is the “conservative writable” figure in the console.</small></div>
+
+  <h3 id="s11-2"><span class="no">11.2</span>Worked examples</h3>
+  <table class="table">
+    <caption>Table 11-1 Sizing examples (illustrative; 16 TB disks, decimal TB)</caption>
+    <thead><tr><th>Configuration</th><th class="num">Raw</th><th>Profile</th><th class="num">× efficiency</th><th class="num">× 99% watermark</th><th class="c">Tolerance</th></tr></thead>
+    <tbody>
+      <tr><td>8 nodes × 36 disks</td><td class="num">4,608 TB</td><td>5+2</td><td class="num">3,291 TB</td><td class="num">≈ 3.3 PB</td><td class="c">2</td></tr>
+      <tr><td>12 nodes × 36 disks</td><td class="num">6,912 TB</td><td>9+2</td><td class="num">5,655 TB</td><td class="num">≈ 5.6 PB</td><td class="c">2</td></tr>
+      <tr><td>22 nodes × 36 disks</td><td class="num">12,672 TB</td><td>18+3</td><td class="num">10,862 TB</td><td class="num">≈ 10.8 PB</td><td class="c">3</td></tr>
+      <tr class="hl"><td>33 nodes × 36 disks</td><td class="num">19,008 TB</td><td>29+3</td><td class="num">17,226 TB</td><td class="num">≈ 17.1 PB</td><td class="c">3</td></tr>
+    </tbody>
+  </table>
+  <p class="muted" style="font-size:8.5pt">Note: efficiency uses the exact k/(k+m). System disks, reserved space and the difference between nominal and usable disk capacity are not included.</p>
+
+  <h3 id="s11-3"><span class="no">11.3</span>Planning guidelines</h3>
+  <ul class="ticks">
+    <li><strong>One node more than the stripe width.</strong> The minimum node count for each profile is k+m+1 — at least 33 nodes for 29+3.</li>
+    <li><strong>Choose the profile by fault tolerance.</strong> To survive 3 simultaneous shard failures, use 18+3 or higher. Use 31+2 only where reduced tolerance is an explicit, accepted trade-off.</li>
+    <li><strong>Leave room for maintenance.</strong> During rolling upgrades, no more than m − 1 nodes may be offline at once.</li>
+    <li><strong>Watch writable nodes.</strong> Writing a stripe needs k+m nodes that can accept writes. As nodes fill up, expand before the “too few writable nodes” alert fires.</li>
+  </ul>
+
+  <h3 id="s11-4"><span class="no">11.4</span>Recommended hardware</h3>
+  <table class="table">
+    <caption>Table 11-2 Recommended hardware (from production experience)</caption>
+    <thead><tr><th style="width:22%">Role</th><th>Configuration</th></tr></thead>
+    <tbody>
+      <tr><td>Storage node</td><td>36 × 16 TB enterprise HDDs (JBOD pass-through); 20-core-class Xeon CPU; 64 GB RAM; 2 × 10 GbE bonded (20 Gbps); RAID1 system disks</td></tr>
+      <tr><td>Master</td><td>Can be co-located with storage on nodes with RAID1 system disks; typically 5</td></tr>
+      <tr><td>MongoDB</td><td>Replica set on SSDs</td></tr>
+      <tr><td>Minimum size</td><td>8 nodes (5+2)</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- ============ 12 ============ -->
+<section class="chapter" id="s12">
+  <h2><span class="no">12</span>Typical use cases</h2>
+  <p class="intro">KDSS fits large, mostly large-file data that is written once and kept for a long time. Typical scenarios include:</p>
+
+  <div class="case">
+    <div class="label"><h4>Decentralized storage</h4><span class="tag">e.g. Filecoin</span></div>
+    <div class="body">
+      <div><h5>Challenge</h5><p>Sealed data is large and long-lived; storage cost directly drives returns, and lost data means lost revenue.</p></div>
+      <div><h5>Approach</h5><p>Sealed output lands sequentially through the FUSE mount, stored with high-density EC; automatic repair and scrubbing keep it available.</p></div>
+      <div><h5>Outcome</h5><p>Over 90% storage efficiency; no data loss from concurrent disk failures; existing programs use the POSIX mount as is.</p></div>
+    </div>
+  </div>
+  <div class="case">
+    <div class="label"><h4>Cold-data archive</h4><span class="tag teal">Archive</span></div>
+    <div class="body">
+      <div><h5>Challenge</h5><p>Data may go unread for years but must not be lost; silent corruption found only at read time is found too late.</p></div>
+      <div><h5>Approach</h5><p>Erasure coding lowers long-term cost; background CRC scrubbing finds and repairs corruption proactively; the recycle bin guards against mistakes.</p></div>
+      <div><h5>Outcome</h5><p>Low retention cost and continuously verifiable data integrity.</p></div>
+    </div>
+  </div>
+  <div class="case">
+    <div class="label"><h4>Video and media</h4><span class="tag">Media</span></div>
+    <div class="body">
+      <div><h5>Challenge</h5><p>Large assets and fast growth; high sequential throughput plus random-access reads.</p></div>
+      <div><h5>Approach</h5><p>256 MB stripes read and written in parallel; S3 GetObject with Range reads; scale out by adding nodes.</p></div>
+      <div><h5>Outcome</h5><p>Steady large-file throughput; file and object access to the same cluster.</p></div>
+    </div>
+  </div>
+  <div class="case">
+    <div class="label"><h4>Backup and disaster recovery</h4><span class="tag teal">Backup</span></div>
+    <div class="body">
+      <div><h5>Challenge</h5><p>Backup copies consume large amounts of capacity, and the backup target itself must be reliable and easy to manage.</p></div>
+      <div><h5>Approach</h5><p>Existing backup tools connect over S3 with multipart upload for large objects; alerts go to Lark and email.</p></div>
+      <div><h5>Outcome</h5><p>Backups stored with erasure coding instead of replicas; S3 tooling works without changes.</p></div>
+    </div>
+  </div>
+  <div class="case">
+    <div class="label"><h4>Raw data lakes for AI and analytics</h4><span class="tag">Data lake</span></div>
+    <div class="body">
+      <div><h5>Challenge</h5><p>Raw datasets keep growing, read both by file-based training jobs and by object-based pipelines.</p></div>
+      <div><h5>Approach</h5><p>Compute nodes read through the FUSE mount; pipelines write and distribute through S3.</p></div>
+      <div><h5>Outcome</h5><p>One storage system for both access patterns; capacity scales with nodes.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 13 ============ -->
+<section class="chapter" id="s13">
+  <h2><span class="no">13</span>Contact us</h2>
+  <p class="intro">To discuss deployment, capacity planning or technical details of KDSS, please get in touch.</p>
+  <div class="contact">
+    <div class="card"><h4>Sales and partnerships</h4><p>Product inquiries, solution assessment, partnerships</p><a class="mail" href="mailto:contact@kdss.io">contact@kdss.io</a></div>
+    <div class="card"><h4>Technical support</h4><p>Deployment, usage and troubleshooting</p><a class="mail" href="mailto:support@kdss.io">support@kdss.io</a></div>
+  </div>
+  <p style="margin-top:14pt">Website: <a href="https://www.kdss.io/">www.kdss.io</a></p>
+
+  <div class="legal">
+    <p>Features and parameters described in this document apply to KDSS version 26.11.1. Figures and examples marked “illustrative” explain principles and do not represent measured results of a specific deployment. Product features may change between releases; the released version is authoritative.</p>
+    <p>Third-party names and trademarks mentioned herein belong to their respective owners.</p>
+    <p>© 2026 KDSS. All rights reserved.</p>
+  </div>
+</section>
+
+</main>
+
+<script>
+// Build the table of contents from chapter and section headings; page numbers are filled in by pdf.js.
+// 根据章节标题生成目录；页码由 pdf.js 渲染时回填。
+(function () {
+  var toc = document.getElementById('toc');
+  document.querySelectorAll('.chapter').forEach(function (ch) {
+    var h2 = ch.querySelector('h2');
+    var li = document.createElement('li');
+    li.innerHTML = '<a href="#' + ch.id + '"><span class="t"><span class="no">' + h2.querySelector('.no').textContent + '</span>' +
+      h2.lastChild.textContent + '</span><span class="dots"></span><span class="pg" data-for="' + ch.id + '"></span></a>';
+    var subs = ch.querySelectorAll('h3[id]');
+    if (subs.length) {
+      var ol = document.createElement('ol');
+      subs.forEach(function (h3) {
+        var s = document.createElement('li');
+        s.innerHTML = '<a href="#' + h3.id + '"><span class="t"><span class="no">' + h3.querySelector('.no').textContent + '</span>' +
+          h3.lastChild.textContent + '</span><span class="dots"></span><span class="pg" data-for="' + h3.id + '"></span></a>';
+        ol.appendChild(s);
+      });
+      li.appendChild(ol);
+    }
+    toc.appendChild(li);
+  });
+})();
+</script>
+</body>
+</html>

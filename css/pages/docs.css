@@ -1,0 +1,41 @@
+/* Docs page only. / 仅文档页使用。 */
+.docs-wrap { padding-top: 64px; }
+.prose > section + section { margin-top: 72px; padding-top: 8px; border-top: 1px solid var(--line); }
+.prose > section > h2:first-child { margin-top: 32px; }
+.prose > section:first-child > h2:first-child { margin-top: 0; }
+.prose h3 { font-size: 1.12rem; }
+.prose .lead-in { color: var(--ink-500); }
+
+/* Formula block / 公式块 */
+.formula { margin-top: 16px; padding: 20px 22px; border: 1px solid var(--line); border-radius: var(--radius); background: var(--surface);
+  font-weight: 700; color: var(--navy-900); font-size: 1.05rem; text-align: center; }
+.formula small { display: block; margin-top: 6px; font-weight: 400; font-size: .85rem; color: var(--ink-500); }
+
+/* Numbered deployment stages / 部署阶段 */
+.prose .steps { margin-top: 20px; }
+.prose .step h4 { font-size: 1.02rem; }
+.prose .step p + p { margin-top: 6px; }
+
+.prose .contact-cards { margin-top: 20px; }
+.prose pre { white-space: pre; }
+@media (max-width: 640px) {
+  .docs-wrap { padding-top: 40px; }
+  .prose pre { font-size: .78rem; padding: 16px; }
+  .prose .table th, .prose .table td { padding: 12px 12px; }
+}
+/* Let wide code blocks scroll inside the column instead of widening the page.
+   让宽代码块在栏内滚动，而不是撑宽页面。 */
+.docs > * { min-width: 0; }
+@media (max-width: 900px) { .docs { grid-template-columns: minmax(0, 1fr); } }
+.prose .contact-card h3 { margin: 0 0 6px; }
+.prose .contact-card p { margin-top: 0; }
+.prose .table.kv td:first-child { white-space: nowrap; }
+.prose .table td.num { white-space: nowrap; }
+.prose .table.kv th:first-child { white-space: nowrap; }
+/* Dense numeric tables on phones. / 手机上压缩数字表格。 */
+@media (max-width: 640px) {
+  .prose .table.compact { font-size: .84rem; }
+  .prose .table.compact th, .prose .table.compact td { padding: 10px 6px; }
+  .prose .table.compact th:first-child, .prose .table.compact td:first-child { padding-left: 12px; }
+  .prose .table.compact td:first-child { white-space: nowrap; }
+}

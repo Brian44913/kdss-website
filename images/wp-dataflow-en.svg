@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 380" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif"><defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#9fb1cf"/></marker></defs>
+<rect width="900" height="380" rx="14" fill="#f6f8fb"/>
+<text x="20" y="36" font-size="15" font-weight="700" fill="#1d5fd1" text-anchor="start">WRITE PATH</text>
+<rect x="20" y="50" width="160" height="80" rx="10" fill="#fff" stroke="#d3d9e4"/><text x="100.0" y="87.0" font-size="16" font-weight="700" fill="#111827" text-anchor="middle">Buffer</text><text x="100.0" y="107.0" font-size="13" font-weight="400" fill="#6b7280" text-anchor="middle">client fills 256 MB</text>
+<line x1="181" y1="90" x2="194" y2="90" stroke="#9fb1cf" stroke-width="1.8" marker-end="url(#ah)"/>
+<rect x="195" y="50" width="160" height="80" rx="10" fill="#fff" stroke="#d3d9e4"/><text x="275.0" y="87.0" font-size="16" font-weight="700" fill="#111827" text-anchor="middle">Allocate</text><text x="275.0" y="107.0" font-size="13" font-weight="400" fill="#6b7280" text-anchor="middle">stripe from Master</text>
+<line x1="356" y1="90" x2="369" y2="90" stroke="#9fb1cf" stroke-width="1.8" marker-end="url(#ah)"/>
+<rect x="370" y="50" width="160" height="80" rx="10" fill="#fff" stroke="#d3d9e4"/><text x="450.0" y="87.0" font-size="16" font-weight="700" fill="#111827" text-anchor="middle">Encode</text><text x="450.0" y="107.0" font-size="13" font-weight="400" fill="#6b7280" text-anchor="middle">locally on client</text>
+<line x1="531" y1="90" x2="544" y2="90" stroke="#9fb1cf" stroke-width="1.8" marker-end="url(#ah)"/>
+<rect x="545" y="50" width="160" height="80" rx="10" fill="#0f2b5b" stroke="#0f2b5b"/><text x="625.0" y="87.0" font-size="16" font-weight="700" fill="#fff" text-anchor="middle">Write shards</text><text x="625.0" y="107.0" font-size="13" font-weight="400" fill="#c9d8f5" text-anchor="middle">32 shards → 32 nodes</text>
+<line x1="706" y1="90" x2="719" y2="90" stroke="#9fb1cf" stroke-width="1.8" marker-end="url(#ah)"/>
+<rect x="720" y="50" width="160" height="80" rx="10" fill="#fff" stroke="#d3d9e4"/><text x="800.0" y="87.0" font-size="16" font-weight="700" fill="#111827" text-anchor="middle">Commit</text><text x="800.0" y="107.0" font-size="13" font-weight="400" fill="#6b7280" text-anchor="middle">stripe metadata</text>
+<text x="20" y="184" font-size="15" font-weight="700" fill="#0f8a7e" text-anchor="start">READ PATH</text>
+<rect x="20" y="198" width="205" height="80" rx="10" fill="#fff" stroke="#d3d9e4"/><text x="122.5" y="235.0" font-size="16" font-weight="700" fill="#111827" text-anchor="middle">Locate</text><text x="122.5" y="255.0" font-size="13" font-weight="400" fill="#6b7280" text-anchor="middle">stripe from Master</text>
+<line x1="226" y1="238" x2="237" y2="238" stroke="#9fb1cf" stroke-width="1.8" marker-end="url(#ah)"/>
+<rect x="238" y="198" width="205" height="80" rx="10" fill="#fff" stroke="#d3d9e4"/><text x="340.5" y="235.0" font-size="16" font-weight="700" fill="#111827" text-anchor="middle">Read shards</text><text x="340.5" y="255.0" font-size="13" font-weight="400" fill="#6b7280" text-anchor="middle">CRC32 on every shard</text>
+<line x1="444" y1="238" x2="455" y2="238" stroke="#9fb1cf" stroke-width="1.8" marker-end="url(#ah)"/>
+<rect x="456" y="198" width="205" height="80" rx="10" fill="#fff" stroke="#0f8a7e"/><text x="558.5" y="235.0" font-size="16" font-weight="700" fill="#111827" text-anchor="middle">Decode on the fly</text><text x="558.5" y="255.0" font-size="13" font-weight="400" fill="#6b7280" text-anchor="middle">any 29 shards suffice</text>
+<line x1="662" y1="238" x2="673" y2="238" stroke="#9fb1cf" stroke-width="1.8" marker-end="url(#ah)"/>
+<rect x="674" y="198" width="205" height="80" rx="10" fill="#fff" stroke="#d3d9e4"/><text x="776.5" y="235.0" font-size="16" font-weight="700" fill="#111827" text-anchor="middle">Return data</text><text x="776.5" y="255.0" font-size="13" font-weight="400" fill="#6b7280" text-anchor="middle">streaming reads verified</text>
+<text x="20" y="320" font-size="13.5" font-weight="400" fill="#6b7280" text-anchor="start">Shown for EC 29+3: each shard is about 8.8 MB.</text>
+<text x="20" y="344" font-size="13.5" font-weight="400" fill="#6b7280" text-anchor="start">Data moves directly between clients and storage nodes; the Master handles metadata only.</text>
+</svg>

@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 560 450" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif"><defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#9fb1cf"/></marker></defs>
+<rect x="0" y="0" width="560" height="450" rx="12" fill="#f6f8fb"/>
+<text x="20" y="36" font-size="14" font-weight="700" fill="#6b7280">1 · DETECT</text>
+<rect x="20" y="52" width="200" height="68" rx="10" fill="#fff" stroke="#d3d9e4"/><text x="120.0" y="84.0" font-size="16" font-weight="700" fill="#111827" text-anchor="middle">SMART polling</text><text x="120.0" y="103.0" font-size="13.5" fill="#6b7280" text-anchor="middle">wear trends</text>
+<path d="M220 86 C238 86 238 194 250 194" stroke="#9fb1cf" stroke-width="1.5" fill="none"/>
+<rect x="20" y="136" width="200" height="68" rx="10" fill="#fff" stroke="#d3d9e4"/><text x="120.0" y="168.0" font-size="16" font-weight="700" fill="#111827" text-anchor="middle">Kernel log scan</text><text x="120.0" y="187.0" font-size="13.5" fill="#6b7280" text-anchor="middle">debounced</text>
+<path d="M220 170 C238 170 238 194 250 194" stroke="#9fb1cf" stroke-width="1.5" fill="none"/>
+<rect x="20" y="220" width="200" height="68" rx="10" fill="#fff" stroke="#d3d9e4"/><text x="120.0" y="252.0" font-size="16" font-weight="700" fill="#111827" text-anchor="middle">Stuck-I/O watchdog</text><text x="120.0" y="271.0" font-size="13.5" fill="#6b7280" text-anchor="middle">read 120 s / write 300 s</text>
+<path d="M220 254 C238 254 238 194 250 194" stroke="#9fb1cf" stroke-width="1.5" fill="none"/>
+<rect x="20" y="304" width="200" height="68" rx="10" fill="#fff" stroke="#d3d9e4"/><text x="120.0" y="336.0" font-size="16" font-weight="700" fill="#111827" text-anchor="middle">I/O error window</text><text x="120.0" y="355.0" font-size="13.5" fill="#6b7280" text-anchor="middle">isolate on threshold</text>
+<path d="M220 338 C238 338 238 194 250 194" stroke="#9fb1cf" stroke-width="1.5" fill="none"/>
+<text x="272" y="36" font-size="14" font-weight="700" fill="#6b7280">2 · ISOLATE &amp; REPAIR</text>
+<line x1="250" y1="194" x2="270" y2="92" stroke="#9fb1cf" stroke-width="1.6" marker-end="url(#ah)"/>
+<rect x="272" y="52" width="250" height="72" rx="10" fill="#0f2b5b" stroke="#0f2b5b"/><text x="397.0" y="86.0" font-size="16" font-weight="700" fill="#fff" text-anchor="middle">Automatic isolation</text><text x="397.0" y="105.0" font-size="13.5" fill="#c9d8f5" text-anchor="middle">Disk leaves the I/O path</text>
+<line x1="397" y1="124" x2="397" y2="146" stroke="#9fb1cf" stroke-width="1.6" marker-end="url(#ah)"/>
+<rect x="272" y="148" width="250" height="72" rx="10" fill="#fff" stroke="#d3d9e4"/><text x="397.0" y="182.0" font-size="16" font-weight="700" fill="#111827" text-anchor="middle">Storage-side rebuild</text><text x="397.0" y="201.0" font-size="13.5" fill="#6b7280" text-anchor="middle">Worst-first, decoded locally</text>
+<line x1="397" y1="220" x2="397" y2="242" stroke="#9fb1cf" stroke-width="1.6" marker-end="url(#ah)"/>
+<rect x="272" y="244" width="250" height="72" rx="10" fill="#fff" stroke="#d3d9e4"/><text x="397.0" y="278.0" font-size="16" font-weight="700" fill="#111827" text-anchor="middle">In-place repair</text><text x="397.0" y="297.0" font-size="13.5" fill="#6b7280" text-anchor="middle">Written back to the new disk</text>
+<line x1="397" y1="316" x2="397" y2="338" stroke="#9fb1cf" stroke-width="1.6" marker-end="url(#ah)"/>
+<rect x="272" y="340" width="250" height="56" rx="10" fill="#e3f4f2" stroke="#bfe3de"/><text x="397.0" y="373.0" font-size="16" font-weight="700" fill="#0f8a7e" text-anchor="middle">Full redundancy restored</text>
+<path d="M522 88 C548 88 548 368 524 368" stroke="#0f8a7e" stroke-width="1.6" fill="none" stroke-dasharray="4 4" marker-end="url(#ah)"/>
+<text x="20" y="430" font-size="13.5" fill="#6b7280">Green dashed: disks recovering from a transient fault rejoin automatically</text>
+</svg>

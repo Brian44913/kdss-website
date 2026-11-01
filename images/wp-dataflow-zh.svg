@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 380" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif"><defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#9fb1cf"/></marker></defs>
+<rect width="900" height="380" rx="14" fill="#f6f8fb"/>
+<text x="20" y="36" font-size="15" font-weight="700" fill="#1d5fd1" text-anchor="start">写入路径</text>
+<rect x="20" y="50" width="160" height="80" rx="10" fill="#fff" stroke="#d3d9e4"/><text x="100.0" y="87.0" font-size="16" font-weight="700" fill="#111827" text-anchor="middle">缓冲</text><text x="100.0" y="107.0" font-size="13" font-weight="400" fill="#6b7280" text-anchor="middle">客户端攒满 256 MB</text>
+<line x1="181" y1="90" x2="194" y2="90" stroke="#9fb1cf" stroke-width="1.8" marker-end="url(#ah)"/>
+<rect x="195" y="50" width="160" height="80" rx="10" fill="#fff" stroke="#d3d9e4"/><text x="275.0" y="87.0" font-size="16" font-weight="700" fill="#111827" text-anchor="middle">申请条带</text><text x="275.0" y="107.0" font-size="13" font-weight="400" fill="#6b7280" text-anchor="middle">向 Master 申请</text>
+<line x1="356" y1="90" x2="369" y2="90" stroke="#9fb1cf" stroke-width="1.8" marker-end="url(#ah)"/>
+<rect x="370" y="50" width="160" height="80" rx="10" fill="#fff" stroke="#d3d9e4"/><text x="450.0" y="87.0" font-size="16" font-weight="700" fill="#111827" text-anchor="middle">EC 编码</text><text x="450.0" y="107.0" font-size="13" font-weight="400" fill="#6b7280" text-anchor="middle">客户端本地完成</text>
+<line x1="531" y1="90" x2="544" y2="90" stroke="#9fb1cf" stroke-width="1.8" marker-end="url(#ah)"/>
+<rect x="545" y="50" width="160" height="80" rx="10" fill="#0f2b5b" stroke="#0f2b5b"/><text x="625.0" y="87.0" font-size="16" font-weight="700" fill="#fff" text-anchor="middle">并行写分片</text><text x="625.0" y="107.0" font-size="13" font-weight="400" fill="#c9d8f5" text-anchor="middle">32 片 → 32 个节点</text>
+<line x1="706" y1="90" x2="719" y2="90" stroke="#9fb1cf" stroke-width="1.8" marker-end="url(#ah)"/>
+<rect x="720" y="50" width="160" height="80" rx="10" fill="#fff" stroke="#d3d9e4"/><text x="800.0" y="87.0" font-size="16" font-weight="700" fill="#111827" text-anchor="middle">提交元数据</text><text x="800.0" y="107.0" font-size="13" font-weight="400" fill="#6b7280" text-anchor="middle">条带级记录</text>
+<text x="20" y="184" font-size="15" font-weight="700" fill="#0f8a7e" text-anchor="start">读取路径</text>
+<rect x="20" y="198" width="205" height="80" rx="10" fill="#fff" stroke="#d3d9e4"/><text x="122.5" y="235.0" font-size="16" font-weight="700" fill="#111827" text-anchor="middle">取位置</text><text x="122.5" y="255.0" font-size="13" font-weight="400" fill="#6b7280" text-anchor="middle">向 Master 查询条带</text>
+<line x1="226" y1="238" x2="237" y2="238" stroke="#9fb1cf" stroke-width="1.8" marker-end="url(#ah)"/>
+<rect x="238" y="198" width="205" height="80" rx="10" fill="#fff" stroke="#d3d9e4"/><text x="340.5" y="235.0" font-size="16" font-weight="700" fill="#111827" text-anchor="middle">并行读分片</text><text x="340.5" y="255.0" font-size="13" font-weight="400" fill="#6b7280" text-anchor="middle">每片 CRC32 校验</text>
+<line x1="444" y1="238" x2="455" y2="238" stroke="#9fb1cf" stroke-width="1.8" marker-end="url(#ah)"/>
+<rect x="456" y="198" width="205" height="80" rx="10" fill="#fff" stroke="#0f8a7e"/><text x="558.5" y="235.0" font-size="16" font-weight="700" fill="#111827" text-anchor="middle">缺片实时解码</text><text x="558.5" y="255.0" font-size="13" font-weight="400" fill="#6b7280" text-anchor="middle">任意 29 片即可还原</text>
+<line x1="662" y1="238" x2="673" y2="238" stroke="#9fb1cf" stroke-width="1.8" marker-end="url(#ah)"/>
+<rect x="674" y="198" width="205" height="80" rx="10" fill="#fff" stroke="#d3d9e4"/><text x="776.5" y="235.0" font-size="16" font-weight="700" fill="#111827" text-anchor="middle">返回数据</text><text x="776.5" y="255.0" font-size="13" font-weight="400" fill="#6b7280" text-anchor="middle">流式读取同样校验</text>
+<text x="20" y="320" font-size="13.5" font-weight="400" fill="#6b7280" text-anchor="start">以 29+3 为例：每个分片约 8.8 MB。</text>
+<text x="20" y="344" font-size="13.5" font-weight="400" fill="#6b7280" text-anchor="start">数据在客户端与存储节点之间直接传输，Master 只处理元数据。</text>
+</svg>

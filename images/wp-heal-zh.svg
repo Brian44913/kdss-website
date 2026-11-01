@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 410" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif"><defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#9fb1cf"/></marker></defs>
+<rect width="900" height="410" rx="14" fill="#f6f8fb"/>
+<text x="20" y="34" font-size="15" font-weight="700" fill="#1d5fd1" text-anchor="start">发现问题</text>
+<rect x="20" y="46" width="135" height="44" rx="8" fill="#fff" stroke="#d3d9e4"/>
+<text x="87.5" y="73" font-size="13.5" font-weight="600" fill="#111827" text-anchor="middle">SMART 周期采集</text>
+<rect x="165" y="46" width="135" height="44" rx="8" fill="#fff" stroke="#d3d9e4"/>
+<text x="232.5" y="73" font-size="13.5" font-weight="600" fill="#111827" text-anchor="middle">内核日志扫描</text>
+<rect x="310" y="46" width="135" height="44" rx="8" fill="#fff" stroke="#d3d9e4"/>
+<text x="377.5" y="73" font-size="13.5" font-weight="600" fill="#111827" text-anchor="middle">读写卡死看门狗</text>
+<rect x="455" y="46" width="135" height="44" rx="8" fill="#fff" stroke="#d3d9e4"/>
+<text x="522.5" y="73" font-size="13.5" font-weight="600" fill="#111827" text-anchor="middle">I/O 错误窗口</text>
+<rect x="600" y="46" width="135" height="44" rx="8" fill="#fff" stroke="#d3d9e4"/>
+<text x="667.5" y="73" font-size="13.5" font-weight="600" fill="#111827" text-anchor="middle">后台 CRC 巡检</text>
+<rect x="745" y="46" width="135" height="44" rx="8" fill="#fff" stroke="#d3d9e4"/>
+<text x="812.5" y="73" font-size="13.5" font-weight="600" fill="#111827" text-anchor="middle">放置审计</text>
+<path d="M450 94 L450 124" stroke="#9fb1cf" stroke-width="1.8" marker-end="url(#ah)"/>
+<rect x="20" y="128" width="200" height="100" rx="10" fill="#fff" stroke="#d3d9e4"/><text x="120.0" y="166.0" font-size="16" font-weight="700" fill="#111827" text-anchor="middle">隔离</text><text x="120.0" y="186.0" font-size="13" font-weight="400" fill="#6b7280" text-anchor="middle">故障盘自动退出</text><text x="120.0" y="204.0" font-size="13" font-weight="400" fill="#6b7280" text-anchor="middle">恢复后自动回归</text>
+<line x1="221" y1="178" x2="239" y2="178" stroke="#9fb1cf" stroke-width="1.8" marker-end="url(#ah)"/>
+<rect x="240" y="128" width="200" height="100" rx="10" fill="#fff" stroke="#d3d9e4"/><text x="340.0" y="166.0" font-size="16" font-weight="700" fill="#111827" text-anchor="middle">建任务</text><text x="340.0" y="186.0" font-size="13" font-weight="400" fill="#6b7280" text-anchor="middle">缺片最多的先修</text><text x="340.0" y="204.0" font-size="13" font-weight="400" fill="#6b7280" text-anchor="middle">数十万条带分钟级入队</text>
+<line x1="441" y1="178" x2="459" y2="178" stroke="#9fb1cf" stroke-width="1.8" marker-end="url(#ah)"/>
+<rect x="460" y="128" width="200" height="100" rx="10" fill="#fff" stroke="#d3d9e4"/><text x="560.0" y="166.0" font-size="16" font-weight="700" fill="#111827" text-anchor="middle">分布式领取</text><text x="560.0" y="186.0" font-size="13" font-weight="400" fill="#6b7280" text-anchor="middle">多个 Master</text><text x="560.0" y="204.0" font-size="13" font-weight="400" fill="#6b7280" text-anchor="middle">并行领取任务</text>
+<line x1="661" y1="178" x2="679" y2="178" stroke="#9fb1cf" stroke-width="1.8" marker-end="url(#ah)"/>
+<rect x="680" y="128" width="200" height="100" rx="10" fill="#0f2b5b" stroke="#0f2b5b"/><text x="780.0" y="166.0" font-size="16" font-weight="700" fill="#fff" text-anchor="middle">本地重建</text><text x="780.0" y="186.0" font-size="13" font-weight="400" fill="#c9d8f5" text-anchor="middle">拉取存活分片</text><text x="780.0" y="204.0" font-size="13" font-weight="400" fill="#c9d8f5" text-anchor="middle">本地解码落盘</text>
+<text x="20" y="266" font-size="14" font-weight="400" fill="#6b7280" text-anchor="start">集群整体达到拒写线时，修复仍可进行。</text>
+<rect x="20" y="292" width="860" height="92" rx="10" fill="#fff" stroke="#0f8a7e"/>
+<text x="44" y="328" font-size="16" font-weight="700" fill="#0f8a7e" text-anchor="start">换盘之后：原位修复</text>
+<text x="44" y="358" font-size="14.5" font-weight="400" fill="#111827" text-anchor="start">把该盘原有的数据重建后写回新盘的原位置。</text>
+</svg>

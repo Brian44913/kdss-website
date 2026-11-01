@@ -1,0 +1,14 @@
+/* Product page only. / 仅产品能力页使用。 */
+/* Let grid children shrink so tables and code blocks scroll inside their own box
+   instead of widening the page on phones. / 允许网格子项收缩，表格与代码块在自身容器内滚动，避免手机端横向溢出。 */
+.feature-row > *, .split > * { min-width: 0; }
+/* No divider directly under a section heading. / 段落标题下的第一行不加分隔线。 */
+.section-head + .feature-row { border-top: 0; padding-top: 0; }
+/* Keep the S3 API category column on one line. / S3 API 表的类别列不换行。 */
+.api-table td:first-child { white-space: nowrap; }
+/* Phones: give figures and tables more room. / 手机端：插图少留白，表格单元格收紧。 */
+@media (max-width: 640px) {
+  .figure { padding: 8px; }
+  .table th, .table td { padding: 12px 10px; }
+}
+.figure img { margin: 0 auto; }

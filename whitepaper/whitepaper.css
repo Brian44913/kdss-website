@@ -1,0 +1,192 @@
+/* =====================================================================
+   KDSS technical whitepaper — A4 print layout (same tokens as css/site.css).
+   KDSS 技术白皮书 —— A4 打印排版（设计变量与 css/site.css 一致）。
+   System fonts only, no external resources. / 只用系统字体，不引用外部资源。
+   ===================================================================== */
+
+:root {
+  --navy-900: #0a1f44; --navy-800: #0f2b5b; --navy-700: #163a78;
+  --blue-600: #1d5fd1; --blue-500: #2f74e6; --blue-100: #e8f0fd; --blue-50: #f3f7fe;
+  --teal-600: #0f8a7e; --amber-600: #b7791f;
+  --ink-900: #111827; --ink-700: #374151; --ink-500: #6b7280; --ink-400: #9ca3af;
+  --line: #e5e8ef; --line-strong: #d3d9e4; --surface: #f6f8fb; --surface-2: #eef2f7; --white: #fff;
+  --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB",
+               "Microsoft YaHei", "Noto Sans CJK SC", "Source Han Sans SC", "Helvetica Neue", Arial, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+}
+
+/* ---------- Page setup / 页面设置 ---------- */
+/* Running header and footer use CSS page-margin boxes, so the cover can have none.
+   页眉页脚用 CSS 页边距盒实现，这样封面可以不带页眉页脚。 */
+@page {
+  size: A4;
+  margin: 22mm 19mm 20mm 19mm;
+  @top-left { content: "KDSS"; font: 700 8pt -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", "Helvetica Neue", Arial, sans-serif; color: #0f2b5b; vertical-align: bottom; padding-bottom: 3mm; }
+  @top-right { content: "Technical Whitepaper"; font: 8pt -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", "Helvetica Neue", Arial, sans-serif; color: #6b7280; vertical-align: bottom; padding-bottom: 3mm; }
+  @bottom-left { content: "KDSS Technical Whitepaper · 26.11.1"; font: 8pt -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", "Helvetica Neue", Arial, sans-serif; color: #6b7280; vertical-align: top; padding-top: 3mm; }
+  @bottom-right { content: counter(page); font: 700 8pt -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", "Helvetica Neue", Arial, sans-serif; color: #0f2b5b; vertical-align: top; padding-top: 3mm; }
+}
+@page zh {
+  @top-right { content: "技术白皮书"; }
+  @bottom-left { content: "KDSS 技术白皮书 · 26.11.1"; }
+}
+@page cover { margin: 0; @top-left { content: none; } @top-right { content: none; } @bottom-left { content: none; } @bottom-right { content: none; } }
+html:lang(zh) .sheet { page: zh; }
+.cover { page: cover; }
+
+/* ---------- Base / 基础 ---------- */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+body { font-family: var(--font-sans); font-size: 9.6pt; line-height: 1.66; color: var(--ink-700); background: var(--white); -webkit-font-smoothing: antialiased; }
+html:lang(en) body { font-size: 9.2pt; line-height: 1.58; hyphens: auto; }
+html:lang(en) .chapter > .intro { font-size: 10pt; line-height: 1.6; }
+html:lang(en) .cover .points li { font-size: 9.5pt; }
+html:lang(en) .cover .sub { font-size: 12pt; }
+img, svg { display: block; max-width: 100%; height: auto; }
+a { color: var(--blue-600); text-decoration: none; }
+ul, ol { padding-left: 1.3em; }
+li { margin-top: 3pt; }
+table { border-collapse: collapse; width: 100%; }
+code { font-family: var(--font-mono); font-size: .88em; background: var(--surface-2); color: var(--navy-800); padding: .05em .35em; border-radius: 3px; }
+strong { color: var(--ink-900); }
+
+h1, h2, h3, h4 { color: var(--navy-900); line-height: 1.3; font-weight: 700; break-after: avoid; hyphens: manual; }
+.toc, .table th, .case .label { hyphens: manual; }
+p { margin-top: 6pt; orphans: 3; widows: 3; }
+
+/* Keep 1.5px inside the page box so right-hand borders are not clipped. / 内缩 1.5px，避免右侧边框被页面裁掉。 */
+main.sheet, nav.sheet { padding: 0 1.5px; }
+
+/* ---------- Chapters / 章节 ---------- */
+.chapter { break-before: page; }
+.chapter > h2 { font-size: 20pt; letter-spacing: -.01em; padding-bottom: 8pt; margin-bottom: 12pt; border-bottom: 2px solid var(--navy-800); display: flex; align-items: baseline; gap: 10pt; }
+.chapter > h2 .no { color: var(--blue-600); font-size: 20pt; font-weight: 800; min-width: 22pt; }
+.chapter > .intro { font-size: 10.4pt; color: var(--ink-500); line-height: 1.75; margin-bottom: 6pt; }
+h3 { font-size: 12pt; margin: 13pt 0 1pt; }
+h3 .no { color: var(--blue-600); margin-right: 6pt; }
+h4 { font-size: 10.5pt; margin: 10pt 0 0; }
+
+/* ---------- Cover / 封面 ---------- */
+.cover { height: 297mm; width: 210mm; position: relative; overflow: hidden; background: var(--white); break-after: page; }
+.cover .band { position: absolute; left: 0; right: 0; bottom: 0; height: 80mm; background: var(--navy-900);
+  background-image: radial-gradient(420px 240px at 100% 0%, rgba(47,116,230,.42), transparent 70%); }
+.cover .grid { position: absolute; inset: 0 0 80mm 0; opacity: .35;
+  background-image: linear-gradient(var(--line) 1px, transparent 1px), linear-gradient(90deg, var(--line) 1px, transparent 1px);
+  background-size: 12mm 12mm; -webkit-mask-image: radial-gradient(ellipse 70% 70% at 85% 20%, #000 0%, transparent 70%); }
+.cover .brand { position: absolute; top: 24mm; left: 22mm; display: flex; align-items: center; gap: 4mm; }
+.cover .brand img { width: 13mm; height: 13mm; }
+.cover .brand b { font-size: 20pt; font-weight: 800; color: var(--navy-900); letter-spacing: .04em; }
+.cover .brand span { font-size: 10pt; color: var(--ink-500); border-left: 1px solid var(--line-strong); padding-left: 4mm; }
+.cover .title { position: absolute; top: 64mm; left: 22mm; right: 22mm; }
+.cover .eyebrow { font-size: 10pt; font-weight: 700; letter-spacing: .16em; text-transform: uppercase; color: var(--blue-600); }
+.cover h1 { font-size: 32pt; line-height: 1.22; color: var(--navy-900); margin-top: 6mm; letter-spacing: -.01em; }
+.cover .sub { font-size: 13pt; color: var(--ink-500); margin-top: 7mm; max-width: 140mm; line-height: 1.6; }
+.cover .visual { position: absolute; right: 20mm; top: 136mm; width: 78mm; background: var(--white); border: 1px solid var(--line); border-radius: 4mm; padding: 4mm; border-color: var(--line-strong); }
+.cover .points { position: absolute; left: 22mm; top: 140mm; width: 88mm; list-style: none; padding: 0; }
+.cover .points li { padding: 3mm 0 3mm 7mm; border-top: 1px solid var(--line); font-size: 10.5pt; color: var(--ink-700); position: relative; }
+.cover .points li:first-child { border-top: 0; }
+.cover .points li::before { content: ""; position: absolute; left: 0; top: 5.2mm; width: 2.6mm; height: 2.6mm; border-radius: 50%; background: var(--teal-600); }
+.cover .points b { display: block; color: var(--navy-900); font-size: 11pt; }
+.cover .meta { position: absolute; left: 22mm; right: 22mm; bottom: 24mm; display: flex; justify-content: space-between; align-items: flex-end; color: #b9c7e2; font-size: 10pt; }
+.cover .meta .ver { font-size: 22pt; color: #fff; font-weight: 800; line-height: 1.1; }
+.cover .meta .ver small { display: block; font-size: 9.5pt; font-weight: 500; color: #93a5c7; letter-spacing: .08em; text-transform: uppercase; margin-bottom: 1.5mm; }
+.cover .meta .contact { text-align: right; line-height: 1.8; }
+
+/* ---------- Table of contents / 目录 ---------- */
+.toc { break-before: page; break-after: page; }
+.toc h2 { font-size: 20pt; padding-bottom: 8pt; margin-bottom: 10pt; border-bottom: 2px solid var(--navy-800); }
+.toc ol { list-style: none; padding: 0; }
+.toc > ol { columns: 2; column-gap: 12mm; }
+.toc > ol > li { break-inside: avoid; }
+.toc li { margin: 0; }
+.toc a { display: flex; align-items: baseline; color: var(--ink-700); padding: 1.1pt 0; }
+.toc a .t { flex: 0 1 auto; }
+.toc a .dots { flex: 1; border-bottom: 1px dotted var(--ink-400); margin: 0 6pt; transform: translateY(-3pt); }
+.toc a .pg { flex: none; min-width: 16pt; text-align: right; font-variant-numeric: tabular-nums; color: var(--ink-500); }
+.toc > ol > li { margin-top: 0; padding-bottom: 7pt; }
+.toc > ol > li > a { font-weight: 700; color: var(--navy-900); font-size: 10.5pt; }
+.toc > ol > li > a .pg { color: var(--navy-900); }
+.toc > ol > li > a .no { color: var(--blue-600); display: inline-block; min-width: 18pt; }
+.toc ol ol a { font-size: 8.6pt; padding-left: 18pt; }
+.toc ol ol a .no { display: inline-block; min-width: 22pt; color: var(--ink-500); }
+
+/* ---------- Blocks / 内容块 ---------- */
+.figure { margin: 8pt 0 2pt; break-inside: avoid; }
+.figure img { width: 100%; margin: 0 auto; border-radius: 6pt; }
+.figure.narrow img { width: 66%; }
+.figure.w80 img { width: 86%; }
+.figure figcaption { font-size: 8.5pt; color: var(--ink-500); margin-top: 5pt; text-align: center; }
+
+.table { margin: 7pt 0 3pt; font-size: 8.8pt; break-inside: avoid; border: 1px solid var(--line); border-collapse: separate; border-spacing: 0; border-radius: 4pt; line-height: 1.55; }
+.table th, .table td { text-align: left; padding: 4pt 8pt; border-bottom: 1px solid var(--line); vertical-align: top; }
+.table th { background: var(--surface); color: var(--navy-900); font-weight: 700; font-size: 8.5pt; }
+.table tr:last-child td { border-bottom: 0; }
+.table td.num, .table th.num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.table td.c, .table th.c { text-align: center; }
+.table tr.hl td { background: var(--blue-50); }
+.table td:first-child { color: var(--ink-900); font-weight: 600; }
+.table caption { caption-side: top; text-align: left; font-size: 8.5pt; color: var(--ink-500); padding-bottom: 4pt; }
+.tag { display: inline-block; font-size: 7.5pt; font-weight: 700; padding: 0 5pt; border-radius: 99px; background: var(--blue-100); color: var(--navy-700); white-space: nowrap; }
+.tag.teal { background: #e3f4f2; color: var(--teal-600); }
+.tag.amber { background: #fbf1df; color: var(--amber-600); }
+
+.metrics { display: grid; grid-template-columns: repeat(4, 1fr); border: 1px solid var(--line); border-radius: 6pt; margin: 12pt 0; break-inside: avoid; }
+.metric { padding: 9pt 10pt; border-left: 1px solid var(--line); }
+.metric:first-child { border-left: 0; }
+.metric strong { display: block; font-size: 17pt; line-height: 1.15; color: var(--navy-900); font-weight: 800; }
+.metric strong small { font-size: .55em; color: var(--navy-700); margin-left: 1pt; }
+.metric span { display: block; font-size: 8.3pt; color: var(--ink-500); margin-top: 3pt; line-height: 1.45; }
+
+.callout { margin: 10pt 0 4pt; padding: 8pt 11pt; border-radius: 4pt; background: var(--blue-50); border-left: 3px solid var(--blue-600); font-size: 9.3pt; break-inside: avoid; }
+.callout.warn { background: #fdf6e8; border-left-color: var(--amber-600); }
+.callout b { color: var(--navy-900); }
+
+.cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8pt; margin: 10pt 0 4pt; }
+.cards.two { grid-template-columns: repeat(2, 1fr); }
+.cards.four { grid-template-columns: repeat(4, 1fr); }
+.card { border: 1px solid var(--line); border-radius: 6pt; padding: 9pt 11pt; background: var(--white); break-inside: avoid; }
+.card.flat { background: var(--surface); border-color: transparent; }
+.card h4 { margin: 0 0 3pt; font-size: 10.5pt; }
+.card p, .card li { font-size: 9pt; margin-top: 2pt; color: var(--ink-700); }
+.card ul { padding-left: 1.1em; }
+
+ul.ticks { list-style: none; padding: 0; }
+ul.ticks li { position: relative; padding-left: 15pt; }
+ul.ticks li::before { content: ""; position: absolute; left: 1pt; top: .52em; width: 8pt; height: 4.5pt; border-left: 1.6px solid var(--teal-600); border-bottom: 1.6px solid var(--teal-600); transform: rotate(-45deg); }
+
+.steps { counter-reset: step; list-style: none; padding: 0; margin-top: 6pt; break-inside: avoid; }
+.steps li { position: relative; padding-left: 22pt; margin-top: 4pt; }
+.steps li::before { counter-increment: step; content: counter(step); position: absolute; left: 0; top: 1pt; width: 14pt; height: 14pt; border-radius: 50%; background: var(--navy-800); color: #fff; font-weight: 700; font-size: 8pt; display: grid; place-items: center; }
+.steps li b { color: var(--ink-900); }
+
+.formula { margin: 10pt 0; padding: 10pt 12pt; border: 1px solid var(--line-strong); border-radius: 6pt; background: var(--surface); text-align: center; font-size: 11pt; color: var(--navy-900); font-weight: 600; break-inside: avoid; }
+.formula small { display: block; font-size: 8.5pt; color: var(--ink-500); font-weight: 400; margin-top: 4pt; }
+
+pre { background: #0d1b36; color: #d7e2f6; font-family: var(--font-mono); font-size: 8.3pt; line-height: 1.6; padding: 9pt 11pt; border-radius: 5pt; margin-top: 6pt; white-space: pre-wrap; break-inside: avoid; }
+pre .c { color: #7f93b8; }
+.code-title { font-size: 8.3pt; font-weight: 700; color: var(--ink-500); margin-top: 10pt; font-family: var(--font-mono); }
+
+.case { border: 1px solid var(--line); border-radius: 6pt; margin-top: 9pt; break-inside: avoid; display: grid; grid-template-columns: 38mm 1fr; }
+.case .label { background: var(--surface); padding: 9pt 10pt; border-right: 1px solid var(--line); }
+.case .label h4 { margin: 0; font-size: 10.5pt; }
+.case .label .tag { margin-top: 4pt; }
+.case .body { padding: 6pt 11pt 8pt; display: grid; grid-template-columns: repeat(3, 1fr); gap: 9pt; }
+.case .body h5 { font-size: 7.8pt; letter-spacing: .1em; text-transform: uppercase; color: var(--ink-400); margin-top: 3pt; }
+.case .body p { font-size: 8.8pt; margin-top: 2pt; line-height: 1.55; }
+
+.contact { display: grid; grid-template-columns: 1fr 1fr; gap: 10pt; margin-top: 12pt; }
+.contact .card { padding: 14pt 16pt; }
+.contact a.mail { display: inline-block; font-size: 13pt; font-weight: 800; color: var(--navy-800); margin-top: 6pt; }
+.legal { margin-top: 26pt; padding-top: 10pt; border-top: 1px solid var(--line); font-size: 8.3pt; color: var(--ink-500); }
+.legal p { margin-top: 4pt; }
+
+/* ---------- Screen preview / 屏幕预览 ---------- */
+@media screen {
+  html { background: #e9edf3; }
+  body { width: 210mm; margin: 24px auto; padding: 22mm 19mm; background: #fff; box-shadow: 0 6px 24px rgba(15,43,91,.12); }
+  .cover { margin: -22mm -19mm 22mm; }
+  .chapter, .toc { border-top: 1px dashed var(--line-strong); padding-top: 18mm; margin-top: 18mm; }
+}
+@media print {
+  body { width: auto; margin: 0; padding: 0; box-shadow: none; }
+}

@@ -1,0 +1,15 @@
+/* Solutions page only. / 仅解决方案页使用。 */
+/* Let grid children shrink so tables and code blocks scroll inside their own box
+   instead of widening the page on phones. / 允许网格子项收缩，表格与代码块在自身容器内滚动，避免手机端横向溢出。 */
+.feature-row > *, .split > * { min-width: 0; }
+/* No divider directly under a section heading. / 段落标题下的第一行不加分隔线。 */
+.section-head + .feature-row { border-top: 0; padding-top: 0; }
+/* Phones: give figures and tables more room. / 手机端：插图少留白，表格单元格收紧。 */
+@media (max-width: 640px) {
+  .figure { padding: 8px; }
+  .table th, .table td { padding: 12px 10px; }
+}
+.figure img { margin: 0 auto; }
+/* Sizing table: keep numbers on one line, fault tolerance as a second line. / 选型表：数字不换行，容错作为第二行小字。 */
+.sizing td:not(:last-child), .sizing th:not(:last-child) { white-space: nowrap; }
+.sizing .sub { display: block; font-size: .8rem; color: var(--ink-500); font-weight: 400; }

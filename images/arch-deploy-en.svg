@@ -1,0 +1,137 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 470" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif"><defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#9fb1cf"/></marker><pattern id="hatch" width="7" height="7" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="7" height="7" fill="#fbf1df"/><line x1="0" y1="0" x2="0" y2="7" stroke="#e6c48a" stroke-width="3"/></pattern></defs><rect x="0" y="0" width="880" height="470" rx="14" fill="#f6f8fb"/>
+<rect x="30" y="30" width="190" height="62" rx="10" fill="#fff" stroke="#d3d9e4"/><text x="125.0" y="58.0" font-size="14" font-weight="700" fill="#111827" text-anchor="middle">Application hosts</text><text x="125.0" y="78.0" font-size="12.5" fill="#6b7280" text-anchor="middle">ksfs mount (POSIX)</text>
+<line x1="125" y1="92" x2="125" y2="128" stroke="#9fb1cf" stroke-width="1.6"/>
+<rect x="240" y="30" width="190" height="62" rx="10" fill="#fff" stroke="#d3d9e4"/><text x="335.0" y="58.0" font-size="14" font-weight="700" fill="#111827" text-anchor="middle">S3 gateway</text><text x="335.0" y="78.0" font-size="12.5" fill="#6b7280" text-anchor="middle">:9000</text>
+<line x1="335" y1="92" x2="335" y2="128" stroke="#9fb1cf" stroke-width="1.6"/>
+<rect x="450" y="30" width="190" height="62" rx="10" fill="#fff" stroke="#d3d9e4"/><text x="545.0" y="58.0" font-size="14" font-weight="700" fill="#111827" text-anchor="middle">Web console</text><text x="545.0" y="78.0" font-size="12.5" fill="#6b7280" text-anchor="middle">:8081</text>
+<line x1="545" y1="92" x2="545" y2="128" stroke="#9fb1cf" stroke-width="1.6"/>
+<rect x="660" y="30" width="190" height="62" rx="10" fill="#fff" stroke="#d3d9e4"/><text x="755.0" y="58.0" font-size="14" font-weight="700" fill="#111827" text-anchor="middle">Monitoring &amp; alerts</text><text x="755.0" y="78.0" font-size="12.5" fill="#6b7280" text-anchor="middle">Prometheus · Lark · email</text>
+<line x1="755" y1="92" x2="755" y2="128" stroke="#9fb1cf" stroke-width="1.6"/>
+<rect x="30" y="128" width="820" height="46" rx="10" fill="#163a78" stroke="#163a78"/><text x="440.0" y="156.0" font-size="14" font-weight="700" fill="#fff" text-anchor="middle">Data network · 2 × 10 GbE bonded per node (20 Gbps)</text>
+<rect x="30" y="222" width="360" height="200" rx="12" fill="#fff" stroke="#d3d9e4"/>
+<text x="48" y="248" font-size="14" fill="#111827" text-anchor="start" font-weight="700">Hybrid nodes (typically 5)</text>
+<rect x="46" y="264" width="58" height="128" rx="8" fill="#f6f8fb" stroke="#d3d9e4"/>
+<rect x="52" y="272" width="46" height="26" rx="5" fill="#0f2b5b"/>
+<text x="75" y="289" font-size="10.5" fill="#fff" text-anchor="middle" font-weight="700">Master</text>
+<rect x="52" y="304" width="46" height="26" rx="5" fill="#dbe7fb"/>
+<text x="75" y="321" font-size="10.5" fill="#0f2b5b" text-anchor="middle" font-weight="700">Storage</text>
+<rect x="54" y="338" width="8" height="26" rx="1.5" fill="#c8d3e6"/>
+<rect x="65" y="338" width="8" height="26" rx="1.5" fill="#c8d3e6"/>
+<rect x="76" y="338" width="8" height="26" rx="1.5" fill="#c8d3e6"/>
+<rect x="87" y="338" width="8" height="26" rx="1.5" fill="#c8d3e6"/>
+<rect x="112" y="264" width="58" height="128" rx="8" fill="#f6f8fb" stroke="#d3d9e4"/>
+<rect x="118" y="272" width="46" height="26" rx="5" fill="#0f2b5b"/>
+<text x="141" y="289" font-size="10.5" fill="#fff" text-anchor="middle" font-weight="700">Master</text>
+<rect x="118" y="304" width="46" height="26" rx="5" fill="#dbe7fb"/>
+<text x="141" y="321" font-size="10.5" fill="#0f2b5b" text-anchor="middle" font-weight="700">Storage</text>
+<rect x="120" y="338" width="8" height="26" rx="1.5" fill="#c8d3e6"/>
+<rect x="131" y="338" width="8" height="26" rx="1.5" fill="#c8d3e6"/>
+<rect x="142" y="338" width="8" height="26" rx="1.5" fill="#c8d3e6"/>
+<rect x="153" y="338" width="8" height="26" rx="1.5" fill="#c8d3e6"/>
+<rect x="178" y="264" width="58" height="128" rx="8" fill="#f6f8fb" stroke="#d3d9e4"/>
+<rect x="184" y="272" width="46" height="26" rx="5" fill="#0f2b5b"/>
+<text x="207" y="289" font-size="10.5" fill="#fff" text-anchor="middle" font-weight="700">Master</text>
+<rect x="184" y="304" width="46" height="26" rx="5" fill="#dbe7fb"/>
+<text x="207" y="321" font-size="10.5" fill="#0f2b5b" text-anchor="middle" font-weight="700">Storage</text>
+<rect x="186" y="338" width="8" height="26" rx="1.5" fill="#c8d3e6"/>
+<rect x="197" y="338" width="8" height="26" rx="1.5" fill="#c8d3e6"/>
+<rect x="208" y="338" width="8" height="26" rx="1.5" fill="#c8d3e6"/>
+<rect x="219" y="338" width="8" height="26" rx="1.5" fill="#c8d3e6"/>
+<rect x="244" y="264" width="58" height="128" rx="8" fill="#f6f8fb" stroke="#d3d9e4"/>
+<rect x="250" y="272" width="46" height="26" rx="5" fill="#0f2b5b"/>
+<text x="273" y="289" font-size="10.5" fill="#fff" text-anchor="middle" font-weight="700">Master</text>
+<rect x="250" y="304" width="46" height="26" rx="5" fill="#dbe7fb"/>
+<text x="273" y="321" font-size="10.5" fill="#0f2b5b" text-anchor="middle" font-weight="700">Storage</text>
+<rect x="252" y="338" width="8" height="26" rx="1.5" fill="#c8d3e6"/>
+<rect x="263" y="338" width="8" height="26" rx="1.5" fill="#c8d3e6"/>
+<rect x="274" y="338" width="8" height="26" rx="1.5" fill="#c8d3e6"/>
+<rect x="285" y="338" width="8" height="26" rx="1.5" fill="#c8d3e6"/>
+<rect x="310" y="264" width="58" height="128" rx="8" fill="#f6f8fb" stroke="#d3d9e4"/>
+<rect x="316" y="272" width="46" height="26" rx="5" fill="#0f2b5b"/>
+<text x="339" y="289" font-size="10.5" fill="#fff" text-anchor="middle" font-weight="700">Master</text>
+<rect x="316" y="304" width="46" height="26" rx="5" fill="#dbe7fb"/>
+<text x="339" y="321" font-size="10.5" fill="#0f2b5b" text-anchor="middle" font-weight="700">Storage</text>
+<rect x="318" y="338" width="8" height="26" rx="1.5" fill="#c8d3e6"/>
+<rect x="329" y="338" width="8" height="26" rx="1.5" fill="#c8d3e6"/>
+<rect x="340" y="338" width="8" height="26" rx="1.5" fill="#c8d3e6"/>
+<rect x="351" y="338" width="8" height="26" rx="1.5" fill="#c8d3e6"/>
+<text x="210" y="412" font-size="11.5" fill="#6b7280" text-anchor="middle" font-weight="400">Master + Storage on one host · RAID1 system disk</text>
+<line x1="210" y1="174" x2="210" y2="222" stroke="#9fb1cf" stroke-width="1.6"/>
+<rect x="410" y="222" width="130" height="200" rx="12" fill="#fff" stroke="#d3d9e4"/>
+<text x="475" y="248" font-size="14" fill="#111827" text-anchor="middle" font-weight="700">MongoDB</text>
+<text x="475" y="268" font-size="11.5" fill="#6b7280" text-anchor="middle" font-weight="400">replica set · SSD</text>
+<ellipse cx="475" cy="288" rx="34" ry="6" fill="#e3f4f2" stroke="#0f8a7e"/>
+<path d="M441 288 v16 a34 6 0 0 0 68 0 v-16" fill="#e3f4f2" stroke="#0f8a7e"/>
+<ellipse cx="475" cy="324" rx="34" ry="6" fill="#e3f4f2" stroke="#0f8a7e"/>
+<path d="M441 324 v16 a34 6 0 0 0 68 0 v-16" fill="#e3f4f2" stroke="#0f8a7e"/>
+<ellipse cx="475" cy="360" rx="34" ry="6" fill="#e3f4f2" stroke="#0f8a7e"/>
+<path d="M441 360 v16 a34 6 0 0 0 68 0 v-16" fill="#e3f4f2" stroke="#0f8a7e"/>
+<text x="475" y="408" font-size="11.5" fill="#0f8a7e" text-anchor="middle" font-weight="600">majority writes</text>
+<line x1="475" y1="174" x2="475" y2="222" stroke="#9fb1cf" stroke-width="1.6"/>
+<rect x="560" y="222" width="290" height="200" rx="12" fill="#fff" stroke="#d3d9e4"/>
+<text x="578" y="248" font-size="14" fill="#111827" text-anchor="start" font-weight="700">Storage-only nodes × N</text>
+<rect x="576" y="264" width="54" height="128" rx="8" fill="#f6f8fb" stroke="#d3d9e4"/>
+<rect x="581" y="272" width="44" height="26" rx="5" fill="#dbe7fb"/>
+<text x="603" y="289" font-size="10" fill="#0f2b5b" text-anchor="middle" font-weight="700">Storage</text>
+<rect x="582" y="306" width="8" height="18" rx="1.5" fill="#c8d3e6"/>
+<rect x="593" y="306" width="8" height="18" rx="1.5" fill="#c8d3e6"/>
+<rect x="604" y="306" width="8" height="18" rx="1.5" fill="#c8d3e6"/>
+<rect x="615" y="306" width="8" height="18" rx="1.5" fill="#c8d3e6"/>
+<rect x="582" y="328" width="8" height="18" rx="1.5" fill="#c8d3e6"/>
+<rect x="593" y="328" width="8" height="18" rx="1.5" fill="#c8d3e6"/>
+<rect x="604" y="328" width="8" height="18" rx="1.5" fill="#c8d3e6"/>
+<rect x="615" y="328" width="8" height="18" rx="1.5" fill="#c8d3e6"/>
+<rect x="582" y="350" width="8" height="18" rx="1.5" fill="#c8d3e6"/>
+<rect x="593" y="350" width="8" height="18" rx="1.5" fill="#c8d3e6"/>
+<rect x="604" y="350" width="8" height="18" rx="1.5" fill="#c8d3e6"/>
+<rect x="615" y="350" width="8" height="18" rx="1.5" fill="#c8d3e6"/>
+<rect x="638" y="264" width="54" height="128" rx="8" fill="#f6f8fb" stroke="#d3d9e4"/>
+<rect x="643" y="272" width="44" height="26" rx="5" fill="#dbe7fb"/>
+<text x="665" y="289" font-size="10" fill="#0f2b5b" text-anchor="middle" font-weight="700">Storage</text>
+<rect x="644" y="306" width="8" height="18" rx="1.5" fill="#c8d3e6"/>
+<rect x="655" y="306" width="8" height="18" rx="1.5" fill="#c8d3e6"/>
+<rect x="666" y="306" width="8" height="18" rx="1.5" fill="#c8d3e6"/>
+<rect x="677" y="306" width="8" height="18" rx="1.5" fill="#c8d3e6"/>
+<rect x="644" y="328" width="8" height="18" rx="1.5" fill="#c8d3e6"/>
+<rect x="655" y="328" width="8" height="18" rx="1.5" fill="#c8d3e6"/>
+<rect x="666" y="328" width="8" height="18" rx="1.5" fill="#c8d3e6"/>
+<rect x="677" y="328" width="8" height="18" rx="1.5" fill="#c8d3e6"/>
+<rect x="644" y="350" width="8" height="18" rx="1.5" fill="#c8d3e6"/>
+<rect x="655" y="350" width="8" height="18" rx="1.5" fill="#c8d3e6"/>
+<rect x="666" y="350" width="8" height="18" rx="1.5" fill="#c8d3e6"/>
+<rect x="677" y="350" width="8" height="18" rx="1.5" fill="#c8d3e6"/>
+<rect x="700" y="264" width="54" height="128" rx="8" fill="#f6f8fb" stroke="#d3d9e4"/>
+<rect x="705" y="272" width="44" height="26" rx="5" fill="#dbe7fb"/>
+<text x="727" y="289" font-size="10" fill="#0f2b5b" text-anchor="middle" font-weight="700">Storage</text>
+<rect x="706" y="306" width="8" height="18" rx="1.5" fill="#c8d3e6"/>
+<rect x="717" y="306" width="8" height="18" rx="1.5" fill="#c8d3e6"/>
+<rect x="728" y="306" width="8" height="18" rx="1.5" fill="#c8d3e6"/>
+<rect x="739" y="306" width="8" height="18" rx="1.5" fill="#c8d3e6"/>
+<rect x="706" y="328" width="8" height="18" rx="1.5" fill="#c8d3e6"/>
+<rect x="717" y="328" width="8" height="18" rx="1.5" fill="#c8d3e6"/>
+<rect x="728" y="328" width="8" height="18" rx="1.5" fill="#c8d3e6"/>
+<rect x="739" y="328" width="8" height="18" rx="1.5" fill="#c8d3e6"/>
+<rect x="706" y="350" width="8" height="18" rx="1.5" fill="#c8d3e6"/>
+<rect x="717" y="350" width="8" height="18" rx="1.5" fill="#c8d3e6"/>
+<rect x="728" y="350" width="8" height="18" rx="1.5" fill="#c8d3e6"/>
+<rect x="739" y="350" width="8" height="18" rx="1.5" fill="#c8d3e6"/>
+<rect x="762" y="264" width="54" height="128" rx="8" fill="#f6f8fb" stroke="#d3d9e4"/>
+<rect x="767" y="272" width="44" height="26" rx="5" fill="#dbe7fb"/>
+<text x="789" y="289" font-size="10" fill="#0f2b5b" text-anchor="middle" font-weight="700">Storage</text>
+<rect x="768" y="306" width="8" height="18" rx="1.5" fill="#c8d3e6"/>
+<rect x="779" y="306" width="8" height="18" rx="1.5" fill="#c8d3e6"/>
+<rect x="790" y="306" width="8" height="18" rx="1.5" fill="#c8d3e6"/>
+<rect x="801" y="306" width="8" height="18" rx="1.5" fill="#c8d3e6"/>
+<rect x="768" y="328" width="8" height="18" rx="1.5" fill="#c8d3e6"/>
+<rect x="779" y="328" width="8" height="18" rx="1.5" fill="#c8d3e6"/>
+<rect x="790" y="328" width="8" height="18" rx="1.5" fill="#c8d3e6"/>
+<rect x="801" y="328" width="8" height="18" rx="1.5" fill="#c8d3e6"/>
+<rect x="768" y="350" width="8" height="18" rx="1.5" fill="#c8d3e6"/>
+<rect x="779" y="350" width="8" height="18" rx="1.5" fill="#c8d3e6"/>
+<rect x="790" y="350" width="8" height="18" rx="1.5" fill="#c8d3e6"/>
+<rect x="801" y="350" width="8" height="18" rx="1.5" fill="#c8d3e6"/>
+<text x="836" y="337" font-size="18" fill="#6b7280" text-anchor="end" font-weight="700">…</text>
+<text x="705" y="412" font-size="11.5" fill="#6b7280" text-anchor="middle" font-weight="400">36 × HDD · JBOD pass-through</text>
+<line x1="705" y1="174" x2="705" y2="222" stroke="#9fb1cf" stroke-width="1.6"/>
+<text x="850" y="454" font-size="11.5" fill="#6b7280" text-anchor="end" font-weight="400">Illustrative: node and disk counts follow capacity planning</text>
+</svg>

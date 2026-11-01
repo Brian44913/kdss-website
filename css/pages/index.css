@@ -1,0 +1,10 @@
+/* Home page only (English copy is longer) / 仅首页使用（英文文案更长） */
+
+/* Cost table: keep numbers on one line, tighter cells on phones
+   成本对比表：数字不换行，手机上收紧单元格内边距 */
+.cost-table td.num, .cost-table th.num { white-space: nowrap; }
+@media (max-width: 640px) {
+  .cost-table th, .cost-table td { padding: 12px 10px; }
+  .cost-table th { font-size: .8rem; }
+  .cost-table { font-size: .88rem; }
+}

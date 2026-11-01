@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 460 470" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif"><defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#9fb1cf"/></marker></defs>
+<rect x="0" y="0" width="460" height="470" rx="12" fill="#fff" stroke="#d3d9e4"/>
+<text x="20" y="38" font-size="18" font-weight="700" fill="#111827">三级容量保护</text>
+<rect x="20" y="60" width="420" height="110" rx="10" fill="#fff" stroke="#d3d9e4"/>
+<rect x="20" y="60" width="6" height="110" rx="3" fill="#163a78"/>
+<rect x="42" y="76" width="68" height="26" rx="13" fill="#e8f0fd"/>
+<text x="76.0" y="94" font-size="13.5" font-weight="700" fill="#163a78" text-anchor="middle">集群级</text>
+<rect x="250" y="84" width="170" height="10" rx="5" fill="#eef2f7"/>
+<rect x="250" y="84" width="168.3" height="10" rx="5" fill="#163a78" opacity=".85"/>
+<text x="42" y="130" font-size="16" font-weight="700" fill="#111827">整体水位 ≥ 99%（默认）</text>
+<text x="42" y="155" font-size="15" fill="#163a78" font-weight="600">→ 停止新写入，修复照常</text>
+<rect x="20" y="184" width="420" height="110" rx="10" fill="#fff" stroke="#d3d9e4"/>
+<rect x="20" y="184" width="6" height="110" rx="3" fill="#b7791f"/>
+<rect x="42" y="200" width="68" height="26" rx="13" fill="#fbf1df"/>
+<text x="76.0" y="218" font-size="13.5" font-weight="700" fill="#b7791f" text-anchor="middle">单盘级</text>
+<rect x="250" y="208" width="170" height="10" rx="5" fill="#eef2f7"/>
+<rect x="250" y="208" width="169.2" height="10" rx="5" fill="#b7791f" opacity=".85"/>
+<text x="42" y="254" font-size="16" font-weight="700" fill="#111827">单盘 ≥ 99.5%（可配到 99.8%）</text>
+<text x="42" y="279" font-size="15" fill="#b7791f" font-weight="600">→ 退出写入环，只接修复</text>
+<rect x="20" y="308" width="420" height="110" rx="10" fill="#fff" stroke="#d3d9e4"/>
+<rect x="20" y="308" width="6" height="110" rx="3" fill="#b42318"/>
+<rect x="42" y="324" width="68" height="26" rx="13" fill="#fde8e8"/>
+<text x="76.0" y="342" font-size="13.5" font-weight="700" fill="#b42318" text-anchor="middle">保底</text>
+<rect x="250" y="332" width="170" height="10" rx="5" fill="#eef2f7"/>
+<rect x="250" y="332" width="170.0" height="10" rx="5" fill="#b42318" opacity=".85"/>
+<text x="42" y="378" font-size="16" font-weight="700" fill="#111827">单盘剩余 &lt; 4 GiB</text>
+<text x="42" y="403" font-size="15" fill="#b42318" font-weight="600">→ 完全只读</text>
+<text x="20" y="452" font-size="13" fill="#6b7280">控制台据此实时给出“当前最大可写 / 保守可写”</text>
+</svg>

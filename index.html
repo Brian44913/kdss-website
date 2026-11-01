@@ -1,301 +1,231 @@
 <!DOCTYPE html>
-
-<html lang="en">
+<html lang="en" class="no-js">
 <head>
-<meta charset="utf-8"/>
-<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>KDSS — High-Performance Distributed Storage</title>
-<meta content="KDSS is a high-performance distributed storage system powered by erasure coding, delivering exceptional space efficiency and data reliability." name="description"/>
-<link href="images/favicon.svg" rel="icon" type="image/svg+xml"/>
-<link href="https://fonts.googleapis.com" rel="preconnect"/>
-<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet"/>
-<link href="css/base.css" rel="stylesheet"/>
-<link href="css/components.css" rel="stylesheet"/>
-<link href="css/layout.css" rel="stylesheet"/>
-<link href="css/pages.css" rel="stylesheet"/>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>KDSS Distributed Storage — Petabyte-Scale Erasure-Coded Storage</title>
+<meta name="description" content="KDSS is distributed storage for petabyte-scale data: Reed-Solomon erasure coding, a raw-disk storage engine, POSIX and S3 access, automated repair and non-disruptive rolling upgrades — close to 50 PB in production.">
+<link rel="icon" href="images/favicon.svg" type="image/svg+xml">
+<link rel="alternate" hreflang="en" href="https://www.kdss.io/">
+<link rel="alternate" hreflang="zh-CN" href="https://www.kdss.io/zh/">
+<link rel="stylesheet" href="css/site.css">
+<link rel="stylesheet" href="css/pages/index.css">
 </head>
 <body>
-<!-- Navigation -->
-<nav class="navbar">
-<div class="container">
-<a class="nav-logo" href="./">
-<img alt="KDSS" height="40" src="images/logo.svg" width="40"/>
-<span>KDSS</span>
-</a>
-<div class="nav-links">
-<a class="nav-link active" href="./">Home</a>
-<a class="nav-link" href="features.html">Features</a>
-<a class="nav-link" href="solutions.html">Solutions</a>
-<a class="nav-link" href="architecture.html">Architecture</a>
-<a class="nav-link" href="docs.html">Docs</a>
-<a class="nav-link" href="about.html">About</a>
-</div>
-<div class="nav-actions">
-<div class="lang-switch"><span class="lang-btn active">EN</span>
-          <a class="lang-btn" href="zh/">中</a></div>
-</div>
-<button aria-label="Menu" class="mobile-menu-btn">
-<span></span><span></span><span></span>
-</button>
-</div>
-</nav>
-<!-- Mobile Navigation -->
-<div class="mobile-nav">
-<a class="nav-link active" href="./">Home</a>
-<a class="nav-link" href="features.html">Features</a>
-<a class="nav-link" href="solutions.html">Solutions</a>
-<a class="nav-link" href="architecture.html">Architecture</a>
-<a class="nav-link" href="docs.html">Docs</a>
-<a class="nav-link" href="about.html">About</a>
-<div class="nav-actions">
-<div class="lang-switch"><span class="lang-btn active">EN</span>
-          <a class="lang-btn" href="zh/">中</a></div>
-</div>
-</div>
-<!-- Hero Section -->
-<section class="hero">
-<canvas class="hero-canvas"></canvas>
-<div class="container">
-<div class="hero-badge">
-<span class="badge badge-blue">High-Performance Distributed Storage</span>
-</div>
-<h1>
-<span>High-Performance Distributed Storage</span><br/>
-<span class="text-gradient">Powered by Erasure Coding</span>
-</h1>
-<p class="hero-subtitle">KDSS is a production-ready distributed storage system built with Reed-Solomon erasure coding, delivering exceptional space efficiency and data reliability.</p>
-<div class="hero-actions">
-<a class="btn btn-primary btn-lg" href="docs.html">Get Started</a>
-<a class="btn btn-secondary btn-lg" href="features.html">Explore Features</a>
-</div>
-</div>
-</section>
-<!-- Core Stats -->
-<section class="section">
-<div class="container">
-<div class="stats-grid reveal">
-<div class="stat-item">
-<div class="stat-number" data-count="90.6" data-suffix="%">0%</div>
-<div class="stat-label">Space Utilization (EC 29+3)</div>
-</div>
-<div class="stat-item">
-<div class="stat-number" data-count="32">0</div>
-<div class="stat-label">Built-in Alert Rules</div>
-</div>
-<div class="stat-item">
-<div class="stat-number" data-count="180">0</div>
-<div class="stat-label">Online Capacity (PB+)</div>
-</div>
-</div>
-</div>
-</section>
-<!-- Features Overview -->
-<section class="section">
-<div class="container">
-<div class="section-header reveal">
-<h2>Built for Modern Storage</h2>
-<p>Enterprise-grade features designed from the ground up for reliability, performance, and operational simplicity.</p>
-</div>
-<div class="grid-3 stagger-group">
-<!-- EC -->
-<div class="card reveal">
-<div class="card-icon blue">
-<svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="2" viewbox="0 0 24 24"><rect height="7" width="7" x="3" y="3"></rect><rect height="7" width="7" x="14" y="3"></rect><rect height="7" width="7" x="3" y="14"></rect><rect height="7" width="7" x="14" y="14"></rect></svg>
-</div>
-<h4>Erasure Coding</h4>
-<p>Reed-Solomon EC with configurable data/parity ratios. Up to 90.6% space efficiency, far surpassing 3-way replication.</p>
-</div>
-<!-- Raw Disk -->
-<div class="card reveal">
-<div class="card-icon purple">
-<svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="2" viewbox="0 0 24 24"><ellipse cx="12" cy="5" rx="9" ry="3"></ellipse><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"></path><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"></path></svg>
-</div>
-<h4>Raw Disk Engine</h4>
-<p>Bypass filesystem overhead with direct disk I/O. Sequential append-only writes with intelligent merge and tunable fsync dramatically reduce random I/O and head seek wear, <strong>significantly extending HDD lifespan, lowering failure rates, and reducing rebuild frequency and hardware replacement costs</strong>.</p>
-</div>
-<!-- S3 -->
-<div class="card reveal">
-<div class="card-icon cyan">
-<svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="2" viewbox="0 0 24 24"><path d="M18 10h-1.26A8 8 0 109 20h9a5 5 0 000-10z"></path></svg>
-</div>
-<h4>S3 Compatible</h4>
-<p>Full S3 API compatibility including multipart upload, presigned URLs, and streaming for large files.</p>
-</div>
-<!-- FUSE -->
-<div class="card reveal">
-<div class="card-icon green">
-<svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="2" viewbox="0 0 24 24"><path d="M22 19a2 2 0 01-2 2H4a2 2 0 01-2-2V5a2 2 0 012-2h5l2 3h9a2 2 0 012 2z"></path></svg>
-</div>
-<h4>FUSE Mount</h4>
-<p>Mount storage as a local filesystem with POSIX interface. Transparent EC encoding/decoding with read/write buffering.</p>
-</div>
-<!-- Auto Repair -->
-<div class="card reveal">
-<div class="card-icon blue">
-<svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="2" viewbox="0 0 24 24"><path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z"></path></svg>
-</div>
-<h4>Auto Repair</h4>
-<p>Automatic fault detection and EC reconstruction. Failed disks are isolated and data migrated to healthy nodes.</p>
-</div>
-<!-- Web Console -->
-<div class="card reveal">
-<div class="card-icon purple">
-<svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="2" viewbox="0 0 24 24"><rect height="14" rx="2" width="20" x="2" y="3"></rect><line x1="8" x2="16" y1="21" y2="21"></line><line x1="12" x2="12" y1="17" y2="21"></line></svg>
-</div>
-<h4>Web Console</h4>
-<p>Full-featured dashboard for cluster management, monitoring, alerting, and RBAC access control.</p>
-</div>
-</div>
-</div>
-</section>
-<!-- EC Configuration Table -->
-<section class="section">
-<div class="container">
-<div class="section-header reveal">
-<h2>EC Configuration Comparison</h2>
-<p>Choose the right erasure coding profile for your workload.</p>
-</div>
-<div class="table-wrapper reveal">
-<table>
-<thead>
-<tr>
-<th>Configuration</th>
-<th>Recommended Servers</th>
-<th>Data Shards</th>
-<th>Parity Shards</th>
-<th>Fault Tolerance</th>
-<th>Space Efficiency</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>EC 5+2</code></td>
-<td>9</td>
-<td>5</td>
-<td>2</td>
-<td>2</td>
-<td class="highlight">71.4%</td>
-</tr>
-<tr>
-<td><code>EC 9+2</code></td>
-<td>13</td>
-<td>9</td>
-<td>2</td>
-<td>2</td>
-<td class="highlight">81.8%</td>
-</tr>
-<tr>
-<td><code>EC 18+3</code></td>
-<td>24</td>
-<td>18</td>
-<td>3</td>
-<td>3</td>
-<td class="highlight">85.7%</td>
-</tr>
-<tr>
-<td><code>EC 29+3</code></td>
-<td>36</td>
-<td>29</td>
-<td>3</td>
-<td>3</td>
-<td class="highlight">90.6%</td>
-</tr>
-<tr>
-<td><code>EC 31+2</code></td>
-<td>36</td>
-<td>31</td>
-<td>2</td>
-<td>2</td>
-<td class="highlight">93.9%<sup>*</sup></td>
-</tr>
-</tbody>
-</table>
-<p style="margin-top: var(--space-md); font-size: 13px; color: var(--text-muted);">* <strong>EC 31+2 Ultra-Density Mode</strong> is designed exclusively for brand-new enterprise-grade servers and drives, deployed in Tier 3+ data centers with 24/7 on-site staff for immediate hardware fault response. With only 2 parity shards, the fault tolerance margin is minimal — any delay in disk replacement increases the risk of data loss.</p>
-</div>
-</div>
-</section>
-<!-- Architecture Preview -->
-<section class="section">
-<div class="container">
-<div class="section-header reveal">
-<h2>System Architecture</h2>
-<p>A distributed architecture with clear separation of concerns between metadata, storage, and access layers.</p>
-</div>
-<div class="arch-preview reveal">
-<div class="arch-diagram">
-<img alt="KDSS Architecture" loading="lazy" src="images/architecture.svg"/>
-</div>
-<div style="margin-top: var(--space-xl); text-align: center;">
-<a class="btn btn-secondary" href="architecture.html">Explore Architecture</a>
-</div>
-</div>
-</div>
-</section>
-<!-- Contact Us -->
-<section class="section contact-section">
-<div class="container">
-<div class="section-header reveal">
-<h2>Contact Us</h2>
-<p>Interested in KDSS? We'd love to hear from you.</p>
-</div>
-<div class="contact-card reveal">
-<div class="contact-icon">
-<svg fill="none" height="32" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" viewbox="0 0 24 24" width="32">
-<rect height="16" rx="2" width="20" x="2" y="4"></rect>
-<path d="M22 4L12 13L2 4"></path>
-</svg>
-</div>
-<h3>Email</h3>
-<a class="contact-email" href="mailto:contact@kdss.io">contact@kdss.io</a>
-<p>For technical consultation, business cooperation or product inquiries.</p>
-</div>
-</div>
-</section>
-<!-- Footer -->
-<footer class="footer">
-<div class="container">
-<div class="footer-grid">
-<div class="footer-brand">
-<a class="nav-logo" href="./">
-<img alt="KDSS" height="40" src="images/logo.svg" width="40"/>
-<span>KDSS</span>
-</a>
-<p>High-performance distributed storage system powered by erasure coding technology.</p>
-</div>
-<div class="footer-col">
-<h4>Product</h4>
-<a href="features.html">Features</a>
-<a href="solutions.html">Solutions</a>
-<a href="architecture.html">Architecture</a>
-</div>
-<div class="footer-col">
-<h4>Documentation</h4>
-<a href="docs.html#requirements">Requirements</a>
-<a href="docs.html#capacity">Capacity Planning</a>
-<a href="docs.html#s3api">S3 API</a>
-</div>
-<div class="footer-col">
-<h4>Support</h4>
-<a href="mailto:support@kdss.io">Technical Support</a>
-<a href="mailto:support@kdss.io">Feedback</a>
-<a href="mailto:contact@kdss.io">Partnership</a>
-</div>
-</div>
-<div class="footer-bottom">
-<p>© 2025-2031 KDSS Project. All rights reserved.</p>
-<div class="footer-bottom-links">
-<span style="color: var(--text-muted); font-size: 13px;">Built with Go, gRPC, and Reed-Solomon</span>
-</div>
-</div>
-</div>
-</footer>
-<!-- Back to Top -->
-<button aria-label="Back to top" class="back-to-top">
-<svg fill="none" height="20" stroke="currentColor" stroke-linecap="round" stroke-width="2" viewbox="0 0 24 24" width="20"><path d="M18 15l-6-6-6 6"></path></svg>
-</button>
 
-<script src="js/nav.js"></script>
-<script src="js/animations.js"></script>
+<header class="site-header">
+  <div class="container">
+    <a class="brand" href="./"><img src="images/logo.svg" alt="" width="30" height="30">KDSS<small>Distributed Storage</small></a>
+    <nav class="nav" aria-label="Main navigation">
+      <a href="./" aria-current="page">Home</a>
+      <a href="features.html">Product</a>
+      <a href="solutions.html">Solutions</a>
+      <a href="architecture.html">Architecture</a>
+      <a href="docs.html">Docs</a>
+      <a href="about.html">About</a>
+    </nav>
+    <div class="nav-actions">
+      <div class="lang"><a href="zh/" hreflang="zh-CN">中</a><span>EN</span></div>
+      <a class="btn btn-primary btn-sm" href="#contact">Contact us</a>
+    </div>
+    <button class="menu-btn" aria-label="Menu" aria-expanded="false"><span></span></button>
+  </div>
+</header>
+
+<main>
+
+<!-- Hero / 首屏 -->
+<section class="hero">
+  <div class="container split">
+    <div>
+      <span class="eyebrow">Enterprise distributed storage</span>
+      <h1><em>Petabyte-scale</em> storage<br>you can trust</h1>
+      <p class="lead">Built on Reed-Solomon erasure coding and a raw-disk storage engine, KDSS stores more data on fewer drives. Lose any three drives or nodes at once and every byte stays readable — then repairs itself automatically.</p>
+      <div class="actions">
+        <a class="btn btn-primary" href="#contact">Contact us</a>
+        <a class="btn btn-outline" href="downloads/kdss-whitepaper-en.pdf">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M5 21h14"/></svg>Whitepaper</a>
+        <a class="btn btn-ghost" href="architecture.html">Explore the architecture →</a>
+      </div>
+      <div class="hero-note"><span>POSIX and S3 access</span><span>Non-disruptive rolling upgrades</span><span>Proven in long-running production</span></div>
+    </div>
+    <div class="hero-visual reveal">
+      <img src="images/hero-stripe-en.svg" alt="A 256 MB data block encoded with EC 29+3 into 32 shards, placed on 32 different nodes" width="560" height="420">
+    </div>
+  </div>
+</section>
+
+<!-- Metrics / 指标 -->
+<section class="section-sm">
+  <div class="container">
+    <div class="metrics reveal">
+      <div class="metric"><strong>90.6<small>%</small></strong><span>Usable capacity with EC 29+3, vs. 33% for 3-way replication</span></div>
+      <div class="metric"><strong>3</strong><span>Simultaneous drive or node failures with no data loss or downtime</span></div>
+      <div class="metric"><strong>~50<small>PB</small></strong><span>Raw capacity in production</span></div>
+      <div class="metric"><strong>180<small>M+</small></strong><span>Stripes under management across 3,600+ data drives</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- Core capabilities / 核心能力 -->
+<section class="section">
+  <div class="container">
+    <div class="section-head">
+      <span class="eyebrow">Core capabilities</span>
+      <h2>Engineered for data that has to last</h2>
+      <p class="lead">From encoding and on-disk layout to access and operations, every layer is built around three goals: fewer drives, zero data loss, and simple operations.</p>
+    </div>
+    <div class="grid grid-4">
+      <article class="card reveal">
+        <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="4" rx="1"/><rect x="3" y="10" width="18" height="4" rx="1"/><rect x="3" y="16" width="11" height="4" rx="1"/><circle cx="18" cy="18" r="2"/></svg></div>
+        <h3>Erasure coding</h3>
+        <p>Profiles from 5+2 to 29+3, selected automatically for your cluster size. 29+3 delivers 90.6% usable capacity, and shards of a stripe never share a node.</p>
+        <a class="card-link" href="features.html#reliability">Learn more →</a>
+      </article>
+      <article class="card reveal">
+        <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="6" rx="8" ry="3"/><path d="M4 6v6c0 1.7 3.6 3 8 3s8-1.3 8-3V6"/><path d="M4 12v6c0 1.7 3.6 3 8 3s8-1.3 8-3v-6"/></svg></div>
+        <h3>Raw-disk engine</h3>
+        <p>Writes straight to block devices, bypassing the local file system — sequential appends with CRC checks end to end. Freed space is reused by exact size and safely compacted.</p>
+        <a class="card-link" href="features.html#engine">Learn more →</a>
+      </article>
+      <article class="card reveal">
+        <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16M4 12h16M4 17h10"/><path d="m17 15 3 2-3 2"/></svg></div>
+        <h3>POSIX and S3</h3>
+        <p>Mount the cluster like a local directory with the FUSE client, or point AWS CLI, boto3 and other existing tools at the S3-compatible gateway.</p>
+        <a class="card-link" href="features.html#access">Learn more →</a>
+      </article>
+      <article class="card reveal">
+        <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 4v5h5"/><path d="M12 7v5l3 2"/></svg></div>
+        <h3>Self-healing operations</h3>
+        <p>Four layers of drive health monitoring, automatic isolation and rebuild, and rolling upgrades without downtime. The console shows exactly how much you can still write.</p>
+        <a class="card-link" href="features.html#operations">Learn more →</a>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- Cost comparison / 成本对比 -->
+<section class="section section-alt">
+  <div class="container split">
+    <div>
+      <span class="eyebrow">Storage economics</span>
+      <h2>Store 10 PB of data on less than half the drives</h2>
+      <p class="lead" style="margin-top:16px">Three-way replication keeps three full copies. With 29+3 erasure coding, KDSS adds only about 10% parity overhead — and tolerates one more simultaneous failure.</p>
+      <ul class="ticks" style="margin-top:24px">
+        <li>90.6% usable capacity, vs. 33.3% for 3-way replication</li>
+        <li>Survives 3 lost shards at once; replication survives 2</li>
+        <li>Large 256 MB stripes keep metadata small and scaling simple</li>
+      </ul>
+    </div>
+    <div class="table-wrap reveal">
+      <table class="table cost-table">
+        <thead><tr><th>For 10 PB of data</th><th class="num">Raw capacity</th><th class="num">Usable</th><th class="num">Tolerates</th></tr></thead>
+        <tbody>
+          <tr><td>3-way replication</td><td class="num">30.0 PB</td><td class="num">33.3%</td><td class="num">2</td></tr>
+          <tr><td>KDSS EC 9+2</td><td class="num">12.2 PB</td><td class="num">81.8%</td><td class="num">2</td></tr>
+          <tr><td>KDSS EC 18+3</td><td class="num">11.7 PB</td><td class="num">85.7%</td><td class="num">3</td></tr>
+          <tr class="highlight"><td><strong>KDSS EC 29+3</strong></td><td class="num"><strong>11.0 PB</strong></td><td class="num"><strong>90.6%</strong></td><td class="num"><strong>3</strong></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- Architecture / 架构概览 -->
+<section class="section">
+  <div class="container">
+    <div class="section-head center">
+      <span class="eyebrow">Architecture</span>
+      <h2>Metadata and data decoupled, every tier scales out</h2>
+      <p class="lead">A group of Masters elects a leader through a MongoDB replica set and manages metadata. Storage nodes own their raw disks directly. Clients encode locally and write shards to different nodes in parallel.</p>
+    </div>
+    <div class="figure reveal">
+      <img src="images/architecture-en.svg" alt="KDSS architecture: clients, Master cluster, MongoDB replica set and storage nodes" width="1100" height="460">
+    </div>
+    <div class="grid grid-3" style="margin-top:32px">
+      <div class="card card-flat"><h4>Master cluster</h4><p>Typically five nodes with automatic leader election and failover. Handles metadata, stripe allocation, scheduling of repair, rebalancing and garbage collection, and placement audits.</p></div>
+      <div class="card card-flat"><h4>Storage nodes</h4><p>Each node manages many raw disks and handles shard I/O, local rebuild and drive health monitoring. Can be co-located with Masters.</p></div>
+      <div class="card card-flat"><h4>Access tier</h4><p>The ksfs FUSE client and the S3 gateway. Writes are redirected to the leader automatically; every shard read is verified for identity and CRC.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- Use cases / 场景 -->
+<section class="section section-alt">
+  <div class="container">
+    <div class="section-head">
+      <span class="eyebrow">Use cases</span>
+      <h2>Built for write-once, keep-for-years data</h2>
+    </div>
+    <div class="grid grid-3">
+      <article class="card reveal"><span class="tag">In production at scale</span><h3 style="margin-top:12px">Decentralized storage</h3><p>Durable storage for sealed data on networks such as Filecoin — sequential writes of large sector files and steady reads for PoSt proofs.</p></article>
+      <article class="card reveal"><span class="tag teal">Cold data</span><h3 style="margin-top:12px">Large-scale archive</h3><p>Imaging, logs and raw research data kept for the long term, with high usable capacity driving cost per TB down.</p></article>
+      <article class="card reveal"><span class="tag amber">Media</span><h3 style="margin-top:12px">Video and media assets</h3><p>Sequential writes and range reads of large files, with S3 plugging directly into transcoding and distribution pipelines.</p></article>
+      <article class="card reveal"><span class="tag">Data protection</span><h3 style="margin-top:12px">Backup and recovery</h3><p>An S3 target for backup software, with a recycle bin and retention window that guard against accidental deletion.</p></article>
+      <article class="card reveal"><span class="tag teal">AI / Big data</span><h3 style="margin-top:12px">Raw data lake</h3><p>Centralize training corpora, sensor and experiment data; compute jobs read it directly through a POSIX mount.</p></article>
+      <article class="card reveal"><span class="tag amber">On-premises</span><h3 style="margin-top:12px">Private cloud object storage</h3><p>Runs in your own data center on standard servers. Data stays in your domain, and capacity grows as you need it.</p></article>
+    </div>
+    <p style="margin-top:28px"><a class="btn btn-ghost" href="solutions.html">Explore solutions →</a></p>
+  </div>
+</section>
+
+<!-- Reliability & operations / 可靠性与运维 -->
+<section class="section">
+  <div class="container split reverse">
+    <div>
+      <span class="eyebrow">Reliability and operations</span>
+      <h2>Detect, isolate and repair — automatically</h2>
+      <div class="steps" style="margin-top:28px">
+        <div class="step"><h4>Detect early</h4><p>SMART collection, kernel log scanning, a stuck-I/O watchdog and a sliding window of I/O errors surface failing drives before they cause trouble.</p></div>
+        <div class="step"><h4>Isolate automatically</h4><p>Faulty drives leave the read/write path without slowing the cluster, and return on their own once a transient fault clears.</p></div>
+        <div class="step"><h4>Rebuild in place</h4><p>Storage nodes fetch surviving shards and decode locally, repairing the most degraded stripes first; hundreds of thousands of stripes are queued in minutes.</p></div>
+        <div class="step"><h4>Upgrade without downtime</h4><p>Nodes enter maintenance mode and are replaced one at a time. Upgrades are transparent to applications — no maintenance window required.</p></div>
+      </div>
+    </div>
+    <div class="figure reveal">
+      <img src="images/console-capacity-en.svg" alt="Console capacity panel (illustrative): max writable and conservative writable" width="560" height="380">
+      <figcaption>Console capacity panel: combines the write cutoff, per-node headroom and erasure-coding placement rules to show live "max writable / conservative writable" figures (illustrative values)</figcaption>
+    </div>
+  </div>
+</section>
+
+<!-- Contact / 联系 -->
+<section class="section section-alt" id="contact">
+  <div class="container">
+    <div class="cta reveal">
+      <div>
+        <h2>Let's talk about your storage plans</h2>
+        <p>Tell us about your data volume, access patterns and data center environment. We'll recommend node counts, an erasure-coding profile and a hardware configuration.</p>
+      </div>
+      <div class="actions">
+        <a class="btn btn-light" href="mailto:contact@kdss.io">contact@kdss.io</a>
+        <a class="btn btn-outline" style="background:transparent;color:#fff;border-color:#3a5288" href="downloads/kdss-whitepaper-en.pdf">Download whitepaper</a>
+      </div>
+    </div>
+    <div class="contact-cards" style="margin-top:24px">
+      <div class="contact-card"><h3>Sales and partnerships</h3><p class="muted">Solution design, procurement and partner programs</p><a class="mail" href="mailto:contact@kdss.io">contact@kdss.io</a></div>
+      <div class="contact-card"><h3>Technical support</h3><p class="muted">Deployment, upgrades and troubleshooting</p><a class="mail" href="mailto:support@kdss.io">support@kdss.io</a></div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="container">
+    <div class="cols">
+      <div>
+        <a class="brand" href="./"><img src="images/logo.svg" alt="" width="30" height="30">KDSS<small>Distributed Storage</small></a>
+        <p>Erasure-coded distributed storage for petabyte-scale data — low-cost, highly reliable infrastructure for long-term retention.</p>
+      </div>
+      <div><h4>Product</h4><ul><li><a href="features.html">Features</a></li><li><a href="architecture.html">Architecture</a></li><li><a href="solutions.html">Solutions</a></li></ul></div>
+      <div><h4>Resources</h4><ul><li><a href="docs.html">Docs</a></li><li><a href="downloads/kdss-whitepaper-en.pdf">Whitepaper</a></li><li><a href="docs.html#s3">S3 API</a></li></ul></div>
+      <div><h4>Contact</h4><ul><li><a href="mailto:contact@kdss.io">contact@kdss.io</a></li><li><a href="mailto:support@kdss.io">support@kdss.io</a></li><li><a href="about.html">About</a></li></ul></div>
+    </div>
+    <div class="legal"><span>© 2026 KDSS. All rights reserved.</span><span>Version 26.11.1</span></div>
+  </div>
+</footer>
+
+<script src="js/site.js"></script>
 </body>
 </html>

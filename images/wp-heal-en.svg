@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 440" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif"><defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#9fb1cf"/></marker></defs>
+<rect width="900" height="440" rx="14" fill="#f6f8fb"/>
+<text x="20" y="34" font-size="15" font-weight="700" fill="#1d5fd1" text-anchor="start">DETECT</text>
+<rect x="20" y="46" width="135" height="44" rx="8" fill="#fff" stroke="#d3d9e4"/>
+<text x="87.5" y="73" font-size="13.5" font-weight="600" fill="#111827" text-anchor="middle">SMART polling</text>
+<rect x="165" y="46" width="135" height="44" rx="8" fill="#fff" stroke="#d3d9e4"/>
+<text x="232.5" y="73" font-size="13.5" font-weight="600" fill="#111827" text-anchor="middle">Kernel log scan</text>
+<rect x="310" y="46" width="135" height="44" rx="8" fill="#fff" stroke="#d3d9e4"/>
+<text x="377.5" y="73" font-size="13.5" font-weight="600" fill="#111827" text-anchor="middle">Hang watchdog</text>
+<rect x="455" y="46" width="135" height="44" rx="8" fill="#fff" stroke="#d3d9e4"/>
+<text x="522.5" y="73" font-size="13.5" font-weight="600" fill="#111827" text-anchor="middle">I/O error window</text>
+<rect x="600" y="46" width="135" height="44" rx="8" fill="#fff" stroke="#d3d9e4"/>
+<text x="667.5" y="73" font-size="13.5" font-weight="600" fill="#111827" text-anchor="middle">CRC scrub</text>
+<rect x="745" y="46" width="135" height="44" rx="8" fill="#fff" stroke="#d3d9e4"/>
+<text x="812.5" y="73" font-size="13.5" font-weight="600" fill="#111827" text-anchor="middle">Placement audit</text>
+<path d="M450 94 L450 124" stroke="#9fb1cf" stroke-width="1.8" marker-end="url(#ah)"/>
+<rect x="20" y="128" width="200" height="100" rx="10" fill="#fff" stroke="#d3d9e4"/><text x="120.0" y="166.0" font-size="16" font-weight="700" fill="#111827" text-anchor="middle">Isolate</text><text x="120.0" y="186.0" font-size="13" font-weight="400" fill="#6b7280" text-anchor="middle">faulty disk taken out;</text><text x="120.0" y="204.0" font-size="13" font-weight="400" fill="#6b7280" text-anchor="middle">rejoins when healthy</text>
+<line x1="221" y1="178" x2="239" y2="178" stroke="#9fb1cf" stroke-width="1.8" marker-end="url(#ah)"/>
+<rect x="240" y="128" width="200" height="100" rx="10" fill="#fff" stroke="#d3d9e4"/><text x="340.0" y="166.0" font-size="16" font-weight="700" fill="#111827" text-anchor="middle">Queue</text><text x="340.0" y="186.0" font-size="13" font-weight="400" fill="#6b7280" text-anchor="middle">worst stripes first;</text><text x="340.0" y="204.0" font-size="13" font-weight="400" fill="#6b7280" text-anchor="middle">100,000s queued in minutes</text>
+<line x1="441" y1="178" x2="459" y2="178" stroke="#9fb1cf" stroke-width="1.8" marker-end="url(#ah)"/>
+<rect x="460" y="128" width="200" height="100" rx="10" fill="#fff" stroke="#d3d9e4"/><text x="560.0" y="166.0" font-size="16" font-weight="700" fill="#111827" text-anchor="middle">Dispatch</text><text x="560.0" y="186.0" font-size="13" font-weight="400" fill="#6b7280" text-anchor="middle">claimed in parallel</text><text x="560.0" y="204.0" font-size="13" font-weight="400" fill="#6b7280" text-anchor="middle">by multiple Masters</text>
+<line x1="661" y1="178" x2="679" y2="178" stroke="#9fb1cf" stroke-width="1.8" marker-end="url(#ah)"/>
+<rect x="680" y="128" width="200" height="100" rx="10" fill="#0f2b5b" stroke="#0f2b5b"/><text x="780.0" y="166.0" font-size="16" font-weight="700" fill="#fff" text-anchor="middle">Rebuild</text><text x="780.0" y="186.0" font-size="13" font-weight="400" fill="#c9d8f5" text-anchor="middle">pull surviving shards;</text><text x="780.0" y="204.0" font-size="13" font-weight="400" fill="#c9d8f5" text-anchor="middle">decode and write locally</text>
+<text x="20" y="266" font-size="14" font-weight="400" fill="#6b7280" text-anchor="start">Repair continues even after the cluster reaches its reject line.</text>
+<rect x="20" y="292" width="860" height="118" rx="10" fill="#fff" stroke="#0f8a7e"/>
+<text x="44" y="328" font-size="16" font-weight="700" fill="#0f8a7e" text-anchor="start">After a disk is replaced: in-place repair</text>
+<text x="44" y="358" font-size="14.5" font-weight="400" fill="#111827" text-anchor="start">Data that lived on the failed disk is rebuilt and written back</text>
+<text x="44" y="382" font-size="14.5" font-weight="400" fill="#111827" text-anchor="start">to the same positions on the new disk.</text>
+</svg>

@@ -1,0 +1,18 @@
+/* About page only / 仅关于我们页使用 */
+
+/* Stage label in the timeline (no dates) / 版本演进的阶段标签（不写具体日期） */
+.timeline .stage { display: block; font-size: .82rem; font-weight: 700; color: var(--blue-600); letter-spacing: .04em; }
+.timeline li:last-child { padding-bottom: 0; }
+
+/* Numbered design principles / 编号设计原则 */
+.principle .num { display: block; font-size: .8rem; font-weight: 800; letter-spacing: .12em; color: var(--blue-600); margin-bottom: 12px; }
+
+/* Tech stack cards: compact / 技术栈卡片：紧凑 */
+.stack-card h4 { font-family: var(--font-mono); font-size: .98rem; color: var(--navy-800); margin-bottom: 6px; overflow-wrap: anywhere; }
+.stack-card p { font-size: .92rem; color: var(--ink-500); }
+
+/* Production note under metrics / 指标条下方说明 */
+.metrics-note { margin-top: 20px; font-size: .9rem; color: var(--ink-500); }
+
+/* Keep inline version formats on one line / 版本格式不折行 */
+.lead code { white-space: nowrap; }

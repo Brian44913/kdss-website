@@ -1,0 +1,38 @@
+/* Architecture page only. / 仅技术架构页使用。 */
+
+/* In-page section links under the hero / 首屏下的页内目录 */
+.page-toc { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 28px; }
+.page-toc a { font-size: .86rem; padding: 6px 14px; border: 1px solid var(--line-strong); border-radius: 999px; background: var(--white); color: var(--ink-700); }
+.page-toc a:hover { border-color: var(--navy-700); color: var(--navy-900); }
+
+/* Wide diagrams stay legible on phones: the figure scrolls sideways, the page does not.
+   宽图在手机上保持可读：图框内横向滚动，页面本身不滚动。 */
+.figure.diagram { padding: 20px; }
+.figure.diagram .scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+.figure.diagram img { width: 100%; }
+.figure .hint { display: none; font-size: .78rem; color: var(--ink-400); margin-top: 8px; text-align: center; }
+@media (max-width: 760px) {
+  .figure.diagram { padding: 14px; }
+  .figure.diagram img { width: 760px; max-width: none; }
+  .figure .hint { display: block; }
+}
+
+.arch-block + .arch-block { margin-top: 40px; }
+.flow-steps { margin-top: 32px; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 40px; }
+@media (max-width: 900px) { .flow-steps { grid-template-columns: 1fr; } }
+.port { font-family: var(--font-mono); font-size: .88rem; white-space: nowrap; color: var(--navy-800); }
+/* Cap 880-wide diagrams on desktop so text stays near body size. / 桌面端限制宽度，图中文字接近正文字号。 */
+@media (min-width: 761px) { .figure.diagram .scroll.fit img { max-width: 960px; margin: 0 auto; } }
+@media (max-width: 760px) { .figure.diagram .scroll.xl img { width: 900px; } }
+
+/* Two-column reference tables become stacked cards on phones (no sideways scroll).
+   参考表在手机上改为上下堆叠，避免横向滚动。 */
+@media (max-width: 640px) {
+  .table-wrap.wide:has(.table.stack) { overflow: visible; }
+  .table-wrap.wide .table.stack { min-width: 0; }
+  .table.stack thead { display: none; }
+  .table.stack tr { display: block; padding: 12px 0; border-bottom: 1px solid var(--line); }
+  .table.stack tr:last-child { border-bottom: 0; }
+  .table.stack td { display: block; border: 0; padding: 2px 16px; }
+  .table.stack td:first-child { padding-bottom: 4px; }
+}

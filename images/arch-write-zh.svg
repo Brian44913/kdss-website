@@ -1,0 +1,64 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 430" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif"><defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#9fb1cf"/></marker><pattern id="hatch" width="7" height="7" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="7" height="7" fill="#fbf1df"/><line x1="0" y1="0" x2="0" y2="7" stroke="#e6c48a" stroke-width="3"/></pattern></defs><rect x="0" y="0" width="880" height="430" rx="14" fill="#f6f8fb"/>
+<rect x="30" y="30" width="350" height="190" rx="12" fill="#fff" stroke="#d3d9e4"/>
+<text x="50" y="58" font-size="15" fill="#111827" text-anchor="start" font-weight="700">客户端（ksfs）</text>
+<rect x="50" y="72" width="310" height="50" rx="10" fill="#f6f8fb" stroke="#f6f8fb"/><text x="205.0" y="102.0" font-size="14" font-weight="700" fill="#111827" text-anchor="middle">写缓冲攒满 256 MB</text>
+<circle cx="50" cy="72" r="11" fill="#1d5fd1"/><text x="50" y="76.5" font-size="12.5" font-weight="700" fill="#fff" text-anchor="middle">1</text>
+<rect x="50" y="140" width="310" height="62" rx="10" fill="#f6f8fb" stroke="#f6f8fb"/><text x="205.0" y="168.0" font-size="14" font-weight="700" fill="#111827" text-anchor="middle">本地 EC 编码（29+3）</text><text x="205.0" y="188.0" font-size="12.5" fill="#6b7280" text-anchor="middle">29 个数据分片 + 3 个校验分片，每片约 8.8 MB</text>
+<circle cx="50" cy="140" r="11" fill="#1d5fd1"/><text x="50" y="144.5" font-size="12.5" font-weight="700" fill="#fff" text-anchor="middle">3</text>
+<rect x="550" y="30" width="180" height="70" rx="10" fill="#0f2b5b" stroke="#0f2b5b"/><text x="640.0" y="62.0" font-size="15" font-weight="700" fill="#fff" text-anchor="middle">Master（Leader）</text><text x="640.0" y="82.0" font-size="12.5" fill="#c9d8f5" text-anchor="middle">分配条带与目标节点</text>
+<rect x="760" y="30" width="100" height="70" rx="10" fill="#fff" stroke="#d3d9e4"/><text x="810.0" y="62.0" font-size="14" font-weight="700" fill="#111827" text-anchor="middle">MongoDB</text><text x="810.0" y="82.0" font-size="12.5" fill="#6b7280" text-anchor="middle">多数派写入</text>
+<line x1="730" y1="65" x2="758" y2="65" stroke="#9fb1cf" stroke-width="1.6" marker-end="url(#ah)"/>
+<line x1="380" y1="50" x2="548" y2="50" stroke="#9fb1cf" stroke-width="1.6" marker-end="url(#ah)"/>
+<circle cx="400" cy="50" r="11" fill="#1d5fd1"/><text x="400" y="54.5" font-size="12.5" font-weight="700" fill="#fff" text-anchor="middle">2</text>
+<text x="418" y="42" font-size="12.5" fill="#6b7280" text-anchor="start" font-weight="400">申请条带</text>
+<line x1="548" y1="82" x2="382" y2="82" stroke="#9fb1cf" stroke-width="1.6" marker-end="url(#ah)" stroke-dasharray="5 4"/>
+<text x="392" y="100" font-size="12" fill="#6b7280" text-anchor="start" font-weight="400">返回条带 ID 与 32 个节点</text>
+<path d="M380 190 H640 V102" stroke="#9fb1cf" stroke-width="1.6" fill="none" marker-end="url(#ah)"/>
+<circle cx="470" cy="190" r="11" fill="#1d5fd1"/><text x="470" y="194.5" font-size="12.5" font-weight="700" fill="#fff" text-anchor="middle">5</text>
+<text x="488" y="182" font-size="12.5" fill="#6b7280" text-anchor="start" font-weight="400">全部分片写完后提交元数据</text>
+<rect x="30.0" y="300" width="21.6" height="46" rx="4" fill="#1d5fd1" opacity="0.9"/>
+<rect x="55.6" y="300" width="21.6" height="46" rx="4" fill="#1d5fd1" opacity="0.9"/>
+<rect x="81.2" y="300" width="21.6" height="46" rx="4" fill="#1d5fd1" opacity="0.9"/>
+<rect x="106.9" y="300" width="21.6" height="46" rx="4" fill="#1d5fd1" opacity="0.9"/>
+<rect x="132.5" y="300" width="21.6" height="46" rx="4" fill="#1d5fd1" opacity="0.9"/>
+<rect x="158.1" y="300" width="21.6" height="46" rx="4" fill="#1d5fd1" opacity="0.9"/>
+<rect x="183.8" y="300" width="21.6" height="46" rx="4" fill="#1d5fd1" opacity="0.9"/>
+<rect x="209.4" y="300" width="21.6" height="46" rx="4" fill="#1d5fd1" opacity="0.9"/>
+<rect x="235.0" y="300" width="21.6" height="46" rx="4" fill="#1d5fd1" opacity="0.9"/>
+<rect x="260.6" y="300" width="21.6" height="46" rx="4" fill="#1d5fd1" opacity="0.9"/>
+<rect x="286.2" y="300" width="21.6" height="46" rx="4" fill="#1d5fd1" opacity="0.9"/>
+<rect x="311.9" y="300" width="21.6" height="46" rx="4" fill="#1d5fd1" opacity="0.9"/>
+<rect x="337.5" y="300" width="21.6" height="46" rx="4" fill="#1d5fd1" opacity="0.9"/>
+<rect x="363.1" y="300" width="21.6" height="46" rx="4" fill="#1d5fd1" opacity="0.9"/>
+<rect x="388.8" y="300" width="21.6" height="46" rx="4" fill="#1d5fd1" opacity="0.9"/>
+<rect x="414.4" y="300" width="21.6" height="46" rx="4" fill="#1d5fd1" opacity="0.9"/>
+<rect x="440.0" y="300" width="21.6" height="46" rx="4" fill="#1d5fd1" opacity="0.9"/>
+<rect x="465.6" y="300" width="21.6" height="46" rx="4" fill="#1d5fd1" opacity="0.9"/>
+<rect x="491.2" y="300" width="21.6" height="46" rx="4" fill="#1d5fd1" opacity="0.9"/>
+<rect x="516.9" y="300" width="21.6" height="46" rx="4" fill="#1d5fd1" opacity="0.9"/>
+<rect x="542.5" y="300" width="21.6" height="46" rx="4" fill="#1d5fd1" opacity="0.9"/>
+<rect x="568.1" y="300" width="21.6" height="46" rx="4" fill="#1d5fd1" opacity="0.9"/>
+<rect x="593.8" y="300" width="21.6" height="46" rx="4" fill="#1d5fd1" opacity="0.9"/>
+<rect x="619.4" y="300" width="21.6" height="46" rx="4" fill="#1d5fd1" opacity="0.9"/>
+<rect x="645.0" y="300" width="21.6" height="46" rx="4" fill="#1d5fd1" opacity="0.9"/>
+<rect x="670.6" y="300" width="21.6" height="46" rx="4" fill="#1d5fd1" opacity="0.9"/>
+<rect x="696.2" y="300" width="21.6" height="46" rx="4" fill="#1d5fd1" opacity="0.9"/>
+<rect x="721.9" y="300" width="21.6" height="46" rx="4" fill="#1d5fd1" opacity="0.9"/>
+<rect x="747.5" y="300" width="21.6" height="46" rx="4" fill="#1d5fd1" opacity="0.9"/>
+<rect x="773.1" y="300" width="21.6" height="46" rx="4" fill="#0f8a7e" opacity="1"/>
+<rect x="798.8" y="300" width="21.6" height="46" rx="4" fill="#0f8a7e" opacity="1"/>
+<rect x="824.4" y="300" width="21.6" height="46" rx="4" fill="#0f8a7e" opacity="1"/>
+<line x1="205" y1="220" x2="40.8125" y2="298" stroke="#1d5fd1" stroke-width="1.6" marker-end="url(#ah)" stroke-dasharray="6 4"/>
+<line x1="205" y1="220" x2="220.1875" y2="298" stroke="#1d5fd1" stroke-width="1.6" marker-end="url(#ah)" stroke-dasharray="6 4"/>
+<line x1="205" y1="220" x2="425.1875" y2="298" stroke="#1d5fd1" stroke-width="1.6" marker-end="url(#ah)" stroke-dasharray="6 4"/>
+<line x1="205" y1="220" x2="630.1875" y2="298" stroke="#1d5fd1" stroke-width="1.6" marker-end="url(#ah)" stroke-dasharray="6 4"/>
+<line x1="205" y1="220" x2="835.1875" y2="298" stroke="#1d5fd1" stroke-width="1.6" marker-end="url(#ah)" stroke-dasharray="6 4"/>
+<circle cx="530" cy="236" r="11" fill="#1d5fd1"/><text x="530" y="240.5" font-size="12.5" font-weight="700" fill="#fff" text-anchor="middle">4</text>
+<text x="548" y="241" font-size="12.5" fill="#1d5fd1" text-anchor="start" font-weight="600">并行写入 32 个不同节点</text>
+<text x="30" y="410" font-size="12.5" fill="#111827" text-anchor="start" font-weight="600">每个节点只存放这条条带的 1 个分片</text>
+<path d="M30 352 v6 H769.125 v-6" stroke="#d3d9e4" stroke-width="1.4" fill="none"/>
+<text x="399.5625" y="376" font-size="12.5" fill="#6b7280" text-anchor="middle" font-weight="400">29 个数据分片</text>
+<path d="M773.125 352 v6 H850 v-6" stroke="#d3d9e4" stroke-width="1.4" fill="none"/>
+<text x="811.5625" y="376" font-size="12.5" fill="#6b7280" text-anchor="middle" font-weight="400">3 个校验分片</text>
+<text x="850" y="410" font-size="11.5" fill="#6b7280" text-anchor="end" font-weight="400">示意：以 EC 29+3 为例</text>
+</svg>

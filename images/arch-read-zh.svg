@@ -1,0 +1,60 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 430" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif"><defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#9fb1cf"/></marker><pattern id="hatch" width="7" height="7" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="7" height="7" fill="#fbf1df"/><line x1="0" y1="0" x2="0" y2="7" stroke="#e6c48a" stroke-width="3"/></pattern></defs><rect x="0" y="0" width="880" height="430" rx="14" fill="#f6f8fb"/>
+<rect x="30" y="30" width="300" height="64" rx="10" fill="#fff" stroke="#d3d9e4"/><text x="180.0" y="59.0" font-size="15" font-weight="700" fill="#111827" text-anchor="middle">客户端</text><text x="180.0" y="79.0" font-size="12.5" fill="#6b7280" text-anchor="middle">ksfs 挂载 / S3 网关</text>
+<rect x="550" y="30" width="300" height="64" rx="10" fill="#0f2b5b" stroke="#0f2b5b"/><text x="700.0" y="59.0" font-size="15" font-weight="700" fill="#fff" text-anchor="middle">Master</text><text x="700.0" y="79.0" font-size="12.5" fill="#c9d8f5" text-anchor="middle">返回条带的 32 个分片位置</text>
+<line x1="330" y1="52" x2="548" y2="52" stroke="#9fb1cf" stroke-width="1.6" marker-end="url(#ah)"/>
+<circle cx="352" cy="52" r="11" fill="#1d5fd1"/><text x="352" y="56.5" font-size="12.5" font-weight="700" fill="#fff" text-anchor="middle">1</text>
+<text x="370" y="44" font-size="12.5" fill="#6b7280" text-anchor="start" font-weight="400">查询条带位置</text>
+<line x1="548" y1="76" x2="332" y2="76" stroke="#9fb1cf" stroke-width="1.6" marker-end="url(#ah)" stroke-dasharray="5 4"/>
+<circle cx="41" cy="150" r="11" fill="#1d5fd1"/><text x="41" y="154.5" font-size="12.5" font-weight="700" fill="#fff" text-anchor="middle">2</text>
+<text x="60" y="155" font-size="13" fill="#111827" text-anchor="start" font-weight="600">并行读取分片：每片校验 CRC32，并核对条带 ID 与分片序号</text>
+<line x1="180" y1="94" x2="180" y2="132" stroke="#9fb1cf" stroke-width="1.6" marker-end="url(#ah)"/>
+<rect x="30.0" y="172" width="21.6" height="46" rx="4" fill="#1d5fd1" opacity="0.9"/>
+<rect x="55.6" y="172" width="21.6" height="46" rx="4" fill="#1d5fd1" opacity="0.9"/>
+<rect x="81.2" y="172" width="21.6" height="46" rx="4" fill="#1d5fd1" opacity="0.9"/>
+<rect x="106.9" y="172" width="21.6" height="46" rx="4" fill="#1d5fd1" opacity="0.9"/>
+<rect x="132.5" y="172" width="21.6" height="46" rx="4" fill="#1d5fd1" opacity="0.9"/>
+<rect x="158.1" y="172" width="21.6" height="46" rx="4" fill="#fff" stroke="#9fb1cf" stroke-dasharray="3 3"/>
+<path d="M162.9 189.0 l12 12 M174.9 189.0 l-12 12" stroke="#b7791f" stroke-width="2"/>
+<rect x="183.8" y="172" width="21.6" height="46" rx="4" fill="#1d5fd1" opacity="0.9"/>
+<rect x="209.4" y="172" width="21.6" height="46" rx="4" fill="#1d5fd1" opacity="0.9"/>
+<rect x="235.0" y="172" width="21.6" height="46" rx="4" fill="#1d5fd1" opacity="0.9"/>
+<rect x="260.6" y="172" width="21.6" height="46" rx="4" fill="#1d5fd1" opacity="0.9"/>
+<rect x="286.2" y="172" width="21.6" height="46" rx="4" fill="#1d5fd1" opacity="0.9"/>
+<rect x="311.9" y="172" width="21.6" height="46" rx="4" fill="#1d5fd1" opacity="0.9"/>
+<rect x="337.5" y="172" width="21.6" height="46" rx="4" fill="#1d5fd1" opacity="0.9"/>
+<rect x="363.1" y="172" width="21.6" height="46" rx="4" fill="#1d5fd1" opacity="0.9"/>
+<rect x="388.8" y="172" width="21.6" height="46" rx="4" fill="#1d5fd1" opacity="0.9"/>
+<rect x="414.4" y="172" width="21.6" height="46" rx="4" fill="#1d5fd1" opacity="0.9"/>
+<rect x="440.0" y="172" width="21.6" height="46" rx="4" fill="#1d5fd1" opacity="0.9"/>
+<rect x="465.6" y="172" width="21.6" height="46" rx="4" fill="#fff" stroke="#9fb1cf" stroke-dasharray="3 3"/>
+<path d="M470.4 189.0 l12 12 M482.4 189.0 l-12 12" stroke="#b7791f" stroke-width="2"/>
+<rect x="491.2" y="172" width="21.6" height="46" rx="4" fill="#1d5fd1" opacity="0.9"/>
+<rect x="516.9" y="172" width="21.6" height="46" rx="4" fill="#1d5fd1" opacity="0.9"/>
+<rect x="542.5" y="172" width="21.6" height="46" rx="4" fill="#1d5fd1" opacity="0.9"/>
+<rect x="568.1" y="172" width="21.6" height="46" rx="4" fill="#1d5fd1" opacity="0.9"/>
+<rect x="593.8" y="172" width="21.6" height="46" rx="4" fill="#1d5fd1" opacity="0.9"/>
+<rect x="619.4" y="172" width="21.6" height="46" rx="4" fill="#1d5fd1" opacity="0.9"/>
+<rect x="645.0" y="172" width="21.6" height="46" rx="4" fill="#1d5fd1" opacity="0.9"/>
+<rect x="670.6" y="172" width="21.6" height="46" rx="4" fill="#1d5fd1" opacity="0.9"/>
+<rect x="696.2" y="172" width="21.6" height="46" rx="4" fill="#1d5fd1" opacity="0.9"/>
+<rect x="721.9" y="172" width="21.6" height="46" rx="4" fill="#1d5fd1" opacity="0.9"/>
+<rect x="747.5" y="172" width="21.6" height="46" rx="4" fill="#1d5fd1" opacity="0.9"/>
+<rect x="773.1" y="172" width="21.6" height="46" rx="4" fill="#fff" stroke="#9fb1cf" stroke-dasharray="3 3"/>
+<path d="M777.9 189.0 l12 12 M789.9 189.0 l-12 12" stroke="#b7791f" stroke-width="2"/>
+<rect x="798.8" y="172" width="21.6" height="46" rx="4" fill="#0f8a7e" opacity="1"/>
+<rect x="824.4" y="172" width="21.6" height="46" rx="4" fill="#0f8a7e" opacity="1"/>
+<line x1="66.4375" y1="218" x2="66.4375" y2="266" stroke="#1d5fd1" stroke-width="1.6" marker-end="url(#ah)" stroke-dasharray="5 4"/>
+<line x1="271.4375" y1="218" x2="271.4375" y2="266" stroke="#1d5fd1" stroke-width="1.6" marker-end="url(#ah)" stroke-dasharray="5 4"/>
+<line x1="373.9375" y1="218" x2="373.9375" y2="266" stroke="#1d5fd1" stroke-width="1.6" marker-end="url(#ah)" stroke-dasharray="5 4"/>
+<line x1="578.9375" y1="218" x2="578.9375" y2="266" stroke="#1d5fd1" stroke-width="1.6" marker-end="url(#ah)" stroke-dasharray="5 4"/>
+<line x1="681.4375" y1="218" x2="681.4375" y2="266" stroke="#1d5fd1" stroke-width="1.6" marker-end="url(#ah)" stroke-dasharray="5 4"/>
+<rect x="30" y="268" width="820" height="76" rx="12" fill="#fff" stroke="#d3d9e4"/>
+<circle cx="52" cy="290" r="11" fill="#1d5fd1"/><text x="52" y="294.5" font-size="12.5" font-weight="700" fill="#fff" text-anchor="middle">3</text>
+<text x="72" y="296" font-size="15" fill="#111827" text-anchor="start" font-weight="700">缺片实时解码（Reed-Solomon，SIMD 加速）</text>
+<text x="72" y="324" font-size="12.5" fill="#6b7280" text-anchor="start" font-weight="400">缺失或校验不符的分片 ≤ 3 个时，用其余任意 29 个分片还原原始数据</text>
+<line x1="440" y1="344" x2="440" y2="376" stroke="#9fb1cf" stroke-width="1.6" marker-end="url(#ah)"/>
+<rect x="340" y="378" width="200" height="36" rx="10" fill="#e3f4f2" stroke="#bfe3dd"/><text x="440.0" y="401.0" font-size="14" font-weight="700" fill="#0f8a7e" text-anchor="middle">返回数据</text>
+<circle cx="352" cy="396" r="11" fill="#0f8a7e"/><text x="352" y="400.5" font-size="12.5" font-weight="700" fill="#fff" text-anchor="middle">4</text>
+<path d="M640 389 l10 10 M650 389 l-10 10" stroke="#b7791f" stroke-width="2"/>
+<text x="658" y="399" font-size="12" fill="#6b7280" text-anchor="start" font-weight="400">故障盘或校验不符（示意）</text>
+</svg>

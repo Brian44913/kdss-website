@@ -1,0 +1,593 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>KDSS 分布式存储技术白皮书</title>
+<meta name="description" content="KDSS 分布式存储技术白皮书（版本 26.11.1）：架构、纠删码、裸盘存储引擎、可靠性与自愈、访问接口、运维、安全与容量规划。">
+<link rel="icon" href="../images/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="whitepaper.css">
+</head>
+<body>
+
+<!-- ============ Cover / 封面 ============ -->
+<section class="cover">
+  <div class="grid"></div>
+  <div class="brand"><img src="../images/logo.svg" alt="KDSS"><b>KDSS</b><span>分布式存储</span></div>
+  <div class="title">
+    <div class="eyebrow">Technical Whitepaper · 技术白皮书</div>
+    <h1>KDSS 分布式存储<br>技术白皮书</h1>
+    <p class="sub">面向 PB 级数据的纠删码分布式存储：以高得盘率降低长期保存成本，以全链路校验与自动修复保障数据可靠，以滚动升级与内置告警降低运维负担。</p>
+  </div>
+  <ul class="points">
+    <li><b>低成本</b>29+3 纠删码得盘率 90.6%，裸盘顺序追加写</li>
+    <li><b>高可靠</b>任意 3 个分片同时丢失仍可读、可重建</li>
+    <li><b>易运维</b>滚动升级不停服，内置控制台与告警</li>
+  </ul>
+  <div class="visual"><img src="../images/hero-stripe-zh.svg" alt="EC 29+3 条带分布示意"></div>
+  <div class="band"></div>
+  <div class="meta">
+    <div class="ver"><small>版本</small>26.11.1<small style="margin-top:3mm">2026 年 11 月</small></div>
+    <div class="contact">www.kdss.io<br>contact@kdss.io</div>
+  </div>
+</section>
+
+<!-- ============ TOC / 目录 ============ -->
+<nav class="toc sheet" aria-label="目录">
+  <h2>目录</h2>
+  <ol id="toc"></ol>
+</nav>
+
+<main class="sheet">
+
+<!-- ============ 1 ============ -->
+<section class="chapter" id="s1">
+  <h2><span class="no">1</span>摘要</h2>
+  <p class="intro">KDSS 是一套面向 PB 级数据的分布式存储系统。它用 Reed-Solomon 纠删码代替多副本提供冗余，用裸盘直写引擎代替本地文件系统管理磁盘，同时提供 POSIX 文件挂载（FUSE 客户端 ksfs）与 S3 兼容接口，并内置 Web 管理控制台和告警系统。</p>
+
+  <div class="metrics">
+    <div class="metric"><strong>90.6<small>%</small></strong><span>得盘率（EC 29+3）</span></div>
+    <div class="metric"><strong>3</strong><span>可同时丢失的分片数（盘或节点）</span></div>
+    <div class="metric"><strong>≈16<small>PB</small></strong><span>单集群裸容量（36 节点 × 36 盘）</span></div>
+    <div class="metric"><strong>近 50<small>PB</small></strong><span>生产集群累计裸容量</span></div>
+  </div>
+
+  <p>KDSS 的设计围绕三个目标：</p>
+  <ul class="ticks">
+    <li><strong>低成本。</strong>纠删码得盘率最高可达 91.2%（31+3）；按集群规模自动选型的 29+3 档位得盘率 90.6%，同等可用容量所需的裸容量约为三副本的 37%。存储引擎直接顺序追加写入块设备，磁头寻道少，有利于延长 HDD 寿命、降低故障率。</li>
+    <li><strong>高可靠。</strong>同一条带的分片绝不落在同一节点；29+3 下任意 3 个分片同时丢失，数据仍可读、可重建。每次读取都做 CRC32 校验，后台持续巡检与放置审计；磁盘健康四层监测，发现故障自动隔离，修复由存储节点在本地完成。</li>
+    <li><strong>易运维。</strong>逐台滚动升级不停服；Web 控制台提供集群、节点、磁盘与容量视图，实时给出“当前最大可写 / 保守可写”；内置 P0/P1/P2 分级告警，可推送飞书（Lark）与邮件，并提供 Prometheus 全量指标。</li>
+  </ul>
+
+  <h3>生产验证</h3>
+  <p>KDSS 已在多个生产集群长期运行：累计裸容量近 50 PB，100 余个存储节点、3,600 余块数据盘，管理的条带超过 1.8 亿条。生产环境中约 99% 的读写通过 FUSE 挂载完成。</p>
+
+  <h3>关于本文</h3>
+  <p>本文面向需要评估或部署 KDSS 的架构师、运维工程师与技术决策者，介绍系统架构、纠删码与数据布局、存储引擎、可靠性机制、访问接口、运维与安全能力，并给出容量规划方法与推荐硬件配置。文中所述能力与参数对应版本 26.11.1。</p>
+</section>
+
+<!-- ============ 2 ============ -->
+<section class="chapter" id="s2">
+  <h2><span class="no">2</span>海量数据存储面临的挑战</h2>
+  <p class="intro">数据量进入 PB 级以后，存储系统的主要矛盾从“能不能存下”变成“能不能长期、便宜、可靠地存下，并且管得过来”。</p>
+
+  <h3 id="s2-1"><span class="no">2.1</span>冗余成本</h3>
+  <p>多副本是最直观的冗余方式，但三副本的得盘率只有约 33%：每存 1 PB 数据要买 3 PB 磁盘，机柜、电力和运维成本随之放大。对需要保存多年的数据，这部分成本会持续累积。</p>
+
+  <h3 id="s2-2"><span class="no">2.2</span>规模带来的故障常态化</h3>
+  <p>集群有成千上万块盘时，坏盘、慢盘、节点掉线不再是偶发事件，而是日常。系统需要能同时容忍多块盘或多个节点故障，并在无人值守的情况下快速发现、隔离并修复；还要防范不报错的静默数据损坏，以及错误路由导致读到别的数据。</p>
+
+  <h3 id="s2-3"><span class="no">2.3</span>磁盘与本地文件系统的开销</h3>
+  <p>在本地文件系统上存放海量大文件，会引入额外的元数据更新、随机写与碎片。对大容量 HDD 来说，寻道次数直接影响吞吐，也影响长期运行下的磁盘健康。</p>
+
+  <h3 id="s2-4"><span class="no">2.4</span>运维与容量管理</h3>
+  <p>升级要不要停服、还能写多少、哪块盘快坏了、告警发给谁——这些问题在小集群里靠人工可以应付，到了数十节点、上千块盘时必须由系统给出确定的答案。容量估算尤其容易失真：剩余空间之和并不等于真正可写入的容量。</p>
+
+  <h3 id="s2-5"><span class="no">2.5</span>接入方式</h3>
+  <p>一部分应用按文件读写，需要 POSIX 语义；另一部分应用面向对象存储开发，需要 S3 接口。同一份数据最好在一套系统内同时满足两类访问。</p>
+
+  <table class="table">
+    <caption>表 2-1 挑战与 KDSS 的应对</caption>
+    <thead><tr><th style="width:24%">挑战</th><th>KDSS 的做法</th><th style="width:22%">详见</th></tr></thead>
+    <tbody>
+      <tr><td>冗余成本高</td><td>Reed-Solomon 纠删码，得盘率 71.4%–91.2%，按节点数自动选型</td><td>第 5 章</td></tr>
+      <tr><td>多盘、多节点同时故障</td><td>分片强制跨节点放置；3 校验档位容忍任意 3 个分片同时丢失</td><td>第 5、7 章</td></tr>
+      <tr><td>静默损坏与错误路由</td><td>每次读取 CRC32 校验；读路径核对条带 ID 与分片序号；后台巡检</td><td>第 6、7 章</td></tr>
+      <tr><td>文件系统开销与磁盘寿命</td><td>裸盘直写、顺序追加、4 KB 对齐；空洞复用与碎片整理</td><td>第 6 章</td></tr>
+      <tr><td>故障发现与修复靠人工</td><td>四层健康监测、自动隔离与恢复、存储节点本地重建、原位修复</td><td>第 7 章</td></tr>
+      <tr><td>升级停服、容量不透明</td><td>滚动升级不停服；控制台实时显示当前最大可写 / 保守可写</td><td>第 9 章</td></tr>
+      <tr><td>文件与对象两类访问</td><td>FUSE 客户端 ksfs 提供 POSIX 挂载；S3 兼容网关</td><td>第 8 章</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- ============ 3 ============ -->
+<section class="chapter" id="s3">
+  <h2><span class="no">3</span>KDSS 概述</h2>
+  <p class="intro">KDSS 把冗余、落盘、访问与运维四个层面做成一个整体：纠删码决定成本与容错，裸盘引擎决定磁盘效率与数据校验，FUSE 与 S3 决定接入方式，控制台与告警决定能否长期稳定运营。</p>
+
+  <h3 id="s3-1"><span class="no">3.1</span>产品定位</h3>
+  <p>KDSS 适合容量大、以大文件为主、需要长期保存的数据：去中心化存储的封装数据、冷数据归档、视频与媒体素材、备份副本、AI 与大数据的原始数据等。它以 256 MB 的数据块为单位组织条带，元数据只记录到条带级别，因此在 PB 级规模下元数据量依然很小。</p>
+
+  <h3 id="s3-2"><span class="no">3.2</span>核心指标</h3>
+  <table class="table">
+    <caption>表 3-1 KDSS 核心指标（版本 26.11.1）</caption>
+    <thead><tr><th style="width:30%">项目</th><th>指标</th></tr></thead>
+    <tbody>
+      <tr><td>冗余方式</td><td>Reed-Solomon 纠删码（klauspost/reedsolomon，SIMD 加速）</td></tr>
+      <tr><td>纠删码档位</td><td>自动：5+2、9+2、18+3、29+3；手动高密度：19+3、21+3、22+3、31+3、31+2</td></tr>
+      <tr><td>得盘率</td><td>5+2 为 71.4%，29+3 为 90.6%，31+3 为 91.2%</td></tr>
+      <tr><td>容错能力</td><td>3 校验档位：任意 3 个分片（盘或节点）同时丢失仍可读、可重建</td></tr>
+      <tr><td>条带粒度</td><td>256 MB 数据块 = 1 条条带；29+3 下每个分片约 8.8 MB</td></tr>
+      <tr><td>集群规模</td><td>最小 8 节点（5+2）；单集群 36 节点 × 36 盘，约 16 PB 裸容量</td></tr>
+      <tr><td>存储引擎</td><td>裸盘直写，顺序追加，4 KB 对齐；双超级块；BadgerDB 本地索引</td></tr>
+      <tr><td>数据校验</td><td>每次读取 CRC32 校验（含流式读取）；后台 CRC 巡检，默认 20 MB/s/节点</td></tr>
+      <tr><td>访问接口</td><td>FUSE 客户端 ksfs（POSIX 挂载）；S3 兼容网关</td></tr>
+      <tr><td>运维与高可用</td><td>滚动升级不停服；Master 多副本 + MongoDB 副本集；内置告警与 Prometheus 指标</td></tr>
+    </tbody>
+  </table>
+
+  <h3 id="s3-3"><span class="no">3.3</span>设计原则</h3>
+  <div class="cards four">
+    <div class="card flat"><h4>大条带、少元数据</h4><p>以 256 MB 为条带粒度，MongoDB 只保存条带级元数据，元数据量随数据量缓慢增长。</p></div>
+    <div class="card flat"><h4>数据不经过 Master</h4><p>客户端本地编码，直接与存储节点并行读写分片；Master 只负责元数据、选主与调度。</p></div>
+    <div class="card flat"><h4>故障是常态</h4><p>检测、隔离、修复、巡检全部自动化；修复在集群写满拒写后仍可进行。</p></div>
+    <div class="card flat"><h4>保守的默认值</h4><p>纠删码按节点数自动选择保守安全的档位；fsync 默认每次写入都落盘。</p></div>
+  </div>
+
+  <h3 id="s3-4"><span class="no">3.4</span>版本与技术栈</h3>
+  <p>KDSS 的版本号采用 CalVer（YY.MM.PATCH），本文对应 26.11.1。技术栈：Go、gRPC + Protocol Buffers、MongoDB、klauspost/reedsolomon、hanwen/go-fuse、BadgerDB、Gin、Vue 3 + Element Plus、Zap、Prometheus client。</p>
+</section>
+
+<!-- ============ 4 ============ -->
+<section class="chapter" id="s4">
+  <h2><span class="no">4</span>系统架构</h2>
+  <p class="intro">KDSS 由接入层（ksfs、S3 网关、Web 控制台）、控制层（Master 集群与 MongoDB 副本集）和数据层（存储节点）组成。数据在客户端与存储节点之间直接传输，Master 只处理元数据和调度。</p>
+
+  <figure class="figure">
+    <img src="../images/architecture-zh.svg" alt="KDSS 系统架构">
+    <figcaption>图 4-1 KDSS 系统架构</figcaption>
+  </figure>
+
+  <h3 id="s4-1"><span class="no">4.1</span>组件</h3>
+  <table class="table">
+    <caption>表 4-1 组件与职责</caption>
+    <thead><tr><th style="width:20%">组件</th><th>职责</th><th style="width:24%">服务端口</th></tr></thead>
+    <tbody>
+      <tr><td>Master</td><td>元数据管理、选主；调度修复、均衡、GC 与放置审计</td><td>gRPC 6700，指标 6701</td></tr>
+      <tr><td>Storage</td><td>裸盘读写、本地重建、磁盘健康监测</td><td>gRPC 6800，指标 6801</td></tr>
+      <tr><td>MongoDB 副本集</td><td>保存 inodes、dentries、stripes、nodes、buckets 等集合；zstd 压缩，多数派写入</td><td>—</td></tr>
+      <tr><td>ksfs</td><td>FUSE 客户端，POSIX 挂载；客户端侧 EC 编解码</td><td>—</td></tr>
+      <tr><td>S3 网关</td><td>S3 兼容接口，面向对象存储应用</td><td>9000</td></tr>
+      <tr><td>Web 控制台</td><td>集群管理、监控、告警、用户与权限</td><td>8081</td></tr>
+    </tbody>
+  </table>
+
+  <h3 id="s4-2"><span class="no">4.2</span>元数据</h3>
+  <p>文件系统命名空间（inodes、dentries）、条带位置（stripes）、节点信息（nodes）与 Bucket（buckets）保存在 MongoDB 副本集中，开启 zstd 压缩，写入采用多数派确认。由于条带粒度为 256 MB，1 PB 数据只对应约 400 万条条带记录，元数据规模与数据规模之间相差数个数量级。</p>
+
+  <h3 id="s4-3"><span class="no">4.3</span>写入与读取数据流</h3>
+  <figure class="figure">
+    <img src="../images/wp-dataflow-zh.svg" alt="写入与读取数据流">
+    <figcaption>图 4-2 FUSE 路径的写入与读取数据流（以 29+3 为例）</figcaption>
+  </figure>
+  <h4>写入</h4>
+  <ol class="steps">
+    <li><b>缓冲：</b>ksfs 在客户端把写入数据缓冲到 256 MB。</li>
+    <li><b>申请条带：</b>向 Master 申请一条新条带及其分片位置。</li>
+    <li><b>本地编码：</b>在客户端完成 EC 编码，例如 29+3 生成 29 个数据分片和 3 个校验分片。</li>
+    <li><b>并行写入：</b>32 个分片并行写到 32 个不同的存储节点。</li>
+    <li><b>提交元数据：</b>分片全部落盘后，向 Master 提交条带元数据。</li>
+  </ol>
+  <h4>读取</h4>
+  <ol class="steps">
+    <li><b>定位：</b>向 Master 获取条带的分片位置。</li>
+    <li><b>并行读取：</b>从各存储节点并行读取分片，每个分片都做 CRC32 校验。</li>
+    <li><b>实时重建：</b>若有分片缺失，用其余分片实时解码还原数据。</li>
+  </ol>
+
+  <h3 id="s4-4"><span class="no">4.4</span>控制面高可用</h3>
+  <p>Master 以多副本部署（典型 5 台），借助 MongoDB 副本集选主；Leader 故障时自动切换，客户端的写请求会被自动重定向到当前 Leader。</p>
+</section>
+
+<!-- ============ 5 ============ -->
+<section class="chapter" id="s5">
+  <h2><span class="no">5</span>纠删码与数据布局</h2>
+  <p class="intro">纠删码把 k 个数据分片编码出 m 个校验分片，k+m 个分片中任意 k 个即可还原原始数据。KDSS 采用 Reed-Solomon 编码，基于 klauspost/reedsolomon 实现并使用 SIMD 加速。</p>
+
+  <h3 id="s5-1"><span class="no">5.1</span>档位与得盘率</h3>
+  <p>KDSS 按集群节点数自动选择档位，默认偏保守；在明确评估容错需求后，也可手动选择更高密度的档位。得盘率 = k / (k+m)。</p>
+  <table class="table">
+    <caption>表 5-1 纠删码档位</caption>
+    <thead><tr><th>档位（k+m）</th><th class="num">得盘率</th><th class="c">可同时丢失分片</th><th class="num">最少节点数</th><th>选型方式</th></tr></thead>
+    <tbody>
+      <tr><td>5+2</td><td class="num">71.4%</td><td class="c">2</td><td class="num">8</td><td><span class="tag teal">自动</span> 小规模起步</td></tr>
+      <tr><td>9+2</td><td class="num">81.8%</td><td class="c">2</td><td class="num">12</td><td><span class="tag teal">自动</span></td></tr>
+      <tr><td>18+3</td><td class="num">85.7%</td><td class="c">3</td><td class="num">22</td><td><span class="tag teal">自动</span></td></tr>
+      <tr class="hl"><td>29+3</td><td class="num">90.6%</td><td class="c">3</td><td class="num">33</td><td><span class="tag teal">自动</span> 大规模推荐</td></tr>
+      <tr><td>19+3 / 21+3</td><td class="num">86.4% / 87.5%</td><td class="c">3</td><td class="num">—</td><td><span class="tag">手动</span> 高密度</td></tr>
+      <tr><td>22+3</td><td class="num">88.0%</td><td class="c">3</td><td class="num">26</td><td><span class="tag">手动</span> 高密度</td></tr>
+      <tr><td>31+3</td><td class="num">91.2%</td><td class="c">3</td><td class="num">—</td><td><span class="tag">手动</span> 高密度</td></tr>
+      <tr><td>31+2</td><td class="num">93.9%</td><td class="c">2</td><td class="num">—</td><td><span class="tag amber">手动</span> 容错下降，谨慎使用</td></tr>
+    </tbody>
+  </table>
+  <p class="muted" style="font-size:8.5pt">注：19+3、21+3、31+2 的得盘率按 k/(k+m) 计算。表中最少节点数均为条带宽度 k+m 再加 1。</p>
+
+  <h3 id="s5-2"><span class="no">5.2</span>与三副本的成本对比</h3>
+  <p>在相同可用容量下，29+3 所需的裸容量约为三副本的 37%，同时容错能力从 2 提高到 3。</p>
+  <figure class="figure">
+    <img src="../images/wp-cost-zh.svg" alt="每 1 PB 可用容量所需裸容量">
+    <figcaption>图 5-1 三副本与各纠删码档位的裸容量需求（示意）</figcaption>
+  </figure>
+
+  <h3 id="s5-3"><span class="no">5.3</span>条带布局</h3>
+  <p>一个 256 MB 的数据块构成一条条带。以 29+3 为例，数据块被切成 29 个约 8.8 MB 的数据分片，再计算出 3 个校验分片，共 32 个分片写到 32 个不同节点上。大粒度条带让每次磁盘 I/O 都足够大，也让元数据只需记录到条带级别。</p>
+  <figure class="figure narrow">
+    <img src="../images/hero-stripe-zh.svg" alt="EC 29+3 条带分布">
+    <figcaption>图 5-2 EC 29+3 条带在节点间的分布</figcaption>
+  </figure>
+
+  <h3 id="s5-4"><span class="no">5.4</span>放置约束与审计</h3>
+  <p>容错能力成立的前提是同一条带的分片互不同节点：否则一个节点故障就可能带走多个分片。KDSS 把这条约束作为硬规则执行：</p>
+  <ul class="ticks">
+    <li><strong>三条路径强制校验。</strong>写入、修复、均衡三条会产生分片的路径，在选择目标节点时都强制检查同条带分片不落在同一节点。</li>
+    <li><strong>后台全量放置审计。</strong>Master 在后台持续巡检全部条带的放置情况，作为对前三道校验的独立复核。</li>
+  </ul>
+</section>
+
+<!-- ============ 6 ============ -->
+<section class="chapter" id="s6">
+  <h2><span class="no">6</span>裸盘存储引擎</h2>
+  <p class="intro">存储节点直接读写块设备，绕过本地文件系统。分片以顺序追加的方式写入磁盘，配合本地索引定位，每次读取都做校验。</p>
+
+  <h3 id="s6-1"><span class="no">6.1</span>顺序追加写</h3>
+  <p>分片按 4 KB 对齐，从写入前沿顺序追加。相比在文件系统上维护大量文件，这种方式省去了文件系统元数据的随机更新，磁头寻道更少：吞吐更稳定，HDD 寿命更长、故障率更低。</p>
+  <figure class="figure">
+    <img src="../images/wp-disk-zh.svg" alt="裸盘布局示意">
+    <figcaption>图 6-1 裸盘布局（示意，未按比例）</figcaption>
+  </figure>
+
+  <h3 id="s6-2"><span class="no">6.2</span>超级块与盘身份</h3>
+  <p>每块盘有主、备两份超级块，均受 CRC 保护。超级块记录盘的身份：节点 ID、盘 ID 与盘 UUID。存储节点启动时据此识别每块盘：盘换了槽位或盘符变化，会自动识别并纠正；如果接上的是不属于本节点的盘，节点拒绝启动，避免把数据写到错误的盘上。</p>
+
+  <h3 id="s6-3"><span class="no">6.3</span>本地索引与数据校验</h3>
+  <p>分片在盘上的位置由本地 BadgerDB 索引维护。每次读取都做 CRC32 校验，流式读取同样校验。读取时若有分片缺失，客户端用其余分片实时解码重建，读请求不因单个分片异常而失败。</p>
+
+  <h3 id="s6-4"><span class="no">6.4</span>崩溃恢复</h3>
+  <table class="table">
+    <caption>表 6-1 启动与恢复行为</caption>
+    <thead><tr><th style="width:28%">场景</th><th>行为</th></tr></thead>
+    <tbody>
+      <tr><td>干净关机</td><td>秒级启动</td></tr>
+      <tr><td>异常断电</td><td>从写入前沿向前扫描，补齐断电前未进入索引的记录</td></tr>
+      <tr><td>压缩 / 整理中断</td><td>可整盘重建本地索引</td></tr>
+      <tr><td>多盘节点</td><td>所有磁盘并行打开</td></tr>
+    </tbody>
+  </table>
+
+  <h3 id="s6-5"><span class="no">6.5</span>fsync 策略</h3>
+  <table class="table">
+    <caption>表 6-2 fsync 策略</caption>
+    <thead><tr><th style="width:28%">策略</th><th>说明</th></tr></thead>
+    <tbody>
+      <tr><td>immediate（默认）</td><td>每次写入都落盘后再确认</td></tr>
+      <tr><td>batch</td><td>组提交，多次写入合并一次落盘</td></tr>
+      <tr><td>deferred</td><td>适用于带 BBU（电池保护缓存）阵列卡等由硬件保证掉电安全的场景</td></tr>
+    </tbody>
+  </table>
+
+  <h3 id="s6-6"><span class="no">6.6</span>空洞复用与碎片整理</h3>
+  <p>删除是软删除：数据先进入回收站，经过可配置的冻结期后，所占空间才成为可复用的空洞。新写入的分片可以直接填入同尺寸的空洞——采用精确尺寸匹配，不切割空洞，避免产生碎片。</p>
+  <p>碎片整理把盘尾部的数据搬入空洞，然后截断回收尾部空间。整个过程崩溃安全；每次搬移后逐片回读校验；对外的元数据零改动，上层无感知。</p>
+
+  <h3 id="s6-7"><span class="no">6.7</span>三级容量保护</h3>
+  <p>磁盘接近写满时，系统分三级逐步收紧写入，保证修复始终有空间可用，已有数据不受影响：</p>
+  <figure class="figure">
+    <img src="../images/wp-capacity-zh.svg" alt="三级容量保护">
+    <figcaption>图 6-2 三级容量保护（默认阈值）</figcaption>
+  </figure>
+</section>
+
+<!-- ============ 7 ============ -->
+<section class="chapter" id="s7">
+  <h2><span class="no">7</span>可靠性与自愈</h2>
+  <p class="intro">KDSS 把可靠性拆成三件事：尽早发现问题、阻止问题扩散、尽快恢复冗余。所有环节默认自动运行，无需人工介入。</p>
+
+  <figure class="figure">
+    <img src="../images/wp-heal-zh.svg" alt="自愈流程">
+    <figcaption>图 7-1 从发现到修复的自愈流程</figcaption>
+  </figure>
+
+  <h3 id="s7-1"><span class="no">7.1</span>四层磁盘健康监测</h3>
+  <table class="table">
+    <caption>表 7-1 磁盘健康监测</caption>
+    <thead><tr><th style="width:26%">层次</th><th>作用</th></tr></thead>
+    <tbody>
+      <tr><td>SMART 周期采集</td><td>定期读取磁盘 SMART 信息，掌握长期健康趋势</td></tr>
+      <tr><td>内核日志快速扫描</td><td>及时捕获内核报告的磁盘错误；经去抖确认，避免偶发日志误判</td></tr>
+      <tr><td>读写卡死看门狗</td><td>读请求超过 120 秒、写请求超过 300 秒未返回即判定卡死</td></tr>
+      <tr><td>I/O 错误滑动窗口</td><td>按时间窗口统计 I/O 错误，超过阈值自动隔离，恢复正常后自动解除</td></tr>
+    </tbody>
+  </table>
+
+  <h3 id="s7-2"><span class="no">7.2</span>存储节点本地重建</h3>
+  <p>分片缺失后，修复由存储节点在本地完成：节点拉取同条带的存活分片，本地解码并直接落盘，减少数据中转。修复任务的组织方式：</p>
+  <ul class="ticks">
+    <li><strong>最劣先修。</strong>按条带缺失的分片数排序，缺得最多、离丢数据最近的条带最先修复。</li>
+    <li><strong>批量入队。</strong>修复任务批量创建，数十万条带可在分钟级完成入队。</li>
+    <li><strong>分布式领取。</strong>多个 Master 分布式领取修复任务。</li>
+    <li><strong>写满也能修。</strong>集群达到拒写线后停止新写入，但修复照常进行。</li>
+  </ul>
+
+  <h3 id="s7-3"><span class="no">7.3</span>原位修复</h3>
+  <p>更换故障盘后，KDSS 可以把原盘上的数据重建并写回新盘的原位置。</p>
+
+  <h3 id="s7-4"><span class="no">7.4</span>读路径身份校验</h3>
+  <p>每次读取都携带条带 ID 与分片序号进行核对，防止因错误路由读到别的条带的数据。它与 CRC 校验互为补充：CRC 保证数据本身没有损坏，身份校验保证读到的是正确的数据。</p>
+
+  <h3 id="s7-5"><span class="no">7.5</span>后台 CRC 巡检</h3>
+  <p>后台巡检会周期性地读取并校验盘上分片，主动发现长期未被访问的数据中的静默损坏。巡检可限速（默认每节点 20 MB/s），周期可调，避免影响业务读写。</p>
+
+  <h3 id="s7-6"><span class="no">7.6</span>回收站与两阶段 GC</h3>
+  <p>误删的数据可以从回收站恢复。垃圾回收分两个阶段执行，并设有可配置的保留窗口。另提供孤儿分片只读对账工具，用于核对盘上分片与元数据是否一致，本身不修改任何数据。</p>
+
+  <h3 id="s7-7"><span class="no">7.7</span>数据均衡</h3>
+  <ul class="ticks">
+    <li><strong>跨节点均衡（显式触发）。</strong>按偏离均值的阈值挑选源节点，按条带的空闲节点集合挑选最空的目标；搬迁前双重查重，元数据更新采用版本 CAS，避免并发冲突与重复搬迁。均衡同样受放置约束校验。</li>
+    <li><strong>节点内盘间均衡。</strong>在同一节点的多块盘之间平衡用量。</li>
+  </ul>
+</section>
+
+<!-- ============ 8 ============ -->
+<section class="chapter" id="s8">
+  <h2><span class="no">8</span>访问接口</h2>
+  <p class="intro">KDSS 提供两种访问方式：FUSE 客户端 ksfs 提供 POSIX 文件挂载，S3 兼容网关面向对象存储应用。生产环境中约 99% 的读写通过 FUSE 完成。</p>
+
+  <h3 id="s8-1"><span class="no">8.1</span>FUSE 客户端 ksfs</h3>
+  <ul class="ticks">
+    <li>以 POSIX 文件系统挂载，现有应用无需改造即可读写。</li>
+    <li><code>df -h</code> 显示集群的真实容量。</li>
+    <li>支持 fsync 持久化。</li>
+    <li>读写缓冲、并发度与限速均可调。</li>
+    <li>客户端本地完成 EC 编码，写入时可并行做 EC 校验。</li>
+  </ul>
+
+  <h3 id="s8-2"><span class="no">8.2</span>S3 兼容网关</h3>
+  <p>S3 网关支持以下 API（已与代码核对）。大对象采用流式读写：64 MB 以内缓冲处理，超过则分段流式传输，内存占用可控。可直接使用 AWS CLI、s3cmd、boto3、Go SDK 等通用工具访问。</p>
+  <table class="table">
+    <caption>表 8-1 支持的 S3 API</caption>
+    <thead><tr><th style="width:22%">类别</th><th>API</th></tr></thead>
+    <tbody>
+      <tr><td>Bucket</td><td>ListBuckets、CreateBucket、DeleteBucket、HeadBucket、ListObjects</td></tr>
+      <tr><td>对象</td><td>PutObject、GetObject（含 Range）、HeadObject、DeleteObject、CopyObject</td></tr>
+      <tr><td>分段上传</td><td>CreateMultipartUpload、UploadPart、CompleteMultipartUpload、AbortMultipartUpload、ListParts、ListMultipartUploads</td></tr>
+    </tbody>
+  </table>
+
+  <div class="code-title">AWS CLI</div>
+<pre><span class="c"># 访问密钥在 Web 控制台创建；&lt;gateway&gt; 为 S3 网关地址</span>
+aws --endpoint-url http://&lt;gateway&gt;:9000 s3 mb s3://archive
+aws --endpoint-url http://&lt;gateway&gt;:9000 s3 cp ./dataset.tar s3://archive/2026/dataset.tar
+aws --endpoint-url http://&lt;gateway&gt;:9000 s3 ls s3://archive/2026/</pre>
+
+  <div class="code-title">Python (boto3)</div>
+<pre>import boto3
+
+s3 = boto3.client("s3", endpoint_url="http://&lt;gateway&gt;:9000",
+                  aws_access_key_id="&lt;ACCESS_KEY&gt;", aws_secret_access_key="&lt;SECRET_KEY&gt;")
+s3.upload_file("dataset.tar", "archive", "2026/dataset.tar")   <span class="c"># 大文件自动走分段上传</span>
+obj = s3.get_object(Bucket="archive", Key="2026/dataset.tar", Range="bytes=0-1048575")</pre>
+
+  <h3 id="s8-3"><span class="no">8.3</span>如何选择</h3>
+  <p>按文件路径读写、需要 POSIX 语义与 fsync 的程序，以及批量落盘、大文件顺序读写，优先使用 FUSE（ksfs）。面向对象存储开发的应用、跨网络的上传下载、已有 S3 工具链的备份与归档流程，使用 S3 网关。</p>
+</section>
+
+<!-- ============ 9 ============ -->
+<section class="chapter" id="s9">
+  <h2><span class="no">9</span>运维与可观测</h2>
+  <p class="intro">KDSS 内置运维所需的主要工具：管理控制台、容量面板、指标与告警，以及不停服的滚动升级流程。</p>
+
+  <h3 id="s9-1"><span class="no">9.1</span>Web 管理控制台</h3>
+  <p>控制台基于 Vue 3 + Element Plus，主要功能包括：</p>
+  <div class="cards">
+    <div class="card flat"><h4>集群视图</h4><p>集群、节点、磁盘的状态与用量</p></div>
+    <div class="card flat"><h4>容量面板</h4><p>当前最大可写、保守可写、回收站</p></div>
+    <div class="card flat"><h4>数据管理</h4><p>Bucket、访问密钥、文件浏览</p></div>
+    <div class="card flat"><h4>告警</h4><p>告警规则与通知渠道、告警历史</p></div>
+    <div class="card flat"><h4>审计</h4><p>操作审计日志</p></div>
+    <div class="card flat"><h4>用户</h4><p>多用户与角色权限管理</p></div>
+  </div>
+
+  <h3 id="s9-2"><span class="no">9.2</span>可写容量</h3>
+  <p>在纠删码集群中，“剩余空间之和”并不等于“还能写多少”：一条 29+3 条带需要 32 个不同节点同时有空间，部分盘写满或退出写入环后，实际可写容量会低于剩余空间。控制台因此直接给出两个值：<strong>当前最大可写</strong>与<strong>当前保守可写</strong>，作为扩容与调度决策的依据，并在可写节点不足时告警。</p>
+  <figure class="figure narrow">
+    <img src="../images/console-capacity-zh.svg" alt="控制台容量面板示意">
+    <figcaption>图 9-1 控制台容量面板（示意）</figcaption>
+  </figure>
+
+  <h3 id="s9-3"><span class="no">9.3</span>指标与告警</h3>
+  <ul class="ticks">
+    <li><strong>Prometheus 指标：</strong>全量指标位于 <code>kdss_*</code> 命名空间，<code>/metrics</code> 支持 Bearer 令牌认证；随版本提供 62 条告警规则模板。</li>
+    <li><strong>内置告警系统：</strong>P0 / P1 / P2 分级，支持去抖与提醒间隔，推送到飞书（Lark）与邮件，保留告警历史。</li>
+    <li><strong>内置规则：</strong>覆盖可写节点不足、容量、磁盘故障、MongoDB 存活、许可证校验失败等。</li>
+  </ul>
+
+  <h3 id="s9-4"><span class="no">9.4</span>滚动升级不停服</h3>
+  <p>升级逐台进行，每台节点经过以下步骤：</p>
+  <ol class="steps">
+    <li><b>进入维护模式（cordon）：</b>该节点不再接收新的写入。</li>
+    <li><b>等待在途写入清零：</b>已开始的写入全部完成。</li>
+    <li><b>替换：</b>替换程序并重启。</li>
+    <li><b>验证：</b>确认节点状态正常。</li>
+    <li><b>退出维护：</b>节点恢复接收写入，继续下一台。</li>
+  </ol>
+  <div class="callout"><b>约束：</b>同时离线的节点数不超过校验分片数 − 1。例如 29+3 集群最多同时离线 2 个节点，保证升级期间仍有冗余余量。</div>
+
+  <h3 id="s9-5"><span class="no">9.5</span>高可用</h3>
+  <p>Master 多副本部署（典型 5 台），与 MongoDB 副本集（多数派写入）共同完成选主；Leader 切换自动进行，客户端写请求自动重定向到 Leader。存储节点故障由纠删码冗余覆盖，并触发自动修复。</p>
+</section>
+
+<!-- ============ 10 ============ -->
+<section class="chapter" id="s10">
+  <h2><span class="no">10</span>安全</h2>
+  <p class="intro">KDSS 默认部署在内网，安全机制覆盖管理面的身份与权限、指标接口的访问控制、组件间通信加密与许可证校验。</p>
+
+  <table class="table">
+    <caption>表 10-1 安全机制</caption>
+    <thead><tr><th style="width:24%">方面</th><th>机制</th></tr></thead>
+    <tbody>
+      <tr><td>角色权限（RBAC）</td><td>多用户，三种角色：admin（管理员）、storage_admin（存储管理员）、readonly（只读）</td></tr>
+      <tr><td>登录认证</td><td>JWT 登录；口令以 bcrypt 存储；登录限速与验证码</td></tr>
+      <tr><td>Web 防护</td><td>CSRF 防护</td></tr>
+      <tr><td>审计</td><td>控制台操作审计日志</td></tr>
+      <tr><td>S3 访问</td><td>Bucket 与访问密钥在控制台创建和管理</td></tr>
+      <tr><td>指标接口</td><td><code>/metrics</code> 支持 Bearer 令牌认证</td></tr>
+      <tr><td>组件间通信</td><td>可选 gRPC mTLS；默认内网部署可关闭</td></tr>
+      <tr><td>许可证</td><td>在线校验；校验失败触发内置告警</td></tr>
+    </tbody>
+  </table>
+
+  <h3 id="s10-1"><span class="no">10.1</span>部署建议</h3>
+  <ul class="ticks">
+    <li>把 Master、Storage 与 MongoDB 部署在隔离的内网中；跨不可信网络通信时启用 gRPC mTLS。</li>
+    <li>按最小权限分配角色：日常查看使用 readonly，存储运维使用 storage_admin，admin 仅用于用户与系统管理。</li>
+    <li>为 <code>/metrics</code> 配置 Bearer 令牌，只允许监控系统抓取。</li>
+  </ul>
+</section>
+
+<!-- ============ 11 ============ -->
+<section class="chapter" id="s11">
+  <h2><span class="no">11</span>容量规划与推荐配置</h2>
+  <p class="intro">容量规划从三个问题出发：需要多少可用容量、需要容忍几个分片同时故障、有多少台节点。节点数决定可选的纠删码档位，档位决定得盘率。</p>
+
+  <h3 id="s11-1"><span class="no">11.1</span>估算公式</h3>
+  <div class="formula">可用容量 ≈ 节点数 × 每节点盘数 × 单盘容量 × k/(k+m) × 拒写线水位
+    <small>拒写线默认 99%；单盘写入上限默认 99.5%。实际可写容量以控制台“当前保守可写”为准。</small></div>
+
+  <h3 id="s11-2"><span class="no">11.2</span>算例</h3>
+  <table class="table">
+    <caption>表 11-1 容量估算算例（示意，单盘 16 TB，按十进制 TB 计）</caption>
+    <thead><tr><th>配置</th><th class="num">裸容量</th><th>档位</th><th class="num">× 得盘率</th><th class="num">× 99% 水位</th><th class="c">容错</th></tr></thead>
+    <tbody>
+      <tr><td>8 节点 × 36 盘</td><td class="num">4,608 TB</td><td>5+2</td><td class="num">3,291 TB</td><td class="num">≈ 3.3 PB</td><td class="c">2</td></tr>
+      <tr><td>12 节点 × 36 盘</td><td class="num">6,912 TB</td><td>9+2</td><td class="num">5,655 TB</td><td class="num">≈ 5.6 PB</td><td class="c">2</td></tr>
+      <tr><td>22 节点 × 36 盘</td><td class="num">12,672 TB</td><td>18+3</td><td class="num">10,862 TB</td><td class="num">≈ 10.8 PB</td><td class="c">3</td></tr>
+      <tr class="hl"><td>33 节点 × 36 盘</td><td class="num">19,008 TB</td><td>29+3</td><td class="num">17,226 TB</td><td class="num">≈ 17.1 PB</td><td class="c">3</td></tr>
+    </tbody>
+  </table>
+  <p class="muted" style="font-size:8.5pt">注：得盘率按 k/(k+m) 精确值计算；未计入系统盘、预留空间与磁盘标称容量和可用容量之间的差异。</p>
+
+  <h3 id="s11-3"><span class="no">11.3</span>规划要点</h3>
+  <ul class="ticks">
+    <li><strong>节点数比条带宽度多一台。</strong>各档位的最少节点数为 k+m+1，例如 29+3 需要至少 33 个节点。</li>
+    <li><strong>按容错需求选档位。</strong>需要容忍 3 个分片同时故障时，选择 18+3 及以上档位；31+2 只适合明确接受容错下降的场景。</li>
+    <li><strong>为维护留余量。</strong>滚动升级时同时离线节点数不超过 m − 1。</li>
+    <li><strong>关注可写节点数。</strong>写入一条条带需要 k+m 个节点同时可写；节点陆续写满时，应在可写节点不足告警之前扩容。</li>
+  </ul>
+
+  <h3 id="s11-4"><span class="no">11.4</span>推荐硬件</h3>
+  <table class="table">
+    <caption>表 11-2 推荐硬件（来自生产实践）</caption>
+    <thead><tr><th style="width:22%">角色</th><th>配置</th></tr></thead>
+    <tbody>
+      <tr><td>存储节点</td><td>36 × 16 TB 企业级 HDD（JBOD 直通）；Xeon 20 核级 CPU；64 GB 内存；2 × 10 GbE 绑定（20 Gbps）；系统盘 RAID1</td></tr>
+      <tr><td>Master</td><td>可与 Storage 混合部署在系统盘为 RAID1 的节点上，典型 5 台</td></tr>
+      <tr><td>MongoDB</td><td>副本集，部署在 SSD 上</td></tr>
+      <tr><td>最小规模</td><td>8 个节点（5+2）</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- ============ 12 ============ -->
+<section class="chapter" id="s12">
+  <h2><span class="no">12</span>典型场景</h2>
+  <p class="intro">KDSS 适合容量大、以大文件为主、写入后长期保存的数据。以下是几类典型场景。</p>
+
+  <div class="case">
+    <div class="label"><h4>去中心化存储</h4><span class="tag">Filecoin 等</span></div>
+    <div class="body">
+      <div><h5>痛点</h5><p>封装后的数据量大、需长期保存，存储成本直接决定收益；数据丢失有经济损失。</p></div>
+      <div><h5>方案</h5><p>封装结果经 FUSE 挂载顺序落盘；高密度纠删码保存；自动修复与巡检保障长期可用。</p></div>
+      <div><h5>收益</h5><p>得盘率最高 90% 以上；多盘同时故障不丢数据；POSIX 挂载，现有程序直接使用。</p></div>
+    </div>
+  </div>
+  <div class="case">
+    <div class="label"><h4>海量冷数据归档</h4><span class="tag teal">归档</span></div>
+    <div class="body">
+      <div><h5>痛点</h5><p>数据多年不读但不能丢；静默损坏在读取时才发现，为时已晚。</p></div>
+      <div><h5>方案</h5><p>纠删码降低长期保存成本；后台 CRC 巡检主动发现损坏并修复；回收站防误删。</p></div>
+      <div><h5>收益</h5><p>长期保存成本低；数据完整性持续可验证。</p></div>
+    </div>
+  </div>
+  <div class="case">
+    <div class="label"><h4>视频与媒体</h4><span class="tag">媒体</span></div>
+    <div class="body">
+      <div><h5>痛点</h5><p>素材文件大、总量增长快，需要高吞吐顺序读写和随机定位读取。</p></div>
+      <div><h5>方案</h5><p>256 MB 大条带并行读写；S3 GetObject 支持 Range 读取；横向扩展节点。</p></div>
+      <div><h5>收益</h5><p>大文件吞吐稳定；文件与对象两种方式访问同一集群。</p></div>
+    </div>
+  </div>
+  <div class="case">
+    <div class="label"><h4>备份与容灾</h4><span class="tag teal">备份</span></div>
+    <div class="body">
+      <div><h5>痛点</h5><p>备份副本占用大量容量；备份系统本身也要可靠、易管理。</p></div>
+      <div><h5>方案</h5><p>S3 接口对接现有备份工具，大对象分段上传；告警推送到飞书与邮件。</p></div>
+      <div><h5>收益</h5><p>以纠删码代替多副本存放备份；无需改造即可接入 S3 工具链。</p></div>
+    </div>
+  </div>
+  <div class="case">
+    <div class="label"><h4>AI 与大数据原始数据湖</h4><span class="tag">数据湖</span></div>
+    <div class="body">
+      <div><h5>痛点</h5><p>原始数据集持续增长，既有按文件读取的训练程序，也有按对象访问的数据管道。</p></div>
+      <div><h5>方案</h5><p>FUSE 挂载供计算节点直接读取；S3 接口供数据管道写入与分发。</p></div>
+      <div><h5>收益</h5><p>一套存储同时服务两类访问；容量随节点线性扩展。</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 13 ============ -->
+<section class="chapter" id="s13">
+  <h2><span class="no">13</span>联系我们</h2>
+  <p class="intro">如需了解 KDSS 的部署方案、容量规划或技术细节，欢迎联系我们。</p>
+  <div class="contact">
+    <div class="card"><h4>商务与合作</h4><p>产品咨询、方案评估、商务合作</p><a class="mail" href="mailto:contact@kdss.io">contact@kdss.io</a></div>
+    <div class="card"><h4>技术支持</h4><p>部署、使用与故障排查</p><a class="mail" href="mailto:support@kdss.io">support@kdss.io</a></div>
+  </div>
+  <p style="margin-top:14pt">官网：<a href="https://www.kdss.io/zh/">www.kdss.io</a></p>
+
+  <div class="legal">
+    <p>本文档描述的功能与参数对应 KDSS 版本 26.11.1。标注“示意”的图表与算例仅用于说明原理，不代表特定部署的实测结果。产品功能可能随版本更新而变化，以实际发布版本为准。</p>
+    <p>文中提及的第三方名称与商标归各自所有者所有。</p>
+    <p>© 2026 KDSS. 保留所有权利。</p>
+  </div>
+</section>
+
+</main>
+
+<script>
+// Build the table of contents from chapter and section headings; page numbers are filled in by pdf.js.
+// 根据章节标题生成目录；页码由 pdf.js 渲染时回填。
+(function () {
+  var toc = document.getElementById('toc');
+  document.querySelectorAll('.chapter').forEach(function (ch) {
+    var h2 = ch.querySelector('h2');
+    var li = document.createElement('li');
+    li.innerHTML = '<a href="#' + ch.id + '"><span class="t"><span class="no">' + h2.querySelector('.no').textContent + '</span>' +
+      h2.lastChild.textContent + '</span><span class="dots"></span><span class="pg" data-for="' + ch.id + '"></span></a>';
+    var subs = ch.querySelectorAll('h3[id]');
+    if (subs.length) {
+      var ol = document.createElement('ol');
+      subs.forEach(function (h3) {
+        var s = document.createElement('li');
+        s.innerHTML = '<a href="#' + h3.id + '"><span class="t"><span class="no">' + h3.querySelector('.no').textContent + '</span>' +
+          h3.lastChild.textContent + '</span><span class="dots"></span><span class="pg" data-for="' + h3.id + '"></span></a>';
+        ol.appendChild(s);
+      });
+      li.appendChild(ol);
+    }
+    toc.appendChild(li);
+  });
+})();
+</script>
+</body>
+</html>
